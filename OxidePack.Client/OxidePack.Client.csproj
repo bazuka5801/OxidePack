@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CF782426-DEC4-431C-A455-715EFB5D4062}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OxidePack.Client</RootNamespace>
     <AssemblyName>OxidePack.Client</AssemblyName>
@@ -44,6 +44,9 @@
       <HintPath>..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Dependencies\SapphireEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -52,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\AppCore.cs" />
+    <Compile Include="App\Client.cs" />
+    <Compile Include="App\Config.cs" />
     <Compile Include="Forms\Auth.cs">
       <SubType>Form</SubType>
     </Compile>
