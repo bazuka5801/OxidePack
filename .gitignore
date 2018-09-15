@@ -1,5 +1,4 @@
 **/.idea/*
-**/obj/*
 **/.vs/*
-**/bin/*
 **/packages/*
+**/__pycache__/*

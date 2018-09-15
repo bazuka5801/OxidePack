@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxidePack.Common", "OxidePack.Common\OxidePack.Common.csproj", "{12B9E389-7EBF-4617-915E-62A961F213AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\OxidePack.Common", "src\OxidePack.Common\OxidePack.Common.csproj", "{12B9E389-7EBF-4617-915E-62A961F213AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxidePack.Client", "OxidePack.Client\OxidePack.Client.csproj", "{CF782426-DEC4-431C-A455-715EFB5D4062}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\OxidePack.Client", "src\OxidePack.Client\OxidePack.Client.csproj", "{CF782426-DEC4-431C-A455-715EFB5D4062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxidePack.Server", "OxidePack.Server\OxidePack.Server.csproj", "{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\OxidePack.Server", "src\OxidePack.Server\OxidePack.Server.csproj", "{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
