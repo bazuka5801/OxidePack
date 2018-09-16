@@ -10,6 +10,7 @@ namespace OxidePack.Server.App
 {
     public class AppCore : SapphireType
     {
+        private BaseServer Server;
         public override void OnAwake()
         {
             this.AddType<ConfigManager>();
@@ -32,6 +33,7 @@ namespace OxidePack.Server.App
         public void Shutdown()
         {
             UserDB.Save();
+            Server.Dispose();
         }
 
         private void OnConsoleCommand(string line)
@@ -50,9 +52,9 @@ namespace OxidePack.Server.App
 
         private void ServerWorker(object o)
         {
-            using (var server = new BaseServer())
+            using (Server = new BaseServer())
             {
-                server.Start();
+                Server.Start();
             }
         }
 

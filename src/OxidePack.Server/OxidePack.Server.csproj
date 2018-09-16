@@ -34,8 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ether.Network, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\Dependencies\Ether.Network\Ether.Network.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52">
       <HintPath>..\..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>

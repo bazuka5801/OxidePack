@@ -41,8 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ether.Network, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\Dependencies\Ether.Network\Ether.Network.dll</HintPath>
     </Reference>
     <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\Dependencies\SapphireEngine\SapphireEngine.dll</HintPath>

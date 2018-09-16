@@ -12,8 +12,8 @@ namespace OxidePack.Server.App
     {
         static HashSet<string> ActiveUsers = new HashSet<string>();
         
-        public bool     IsAuthed   = false;
-        public UserData Data     = null;
+        public bool     IsAuthed;
+        public UserData Data;
         
         public override void HandleMessage(INetPacketStream stream)
         {

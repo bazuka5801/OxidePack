@@ -1,4 +1,5 @@
 using System.Threading;
+using OxidePack.Client.Forms;
 using SapphireEngine;
 
 namespace OxidePack.Client.App
@@ -22,16 +23,7 @@ namespace OxidePack.Client.App
         {
             using (var client = new Client(Config.Host, Config.Port, Config.BufferSize))
             {
-                client.Connect();
-
-                while (true)
-                {
-                    if (client.IsConnected == false)
-                    {
-                        client.Connect();
-                    }
-                    Thread.Sleep(1000);
-                }
+                client.WorkingLoop();
             }
         }
         #endregion

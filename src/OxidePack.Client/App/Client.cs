@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using Ether.Network.Client;
 using Ether.Network.Packets;
@@ -10,11 +11,16 @@ namespace OxidePack.Client.App
 {
     public class Client : NetClient
     {
+        private bool _needReconnect;
+        
         public Client(string host, int port, int bufferSize)
         {
             this.Configuration.Host = host;
             this.Configuration.Port = port;
             this.Configuration.BufferSize = bufferSize;
+            this.Configuration.RetryMode = NetClientRetryOptions.Limited;
+            this.Configuration.MaxRetryAttempts = 5;
+            this.Configuration.TimeOut = 1000;
         }
 
         
@@ -74,11 +80,32 @@ namespace OxidePack.Client.App
         protected override void OnDisconnected()
         {
             ConsoleSystem.Log("Disconnected");
+            _needReconnect = true;
         }
 
         protected override void OnSocketError(SocketError socketError)
         {
             ConsoleSystem.LogError($"[Client] SocketError: {socketError}");
+        }
+
+        public void WorkingLoop()
+        {
+            Connect();
+            while (true)
+            {
+                Thread.Sleep(1000);
+                
+                if (IsConnected)
+                    continue;
+                
+                if (_needReconnect)
+                {
+                    _needReconnect = false;
+                    AuthForm.UpdateStatus("(2/3) Connecting to server...");
+                    Connect();
+                }
+            }
+            AuthForm.UpdateStatus("Connection Failed - Unresponsive");
         }
     }
 }
