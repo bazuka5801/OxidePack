@@ -44,7 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\Dependencies\SapphireEngine.dll</HintPath>
+      <HintPath>..\..\Dependencies\SapphireEngine\SapphireEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
