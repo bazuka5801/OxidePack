@@ -66,7 +66,7 @@ namespace OxidePack.Server.App
 
             if (ActiveUsers.Contains(uInfo.key))
             {
-                SendGiveUserInformationResult("Session with the same key already exists!");
+                SendGiveUserInformationResult("Double connection!");
                 return;
             }
             
