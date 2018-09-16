@@ -5,23 +5,20 @@ namespace OxidePack.Client.App
 {
     public class AppCore : SapphireType
     {
-        public override void OnAwake()
+        public static void Initialize()
         {
-            Initialize();
-        }
-
-        private void Initialize()
-        {
+            RunFramework();
             RunClient();
         }
 
-        private void RunClient()
+        #region [Methods] Client
+        private static void RunClient()
         {
             var clientThread = new Thread(ClientWorker) { Name = "Client", IsBackground = true };
             clientThread.Start();
         }
 
-        private void ClientWorker(object o)
+        private static void ClientWorker(object o)
         {
             using (var client = new Client(Config.Host, Config.Port, Config.BufferSize))
             {
@@ -37,5 +34,19 @@ namespace OxidePack.Client.App
                 }
             }
         }
+        #endregion
+        
+        #region [Methods] Framework
+        private static void RunFramework()
+        {
+            Thread frameworkThread = new Thread(FrameworkWorker) { Name = "Framework", IsBackground = true };
+            frameworkThread.Start();
+        }
+
+        private static void FrameworkWorker(object o)
+        {
+            Framework.Initialization<AppCore>(true);
+        }
+        #endregion
     }
 }

@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\build\client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\build\client\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,16 +41,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ether.Network, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
+      <HintPath>..\..\packages\Ether.Network.3.0.0\lib\net46\Ether.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\Dependencies\SapphireEngine.dll</HintPath>
+      <HintPath>..\..\Dependencies\SapphireEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -58,11 +59,12 @@
     <Compile Include="App\AppCore.cs" />
     <Compile Include="App\Client.cs" />
     <Compile Include="App\Config.cs" />
-    <Compile Include="Forms\Auth.cs">
+    <Compile Include="Data\OxidePack.Data.cs" />
+    <Compile Include="Forms\AuthForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Auth.Designer.cs">
-      <DependentUpon>Auth.cs</DependentUpon>
+      <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,10 +73,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="System\MachineIdentificator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\Auth.resx">
-      <DependentUpon>Auth.cs</DependentUpon>
+      <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -82,17 +85,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj">
       <Project>{12b9e389-7ebf-4617-915e-62a961f213ac}</Project>
       <Name>OxidePack.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
+         
+  <Target Name="AfterBuild">
+    <Exec Command="$(SolutionDir)tools\ProtoBuf\compile.py client" WorkingDirectory="$(SolutionDir)tools\ProtoBuf" />
+  </Target>
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">

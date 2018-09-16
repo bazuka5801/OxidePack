@@ -1,6 +1,6 @@
 ﻿namespace OxidePack.Client.Forms
 {
-    partial class Auth
+    partial class AuthForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Auth));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuthForm));
             this.lblUID = new System.Windows.Forms.Label();
             this.btnCopyUID = new System.Windows.Forms.Button();
             this.tbUID = new System.Windows.Forms.TextBox();
@@ -99,7 +99,7 @@
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Auth";
+            this.Name = "AuthForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Auth";
             this.TopMost = true;
