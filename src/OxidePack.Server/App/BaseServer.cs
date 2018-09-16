@@ -21,13 +21,14 @@ namespace OxidePack.Server.App
             ConsoleSystem.Log("Server is Ready");
         }
 
-        protected override void OnClientConnected(User connection)
+        protected override void OnClientConnected(User user)
         {
-            ConsoleSystem.Log($"[Server] New client from {connection.Socket.GetIP()} - {connection.Id}");
+            user.OnConnected();
         }
 
-        protected override void OnClientDisconnected(User connection)
+        protected override void OnClientDisconnected(User user)
         {
+            user.OnDisconnected();
         }
 
         protected override void OnError(Exception e)

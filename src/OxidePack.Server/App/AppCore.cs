@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using OxidePack.Server.App.Data;
 using SapphireEngine;
 using Timer = SapphireEngine.Functions.Timer;
 
@@ -12,14 +14,34 @@ namespace OxidePack.Server.App
         {
             this.AddType<ConfigManager>();
             this.Initialize();
+            ConsoleSystem.OnConsoleInput += OnConsoleCommand;
         }
 
+        public override void OnDestroy()
+        {
+            this.Shutdown();
+        }
+        
         public void Initialize()
         {
+            UserDB.Load();
             Timer.SetInterval(UpdateTitle, 1f);
             RunServer();
         }
 
+        public void Shutdown()
+        {
+            UserDB.Save();
+        }
+
+        private void OnConsoleCommand(string line)
+        {
+            if (line == ":q")
+            {
+                Framework.Quit();
+            }
+        }
+        
         private void RunServer()
         {
             Thread serverThread = new Thread(ServerWorker) { Name = "Server", IsBackground = true };
