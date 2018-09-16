@@ -63,7 +63,7 @@
     <Compile Include="Forms\AuthForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Auth.Designer.cs">
+    <Compile Include="Forms\AuthForm.Designer.cs">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="System\MachineIdentificator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\Auth.resx">
+    <EmbeddedResource Include="Forms\AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
