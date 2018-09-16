@@ -1,0 +1,6 @@
+package OxidePack.Data;
+
+message UserInformation {
+	required string      key = 1;
+	required string username = 2;
+}
