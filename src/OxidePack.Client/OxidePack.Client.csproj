@@ -59,6 +59,8 @@
     <Compile Include="App\AppCore.cs" />
     <Compile Include="App\Client.cs" />
     <Compile Include="App\Config.cs" />
+    <Compile Include="Core\MsBuildProject\Solution.cs" />
+    <Compile Include="Core\MsBuildProject\CsProject.cs" />
     <Compile Include="Data\OxidePack.Data.cs" />
     <Compile Include="Forms\BuyFormo.cs">
       <SubType>Form</SubType>

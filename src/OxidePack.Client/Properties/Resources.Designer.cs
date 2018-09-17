@@ -91,6 +91,15 @@ namespace OxidePack.Client.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Project\(\&quot;.*\&quot;\) = \&quot;(?&lt;name&gt;.*)\&quot;, \&quot;(?&lt;csproj&gt;.*)\&quot;, \&quot;.*\&quot;.
+        /// </summary>
+        internal static string MsBuildProjectRegex {
+            get {
+                return ResourceManager.GetString("MsBuildProjectRegex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         /// </summary>
         internal static System.Drawing.Icon oxidepack {
