@@ -60,7 +60,11 @@
     <Compile Include="App\Client.cs" />
     <Compile Include="App\Config.cs" />
     <Compile Include="Data\OxidePack.Data.cs" />
+    <Compile Include="Forms\BuyFormo.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BuyFormo.Designer.cs">
+      <DependentUpon>BuyFormo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
