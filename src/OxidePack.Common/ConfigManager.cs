@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using SapphireEngine;
@@ -12,6 +13,13 @@ namespace OxidePack
     {
         
     }
+    
+    [AttributeUsage(AttributeTargets.Field)]
+    public class ConfigLoadedEventAttribute : Attribute
+    {
+        
+    }
+    
     public class ConfigManager : SapphireType
     {
         private Type m_ConfigType;
@@ -64,7 +72,8 @@ namespace OxidePack
                 ConsoleSystem.LogError("[ConfigManager] Invalid config!\nDetails: "+e.Message);
                 return;
             }
-            foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public))
+            foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f=>f.IsLiteral == false))
             {
                 if (config.ContainsKey(field.Name))
                 {
@@ -76,9 +85,11 @@ namespace OxidePack
                 }
             }
 
-            m_ConfigType.GetEvent("OnConfigLoaded", BindingFlags.Public | BindingFlags.Static)
-                ?.GetRaiseMethod()
-                .Invoke(null, new object[0]);
+            foreach (var action in m_ConfigType.GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(p=> p.GetCustomAttribute<ConfigLoadedEventAttribute>() != null))
+            {
+                (action.GetValue(null) as Action)?.Invoke();
+            }
             
             Write();
             if (newFiels.Count > 0)
@@ -96,7 +107,8 @@ namespace OxidePack
             }
             
             JObject config = new JObject();
-            foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public))
+            foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f=>f.IsLiteral == false))
             {
                 config[field.Name] = JToken.FromObject(field.GetValue(null));
             }
