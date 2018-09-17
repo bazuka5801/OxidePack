@@ -13,7 +13,7 @@ namespace OxidePack.Server.App
         private BaseServer Server;
         public override void OnAwake()
         {
-            this.AddType<ConfigManager>();
+            this.AddType<ConfigManager>().RunWatcher();
             this.Initialize();
             ConsoleSystem.OnConsoleInput += OnConsoleCommand;
         }
