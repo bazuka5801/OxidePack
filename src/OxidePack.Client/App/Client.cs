@@ -46,7 +46,7 @@ namespace OxidePack.Client.App
         #region [Method] OnRequestUserInformation
         public void OnRequestUserInformation()
         {
-            AuthForm.UpdateStatus("(3/3) Authentication...");
+            MainForm.UpdateStatus("(3/3) Authentication...");
             using (NetPacket packet = new NetPacket())
             {
                 packet.WritePackketID(PacketType.GiveUserInformation);
@@ -64,10 +64,12 @@ namespace OxidePack.Client.App
         {
             if (string.IsNullOrEmpty(result) == false)
             {
-                AuthForm.UpdateStatus($"(3/3) Auth error: {result}");
+                MainForm.UpdateStatus($"(3/3) Auth error: {result}");
+                MainForm.UpdateProgressBar(value: 3, max: 3);
                 return;
             }
-            AuthForm.UpdateStatus($"Authenticated!");
+            MainForm.UpdateStatus($"Authenticated!");
+            MainForm.UpdateProgressBar(value: 0);
             ConsoleSystem.Log("Authed!");
         }
         #endregion
@@ -101,11 +103,12 @@ namespace OxidePack.Client.App
                 if (_needReconnect)
                 {
                     _needReconnect = false;
-                    AuthForm.UpdateStatus("(2/3) Connecting to server...");
+                    MainForm.UpdateStatus("(2/3) Connecting to server...");
+                    MainForm.UpdateProgressBar(value: 2, max: 3, ProgressBarStyle.Continuous);
                     Connect();
                 }
             }
-            AuthForm.UpdateStatus("Connection Failed - Unresponsive");
+            MainForm.UpdateStatus("Connection Failed - Unresponsive");
         }
     }
 }

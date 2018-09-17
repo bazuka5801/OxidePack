@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\oxidepack.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <Win32Resource>
@@ -59,11 +60,13 @@
     <Compile Include="App\Client.cs" />
     <Compile Include="App\Config.cs" />
     <Compile Include="Data\OxidePack.Data.cs" />
-    <Compile Include="Forms\AuthForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AuthForm.Designer.cs">
-      <DependentUpon>AuthForm.cs</DependentUpon>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +78,11 @@
     <Compile Include="System\MachineIdentificator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\AuthForm.resx">
-      <DependentUpon>AuthForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\BuyFormo.resx">
+      <DependentUpon>BuyFormo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -91,6 +97,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnCopy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnOpen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnOpenFolder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
