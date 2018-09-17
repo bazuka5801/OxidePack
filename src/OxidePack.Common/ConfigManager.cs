@@ -8,16 +8,15 @@ using SapphireEngine;
 
 namespace OxidePack
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ConfigAttribute : Attribute
+    public class BaseConfig
     {
-        
-    }
-    
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ConfigLoadedEventAttribute : Attribute
-    {
-        
+        public static event Action OnConfigLoaded;
+        public static bool IsLoaded;
+
+        internal static void FireOnConfigLoaded()
+        {
+            OnConfigLoaded?.Invoke();
+        }
     }
     
     public class ConfigManager : SapphireType
@@ -28,11 +27,15 @@ namespace OxidePack
         public override void OnAwake()
         {
             m_ConfigType = FindConfigType();
-            Watch();
             Load();
         }
 
-        public void Watch()
+        public override void OnDestroy()
+        {
+            Write();
+        }
+
+        public void RunWatcher()
         {
             if (m_ConfigWatcher != null)
             {
@@ -41,6 +44,15 @@ namespace OxidePack
             }
             m_ConfigWatcher = new FSWatcher(AppDomain.CurrentDomain.BaseDirectory, "config.json");
             m_ConfigWatcher.Subscribe(OnConfigChanged);
+        }
+
+        public void DisableWatcher()
+        {
+            if (m_ConfigWatcher != null)
+            {
+                m_ConfigWatcher.Close();
+                m_ConfigWatcher = null;
+            }
         }
 
         private void OnConfigChanged(string obj)
@@ -84,12 +96,9 @@ namespace OxidePack
                     newFiels.Add($"{field.FieldType.Name} {field.Name}");
                 }
             }
-
-            foreach (var action in m_ConfigType.GetFields(BindingFlags.Public | BindingFlags.Static)
-                .Where(p=> p.GetCustomAttribute<ConfigLoadedEventAttribute>() != null))
-            {
-                (action.GetValue(null) as Action)?.Invoke();
-            }
+            
+            BaseConfig.IsLoaded = true;
+            BaseConfig.FireOnConfigLoaded();
             
             Write();
             if (newFiels.Count > 0)
@@ -97,6 +106,7 @@ namespace OxidePack
                 ConsoleSystem.LogWarning($"New fields in config:\n{string.Join("\n", newFiels)}");
             }
             ConsoleSystem.Log("Config reloaded!");
+
         }
 
         public void Write()
@@ -113,9 +123,11 @@ namespace OxidePack
                 config[field.Name] = JToken.FromObject(field.GetValue(null));
             }
 
-            m_ConfigWatcher.Enabled = false;
+            if (m_ConfigWatcher != null)
+                m_ConfigWatcher.Enabled = false;
             File.WriteAllText("config.json", config.ToString());
-            m_ConfigWatcher.Enabled = true;
+            if (m_ConfigWatcher != null)
+                m_ConfigWatcher.Enabled = true;
         }
 
         public Type FindConfigType()
@@ -125,8 +137,7 @@ namespace OxidePack
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    var configA = type.GetCustomAttribute(typeof(ConfigAttribute));
-                    if (configA != null)
+                    if (type.BaseType == typeof(BaseConfig))
                     {
                         if (configType != null)
                         {
