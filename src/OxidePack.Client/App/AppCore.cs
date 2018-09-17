@@ -1,4 +1,5 @@
 using System.Threading;
+using System.Windows.Forms;
 using OxidePack.Client.Forms;
 using SapphireEngine;
 
@@ -6,9 +7,16 @@ namespace OxidePack.Client.App
 {
     public class AppCore : SapphireType
     {
-        public static void Initialize()
+        public static MainForm AuthForm;
+        
+        public override void OnAwake()
         {
-            RunFramework();
+            RunUI();
+            this.AddType<ConfigManager>();
+        }
+
+        public static void ConnectToServer()
+        {
             RunClient();
         }
 
@@ -28,16 +36,19 @@ namespace OxidePack.Client.App
         }
         #endregion
         
-        #region [Methods] Framework
-        private static void RunFramework()
+        #region [Methods] UI
+        private static void RunUI()
         {
-            Thread frameworkThread = new Thread(FrameworkWorker) { Name = "Framework", IsBackground = true };
-            frameworkThread.Start();
+            Thread uiThread = new Thread(UIWorker) { Name = "UI", IsBackground = true };
+            uiThread.SetApartmentState(ApartmentState.STA);
+            uiThread.Start();
         }
 
-        private static void FrameworkWorker(object o)
+        private static void UIWorker(object o)
         {
-            Framework.Initialization<AppCore>(true);
+            Application.EnableVisualStyles();
+            Application.Run(AuthForm = new MainForm());
+            Framework.RunToMainThread(z => Framework.Quit(), null);
         }
         #endregion
     }
