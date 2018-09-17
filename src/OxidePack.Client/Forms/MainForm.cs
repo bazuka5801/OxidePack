@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OxidePack.Client.App;
+using OxidePack.Client.Core.MsBuildProject;
+using SapphireEngine;
 
 namespace OxidePack.Client.Forms
 {
@@ -20,7 +22,14 @@ namespace OxidePack.Client.Forms
         {
             Instance = this;
             InitializeComponent();
+            
             Config.OnConfigLoaded += LoadConfig;
+            if (Config.IsLoaded)
+            {
+                ConsoleSystem.Log("Config.IsLoaded!");
+                LoadConfig();
+            }
+            
             UpdateStatus("(1/3) Retrieving MachineID");
             UpdateProgressBar(style: ProgressBarStyle.Marquee);
             ThreadPool.QueueUserWorkItem(o =>
@@ -61,14 +70,14 @@ namespace OxidePack.Client.Forms
 
         private void SetSolutionFile(string file)
         {
-            Settings_lblSolutionFilePath.Text = Config.SolutionFile = file;
+            Settings_lblSolutionFilePath.Text = Config.SolutionFile = file;            
         }
 
         private void LoadConfig()
         {
             RunInMainThread(() =>
             {
-                SetSolutionFile(Config.SolutionFile); 
+                SetSolutionFile(Config.SolutionFile);
             });
         }
 
