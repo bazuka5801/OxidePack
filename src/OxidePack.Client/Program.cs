@@ -16,8 +16,20 @@ namespace OxidePack.Client
     {
         public static void Main(string[] args)
         {
+            if (KillIfStarted()) return;
             Framework.Initialization<AppCore>();
         }
+
+        static bool KillIfStarted()
+        {
+            if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location))
+                    .Count() > 1)
+            {
+                Process.GetCurrentProcess().Kill();
+                return true;
+            }
+
+            return false;
         }
     }
 }
