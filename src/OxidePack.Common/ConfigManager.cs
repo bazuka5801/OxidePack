@@ -75,6 +75,10 @@ namespace OxidePack
                     newFiels.Add($"{field.FieldType.Name} {field.Name}");
                 }
             }
+
+            m_ConfigType.GetEvent("OnConfigLoaded", BindingFlags.Public | BindingFlags.Static)
+                ?.GetRaiseMethod()
+                .Invoke(null, new object[0]);
             
             Write();
             if (newFiels.Count > 0)
