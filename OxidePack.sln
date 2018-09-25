@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\OxidePack.Client", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\OxidePack.Server", "src\OxidePack.Server\OxidePack.Server.csproj", "{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxidePack.CoreLib", "src\OxidePack.CoreLib\OxidePack.CoreLib.csproj", "{D9FFF35C-91BE-4070-B67C-D9B9B9B855F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA0FFD4-1493-48EB-86FD-C0D39E1A469D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9FFF35C-91BE-4070-B67C-D9B9B9B855F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9FFF35C-91BE-4070-B67C-D9B9B9B855F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9FFF35C-91BE-4070-B67C-D9B9B9B855F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9FFF35C-91BE-4070-B67C-D9B9B9B855F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

@@ -11,6 +11,7 @@ namespace OxidePack.Client.App
         
         public override void OnAwake()
         {
+            ConsoleSystem.IsOutputToFile = false;
             RunUI();
             this.AddType<ConfigManager>();
         }

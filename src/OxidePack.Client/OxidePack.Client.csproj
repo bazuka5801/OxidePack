@@ -1,128 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CF782426-DEC4-431C-A455-715EFB5D4062}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OxidePack.Client</RootNamespace>
-    <AssemblyName>OxidePack.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <LangVersion>7.2</LangVersion>
+    <OutputPath>..\..\build\client</OutputPath>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net462</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\build\client\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\build\client\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Win32Resource>
-    </Win32Resource>
-  </PropertyGroup>
+
   <ItemGroup>
+    <Reference Include="DepotDownloader.Lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\Dependencies\DepotDownloader.Lib\DepotDownloader.Lib.dll</HintPath>
+    </Reference>
     <Reference Include="Ether.Network, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\Dependencies\Ether.Network\Ether.Network.dll</HintPath>
     </Reference>
     <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\Dependencies\SapphireEngine\SapphireEngine.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="App\AppCore.cs" />
-    <Compile Include="App\Client.cs" />
-    <Compile Include="App\Config.cs" />
-    <Compile Include="Core\MsBuildProject\Solution.cs" />
-    <Compile Include="Core\MsBuildProject\CsProject.cs" />
-    <Compile Include="Data\OxidePack.Data.cs" />
-    <Compile Include="Forms\BuyFormo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BuyFormo.Designer.cs">
-      <DependentUpon>BuyFormo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="System\MachineIdentificator.cs" />
+    <PackageReference Include="FubuCsProjFile" Version="1.9.0.229" />
+    <PackageReference Include="ILRepack.Lib" Version="2.0.16" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+    <PackageReference Include="System.Management" Version="4.5.0" />
+    <PackageReference Include="TreeViewAdv" Version="1.7.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Forms\BuyFormo.resx">
-      <DependentUpon>BuyFormo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj">
-      <Project>{12b9e389-7ebf-4617-915e-62a961f213ac}</Project>
-      <Name>OxidePack.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\btnCopy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\btnOpen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\btnOpenFolder.png" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-         
-  <Target Name="AfterBuild">
-    <Exec Command="$(SolutionDir)tools\ProtoBuf\compile.py client" WorkingDirectory="$(SolutionDir)tools\ProtoBuf" />
-  </Target>
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
+
 </Project>

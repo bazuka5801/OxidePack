@@ -43,7 +43,6 @@ namespace OxidePack
         /// </summary>
         /// <param name="directory"></param>
         /// <param name="filter"></param>
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private void LoadWatcher(string directory, string filter)
         {
             // Create the watcher

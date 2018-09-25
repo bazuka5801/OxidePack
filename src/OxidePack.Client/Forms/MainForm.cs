@@ -39,6 +39,7 @@ namespace OxidePack.Client.Forms
                 UpdateProgressBar(value: 2, max: 3);
                 AppCore.ConnectToServer();
             });
+            new DependenciesForm().Show();
         }
 
         private static void UpdateKey(string key)
@@ -78,6 +79,7 @@ namespace OxidePack.Client.Forms
             RunInMainThread(() =>
             {
                 SetSolutionFile(Config.SolutionFile);
+                Solution solution = new Solution(Config.SolutionFile);
             });
         }
 

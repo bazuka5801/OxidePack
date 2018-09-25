@@ -43,10 +43,10 @@
             this.tpMain = new System.Windows.Forms.TabPage();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.Settings_pnlSolution = new System.Windows.Forms.Panel();
+            this.Settings_lblSolutionFile = new System.Windows.Forms.Label();
             this.Settings_btnSolutionOpen = new System.Windows.Forms.Button();
             this.Settings_lblSolutionFilePath = new System.Windows.Forms.Label();
             this.tpProfile = new System.Windows.Forms.TabPage();
-            this.Settings_lblSolutionFile = new System.Windows.Forms.Label();
             this.mStatus.SuspendLayout();
             this.pnlAuth.SuspendLayout();
             this.menuStrip.SuspendLayout();
@@ -214,6 +214,15 @@
             this.Settings_pnlSolution.Size = new System.Drawing.Size(431, 44);
             this.Settings_pnlSolution.TabIndex = 1;
             // 
+            // Settings_lblSolutionFile
+            // 
+            this.Settings_lblSolutionFile.Location = new System.Drawing.Point(3, 10);
+            this.Settings_lblSolutionFile.Name = "Settings_lblSolutionFile";
+            this.Settings_lblSolutionFile.Size = new System.Drawing.Size(129, 24);
+            this.Settings_lblSolutionFile.TabIndex = 2;
+            this.Settings_lblSolutionFile.Text = "Solution File:";
+            this.Settings_lblSolutionFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // Settings_btnSolutionOpen
             // 
             this.Settings_btnSolutionOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -248,15 +257,6 @@
             this.tpProfile.Text = "Profile";
             this.tpProfile.UseVisualStyleBackColor = true;
             // 
-            // Settings_lblSolutionFile
-            // 
-            this.Settings_lblSolutionFile.Location = new System.Drawing.Point(3, 10);
-            this.Settings_lblSolutionFile.Name = "Settings_lblSolutionFile";
-            this.Settings_lblSolutionFile.Size = new System.Drawing.Size(129, 24);
-            this.Settings_lblSolutionFile.TabIndex = 2;
-            this.Settings_lblSolutionFile.Text = "Solution File:";
-            this.Settings_lblSolutionFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -270,11 +270,9 @@
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Oxide Pack";
-            this.TopMost = true;
             this.mStatus.ResumeLayout(false);
             this.mStatus.PerformLayout();
             this.pnlAuth.ResumeLayout(false);

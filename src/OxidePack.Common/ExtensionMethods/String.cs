@@ -27,5 +27,7 @@ namespace OxidePack
                 return shaM.ComputeHash(data).ToHexString();
             }
         }
+
+        public static string NormalizePath(this string path) => path.Replace('/', '\\');
     }
 }

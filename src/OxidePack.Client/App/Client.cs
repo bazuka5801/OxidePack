@@ -23,8 +23,8 @@ namespace OxidePack.Client.App
             this.Configuration.TimeOut = 1000;
         }
 
-        
-        
+
+        #region [Method] HandleMessage
         public override void HandleMessage(INetPacketStream packet)
         {
             var msgType = packet.ReadPacketID();
@@ -42,6 +42,7 @@ namespace OxidePack.Client.App
                     break;
             }
         }
+        #endregion
 
         #region [Method] OnRequestUserInformation
         public void OnRequestUserInformation()
@@ -74,22 +75,29 @@ namespace OxidePack.Client.App
         }
         #endregion
 
+        #region [Method] OnConnected
         protected override void OnConnected()
         {
             ConsoleSystem.Log("Connected");
         }
+        #endregion
 
+        #region [Method] OnDisconnected
         protected override void OnDisconnected()
         {
             ConsoleSystem.Log("Disconnected");
             _needReconnect = true;
         }
-
+        #endregion
+        
+        #region [Method] OnSocketError
         protected override void OnSocketError(SocketError socketError)
         {
             ConsoleSystem.LogError($"[Client] SocketError: {socketError}");
         }
+        #endregion
 
+        #region [Method] WorkingLoop
         public void WorkingLoop()
         {
             Connect();
@@ -106,9 +114,14 @@ namespace OxidePack.Client.App
                     MainForm.UpdateStatus("(2/3) Connecting to server...");
                     MainForm.UpdateProgressBar(value: 2, max: 3, ProgressBarStyle.Continuous);
                     Connect();
+                    if (IsConnected == false)
+                    {
+                        MainForm.UpdateStatus("Failed connect to server");
+                        break;
+                    }
                 }
             }
-            MainForm.UpdateStatus("Connection Failed - Unresponsive");
         }
+        #endregion
     }
 }
