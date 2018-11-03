@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OxidePack.Server": {
+      "commandName": "Project",
+      "workingDirectory": "B:\\Work\\OxidePack\\build\\server"
+    }
+  }
+}
