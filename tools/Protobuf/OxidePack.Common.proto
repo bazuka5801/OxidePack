@@ -4,3 +4,27 @@ message UserInformation {
 	required string      key = 1;
 	required string username = 2;
 }
+
+message GeneratedFileRequest {
+	required string pluginname = 1;
+	repeated string    modules = 2;
+}
+message GeneratedFileResponse {
+	required string pluginname = 1;
+	required string    content = 2;
+}
+
+message BuildRequest {
+	required BuildOptions options = 1;
+	repeated   SourceFile sources = 2;
+}
+
+message BuildOptions {
+	required string name = 1;
+}
+
+message SourceFile {
+	required string filename = 1;
+	required string  content = 2;
+	required string   sha256 = 3;
+}
