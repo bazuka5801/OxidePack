@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <OutputType>Exe</OutputType>
-    <OutputPath>..\..\build\server</OutputPath>
+    <OutputPath>..\..\build\server\bin</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
