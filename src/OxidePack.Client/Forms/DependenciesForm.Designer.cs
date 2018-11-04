@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DependenciesForm));
             this.tvDependencies = new Aga.Controls.Tree.TreeViewAdv();
             this.treeColumn1 = new Aga.Controls.Tree.TreeColumn();
             this.treeColumn2 = new Aga.Controls.Tree.TreeColumn();
@@ -36,9 +35,10 @@
             this._nodeCheckBox = new Aga.Controls.Tree.NodeControls.NodeCheckBox();
             this._nodeIcon = new Aga.Controls.Tree.NodeControls.NodeStateIcon();
             this._nodeTextBox = new Aga.Controls.Tree.NodeControls.NodeTextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnApply = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.cbBundle = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +62,7 @@
             this.tvDependencies.NodeControls.Add(this._nodeIcon);
             this.tvDependencies.NodeControls.Add(this._nodeTextBox);
             this.tvDependencies.SelectedNode = null;
-            this.tvDependencies.Size = new System.Drawing.Size(264, 241);
+            this.tvDependencies.Size = new System.Drawing.Size(264, 222);
             this.tvDependencies.TabIndex = 1;
             this.tvDependencies.Text = "treeViewAdv1";
             // 
@@ -107,25 +107,26 @@
             this._nodeTextBox.LeftMargin = 3;
             this._nodeTextBox.ParentColumn = null;
             // 
-            // button1
+            // btnApply
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.ForeColor = System.Drawing.Color.Green;
-            this.button1.Location = new System.Drawing.Point(5, 4);
-            this.button1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 40);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Apply";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnApply.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnApply.ForeColor = System.Drawing.Color.Green;
+            this.btnApply.Location = new System.Drawing.Point(5, 4);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.btnApply.Name = "btnApply";
+            this.btnApply.Size = new System.Drawing.Size(127, 40);
+            this.btnApply.TabIndex = 2;
+            this.btnApply.Text = "Apply";
+            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.button2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.button1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnCancel, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnApply, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(5, 258);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -134,27 +135,38 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(274, 48);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // button2
+            // btnCancel
             // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button2.ForeColor = System.Drawing.Color.Maroon;
-            this.button2.Location = new System.Drawing.Point(142, 4);
-            this.button2.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(127, 40);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCancel.ForeColor = System.Drawing.Color.Maroon;
+            this.btnCancel.Location = new System.Drawing.Point(142, 4);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(127, 40);
+            this.btnCancel.TabIndex = 3;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // cbBundle
+            // 
+            this.cbBundle.AutoSize = true;
+            this.cbBundle.Location = new System.Drawing.Point(10, 233);
+            this.cbBundle.Name = "cbBundle";
+            this.cbBundle.Size = new System.Drawing.Size(83, 22);
+            this.cbBundle.TabIndex = 4;
+            this.cbBundle.Text = "Bundle";
+            this.cbBundle.UseVisualStyleBackColor = true;
             // 
             // DependenciesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 311);
+            this.Controls.Add(this.cbBundle);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.tvDependencies);
             this.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -164,6 +176,7 @@
             this.Text = "Dependencies Manager";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -175,8 +188,9 @@
         private Aga.Controls.Tree.NodeControls.NodeCheckBox _nodeCheckBox;
         private Aga.Controls.Tree.NodeControls.NodeStateIcon _nodeIcon;
         private Aga.Controls.Tree.NodeControls.NodeTextBox _nodeTextBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox cbBundle;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

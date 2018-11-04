@@ -1,11 +1,14 @@
+using System;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ether.Network.Client;
 using Ether.Network.Packets;
 using OxidePack.Client.Forms;
 using OxidePack.Data;
 using SapphireEngine;
+using SilentOrbit.ProtocolBuffers;
 
 namespace OxidePack.Client.App
 {
@@ -27,19 +30,47 @@ namespace OxidePack.Client.App
         #region [Method] HandleMessage
         public override void HandleMessage(INetPacketStream packet)
         {
-            var msgType = packet.ReadPacketID();
+            var stream = (NetPacket) packet;
+            var msgType = stream.ReadPacketID();
             switch (msgType)
             {
                 case PacketType.RequestUserInformation:
                     OnRequestUserInformation();
                     break;
                 case PacketType.GiveUserInformationResult:
-                    string result = packet.Read<string>();
+                    string result = stream.Read<string>();
                     OnGiveUserInformationResult(result);
+                    break;
+                case PacketType.RPCMessage:
+                    var rpcmessagetype = (RPCMessageType) stream.Read<UInt32>();
+                    HandleRPCMessage(rpcmessagetype, stream);
                     break;
                 default:
                     ConsoleSystem.LogError($"{this} sent invalid message");
                     break;
+            }
+        }
+        #endregion
+
+        #region [Method] HandleRPCMessage
+        public virtual void HandleRPCMessage(RPCMessageType type, NetPacket stream)
+        {
+            
+        }
+        #endregion
+
+        #region [Method] SendRPC
+        public void SendRPC(RPCMessageType type, params IProto[] args)
+        {
+            using (NetPacket packet = new NetPacket())
+            {
+                packet.WritePackketID(PacketType.RPCMessage);
+                packet.Write((uint)type);
+                for (var i = 0; i < args.Length; i++)
+                {
+                    args[i].WriteToStream(packet);
+                }
+                Send(packet);
             }
         }
         #endregion
@@ -71,6 +102,7 @@ namespace OxidePack.Client.App
             }
             MainForm.UpdateStatus($"Authenticated!");
             MainForm.UpdateProgressBar(value: 0);
+            Task.Run(MainForm.Instance.CheckForUpdates);
             ConsoleSystem.Log("Authed!");
         }
         #endregion

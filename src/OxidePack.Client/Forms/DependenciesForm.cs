@@ -1,20 +1,38 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using OxidePack.Client.Forms.Components;
 
 namespace OxidePack.Client.Forms
 {
+    public class DependenciesModel
+    {
+        public List<string> SelectedFiles;
+        public Boolean Bundle;
+        public Boolean Changed = false;
+    }
+
     public partial class DependenciesForm : Form
     {
         private DependencyTreeModel _model;
+        private DependenciesModel _formModel;
         
-        public DependenciesForm()
+        public DependenciesForm(DependenciesModel formModel)
         {
             InitializeComponent();
             InitTree();
+            ApplyModel(formModel);
         }
 
-        private string Dir = ".temp";
+        public void ApplyModel(DependenciesModel formModel)
+        {
+            _formModel = formModel;
+            _model.Load(formModel.SelectedFiles);
+            cbBundle.Checked = formModel.Bundle;
+        }
+
+        private string Dir = ".references-cache";
         
         public void InitTree()
         {
@@ -25,69 +43,20 @@ namespace OxidePack.Client.Forms
             _model = new DependencyTreeModel(Dir);
             tvDependencies.Model = _model;
         }
-        
-        
-        
-        
-        // Updates all child tree nodes recursively.
-        private void CheckAllChildNodes( TreeNode treeNode, bool nodeChecked )
+
+        private void btnApply_Click(object sender, System.EventArgs e)
         {
-            foreach (TreeNode node in treeNode.Nodes)
-            {
-                node.Checked = nodeChecked;
-                if (node.Nodes.Count > 0)
-                {
-                    // If the current node has child nodes, call the CheckAllChildsNodes method recursively.
-                    this.CheckAllChildNodes(node, nodeChecked);
-                }
-            }
+            this._formModel.Bundle = cbBundle.Checked;
+            this._formModel.SelectedFiles = _model.GetSelectedFiles();
+            this._formModel.Changed = true;
+            this.Close();
         }
 
-        // Updates all parent tree nodes recursively.
-        private void CheckAllParentNodes( TreeNode treeNode, bool nodeChecked )
-        {
-            TreeNode pNode = treeNode.Parent;
-            while (pNode != null)
-            {
-                if (nodeChecked)
-                {
-                    pNode.Checked = true;
-                }
-                else
-                {
-                    // If any child checked then node checked
-                    bool value = false;
-                    foreach (TreeNode node in pNode.Nodes)
-                    {
-                        if (node.Checked)
-                        {
-                            value = true;
-                            break;
-                        }
-                    }
-                    pNode.Checked = value;
-                }
-                pNode = pNode.Parent;
-            }
-        }
 
-        private void tvDependencies_AfterCheck( object sender, TreeViewEventArgs e )
-        {
-            // The code only executes if the user caused the checked state to change.
-            if (e.Action != TreeViewAction.Unknown)
-            {
-                tvDependencies.BeginUpdate();
-                if (e.Node.Nodes.Count > 0)
-                {
-                    this.CheckAllChildNodes(e.Node, e.Node.Checked);
-                }
-                this.CheckAllParentNodes(e.Node, e.Node.Checked);
-                tvDependencies.EndUpdate();
-            }
-        }
 
-        private void tvDependencies_BeforeCheck( object sender, TreeViewCancelEventArgs e )
+        private void btnCancel_Click(object sender, System.EventArgs e)
         {
+            this.Close();
         }
     }
 }

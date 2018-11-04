@@ -50,32 +50,66 @@ namespace OxidePack.Client.Forms.Components
         {
         }
 
-        private CheckState _state = CheckState.Unchecked;
+        protected CheckState _state = CheckState.Unchecked;
         public override CheckState CheckState
         {
             get
             {
                 return _state;
-                bool any = false, all = true;
-                foreach (var p in Nodes)
-                {
-                    if (p.CheckState != CheckState.Unchecked)
-                    {
-                        all = false;
-                    }
-                    else
-                    {
-                        any = true;
-                    }
-                }
-
-                if (all)
-                    return CheckState.Checked;
-                if (any)
-                    return CheckState.Indeterminate;
-                return CheckState.Unchecked;
             }
-            set => _state = value;
+            set
+            {
+                _state = value;
+                if (_state == CheckState.Checked)
+                {
+                    if (Parent != default)
+                    {
+                        var parent = Parent;
+                        while (string.IsNullOrEmpty(parent.Text) == false)
+                        {
+                            if (parent.Nodes.All(p => p.CheckState == CheckState.Unchecked))
+                                ((DependencyNode)parent)._state = CheckState.Unchecked;
+                            else if (parent.Nodes.All(p => p.CheckState == CheckState.Checked))
+                                ((DependencyNode) parent)._state = CheckState.Checked;
+                            else
+                                ((DependencyNode) parent)._state = CheckState.Indeterminate;
+                            parent = parent.Parent;
+                        }
+                    }
+                    foreach (var node in base.Nodes)
+                        node.CheckState = CheckState.Checked;
+                }
+                else if (_state == CheckState.Unchecked)
+                {
+//                    if (Parent != default)
+//                        Parent.CheckState = CheckState.Indeterminate;
+                    if (Parent != default)
+                    {
+                        var parent = Parent;
+                        while (string.IsNullOrEmpty(parent.Text) == false)
+                        {
+                            if (parent.Nodes.All(p => p.CheckState == CheckState.Unchecked))
+                                ((DependencyNode)parent)._state = CheckState.Unchecked;
+                            else if (parent.Nodes.All(p => p.CheckState == CheckState.Checked))
+                                ((DependencyNode) parent)._state = CheckState.Checked;
+                            else
+                                ((DependencyNode) parent)._state = CheckState.Indeterminate;
+                            parent = parent.Parent;
+                        }
+                    }
+                    foreach (var node in base.Nodes)
+                        node.CheckState = CheckState.Unchecked;
+                }
+                else if (_state == CheckState.Indeterminate)
+                {
+                    if (base.Nodes == null || base.Nodes.Count == 0)
+                        CheckState = CheckState.Unchecked;
+                    else if (base.Nodes.All(p => p.CheckState == CheckState.Unchecked))
+                        _state = CheckState.Unchecked;
+                    else if (base.Nodes.All(p => p.CheckState == CheckState.Checked))
+                        CheckState = CheckState.Unchecked;
+                }
+            }
         }
     }
 }

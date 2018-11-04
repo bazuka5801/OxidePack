@@ -12,8 +12,9 @@ namespace OxidePack.Client.App
         public override void OnAwake()
         {
             ConsoleSystem.IsOutputToFile = false;
-            RunUI();
             this.AddType<ConfigManager>();
+            OPClientCore.Init();
+            RunUI();
         }
 
         public static void ConnectToServer()
@@ -30,7 +31,7 @@ namespace OxidePack.Client.App
 
         private static void ClientWorker(object o)
         {
-            using (var client = new Client(Config.Host, Config.Port, Config.BufferSize))
+            using (var client = new OPClient(Config.Host, Config.Port, Config.BufferSize))
             {
                 client.WorkingLoop();
             }

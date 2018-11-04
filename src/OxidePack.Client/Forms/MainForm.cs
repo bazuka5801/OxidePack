@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OxidePack.Client.App;
 using OxidePack.Client.Core.MsBuildProject;
+using OxidePack.Client.Core.OxideDownloader;
+using OxidePack.Data;
 using SapphireEngine;
+using DepotDownloader = DepotDownloader.DepotDownloader;
+using Timer = SapphireEngine.Functions.Timer;
 
 namespace OxidePack.Client.Forms
 {
@@ -39,7 +45,17 @@ namespace OxidePack.Client.Forms
                 UpdateProgressBar(value: 2, max: 3);
                 AppCore.ConnectToServer();
             });
-            new DependenciesForm().Show();
+            var form = new DependenciesModel()
+            {
+                Bundle = Config.Dependencies.Bundle,
+                SelectedFiles = Config.Dependencies.SelectedFiles
+            };
+            new DependenciesForm(form).ShowDialog();
+            if (form.Changed)
+            {
+                Config.Dependencies.Bundle = form.Bundle;
+                Config.Dependencies.SelectedFiles = form.SelectedFiles;
+            }
         }
 
         private static void UpdateKey(string key)
@@ -51,10 +67,12 @@ namespace OxidePack.Client.Forms
             });
         }
 
+        static string currentStatus = "";
         public static void UpdateStatus(string text)
         {
             RunInMainThread(() =>
             {
+                currentStatus = text;
                 Instance.lblStatus.Text = $"Status: {text}";
             });
         }
@@ -71,7 +89,8 @@ namespace OxidePack.Client.Forms
 
         private void SetSolutionFile(string file)
         {
-            Settings_lblSolutionFilePath.Text = Config.SolutionFile = file;            
+            Settings_lblSolutionFilePath.Text = Config.SolutionFile = file;
+            OPClientCore.SetSolution(file);
         }
 
         private void LoadConfig()
@@ -79,9 +98,79 @@ namespace OxidePack.Client.Forms
             RunInMainThread(() =>
             {
                 SetSolutionFile(Config.SolutionFile);
-                Solution solution = new Solution(Config.SolutionFile);
+//                Solution solution = (Config.SolutionFile);
+                ReloadStatus();
             });
         }
+
+        #region [Method] Reload Status
+        public static void ReloadStatus()
+        {
+            if (Instance.InvokeRequired)
+            {
+                Instance.Invoke((Action) ReloadStatus);
+                return;
+            }
+
+            Instance.lblOxidePackCurrentVersion.Text = Config.Version;
+            Instance.lblRustCurrentVersion.Text      = Config.RustVersion;
+            Instance.lblOxideCurrentVersion.Text     = Config.OxideVersion;
+        }
+        #endregion
+
+        #region [Method] CheckForUpdates
+        public async Task CheckForUpdates()
+        {
+            var statusBefore = currentStatus;
+            UpdateStatus("Checking rust update...");
+            UpdateProgressBar(33);
+            var RustAvailableVersion = OPClientCore.GetRustAvailableVersion();
+            RunInMainThread(() => lblRustAvailableVersion.Text = RustAvailableVersion);
+            if (Config.RustVersion != RustAvailableVersion)
+            {
+                if (MessageBox.Show($"Rust update available! ({RustAvailableVersion})\nUpdate?", "Rust Update", MessageBoxButtons.YesNo) ==
+                    DialogResult.Yes)
+                {
+                    await OPClientCore.DownloadRustDLLs(null, null);
+                }
+            }
+            UpdateStatus("Checking oxide update...");
+            UpdateProgressBar(66);
+            var OxideAvailableVersion = OPClientCore.GetOxideAvailableVersion();
+            RunInMainThread(() => lblOxideAvailableVersion.Text = OxideAvailableVersion);
+            if (Config.OxideVersion != OxideAvailableVersion)
+            {
+                if (MessageBox.Show($"Oxide update available! ({OxideAvailableVersion})\nUpdate?", "Oxide Update", MessageBoxButtons.YesNo) ==
+                    DialogResult.Yes)
+                {
+                    await DownloadOxide();
+                }
+            }
+            UpdateStatus("Check for updates completed!");
+            UpdateProgressBar(100);
+            Timer.SetTimeout(() => {
+                UpdateStatus(statusBefore);
+                UpdateProgressBar();
+            }, 5f);
+        }
+        #endregion
+
+        #region [Method] DownloadOxide
+        public async Task DownloadOxide()
+        {
+            var statusBefore = currentStatus;
+            await OPClientCore.DownloadOxideDLLs((text, percent) =>
+            {
+                UpdateStatus(text);
+                UpdateProgressBar(percent);
+            }, () =>
+            {
+                UpdateStatus("Download completed!");
+                UpdateProgressBar();
+                Timer.SetTimeout(() => UpdateStatus(statusBefore), 5f);
+            });
+        }
+        #endregion
 
         #region [Methods] UI Handlers
         
@@ -95,17 +184,118 @@ namespace OxidePack.Client.Forms
         #region [Method] Settings_btnSolutionOpen_Click
         private void Settings_btnSolutionOpen_Click( object sender, EventArgs e )
         {
-            using (var openFileDialog = new OpenFileDialog() {CheckFileExists = true, DefaultExt = ".sln", Filter = "Solution File|*.sln"})
+            using (var openFileDialog = new OpenFileDialog()
+            {
+                CheckFileExists = true,
+                DefaultExt = ".sln",
+                Filter = "Solution File|*.sln"
+            })
             {
                 switch (openFileDialog.ShowDialog())
                 {
                     case DialogResult.OK:
+                        var solution = Solution.Load(openFileDialog.FileName);
                         SetSolutionFile(openFileDialog.FileName);
                         break;
                     default:
                         return;
                 }
             }
+        }
+        #endregion
+
+        #region btnSendPluginRequest_Click
+        private void btnSendPluginRequest_Click(object sender, System.EventArgs e)
+        {
+            var pluginContent = File.ReadAllText("plugin.cs");
+            var bRequest = new BuildRequest()
+            {
+                sources = new List<SourceFile>()
+                {
+                    new SourceFile()
+                        {filename = "plugin.cs", content = pluginContent, sha256 = pluginContent.ToSHA512()}
+                },
+                options = new BuildOptions()
+                {
+                    name = "plugin"
+                }
+            };
+            Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
+        }
+        #endregion
+
+        #region btnCreateNewSolution_Click
+        private void btnCreateNewSolution_Click(object sender, System.EventArgs e)
+        {
+            using (SaveFileDialog sFileDialog = new SaveFileDialog()
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = ".sln",
+                Filter = "Solution File|*.sln"
+            })
+            {
+                switch (sFileDialog.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        var solution = Solution.Create(sFileDialog.FileName);
+                        SetSolutionFile(solution.Filename);
+                        OPClientCore.SetSolution(solution);
+                        break;
+                    default:
+                        return;
+                }
+            }
+        }
+        #endregion
+
+        #region btnAddProject_Click
+        private void btnAddProject_Click(object sender, System.EventArgs e)
+        {
+            using (var openFileDialog = new SaveFileDialog()
+            {
+                DefaultExt = ".csproj",
+                Filter = "C# Project|*.csproj"
+            })
+            {
+                switch (openFileDialog.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        OPClientCore.AddProject(openFileDialog.FileName);
+                        break;
+                    default:
+                        return;
+                }
+            }
+        }
+        #endregion
+
+
+        #region btnAddReference_Click
+        private void btnAddReference_Click(object sender, System.EventArgs e)
+        {
+            OPClientCore.Solution.TestReference();
+        }
+        #endregion
+
+        #region btnRustUpdate_Click
+        private void btnRustUpdate_Click(object sender, System.EventArgs e)
+        {
+            OPClientCore.DownloadRustDLLs(null, null);
+        }
+        #endregion
+
+        #region btnOxideUpdate_Click
+        private async void btnOxideUpdate_Click(object sender, System.EventArgs e)
+        {
+            await DownloadOxide();
+        }
+        #endregion
+
+        #region btnCheckForUpdates_Click
+        private async void btnCheckForUpdates_Click(object sender, System.EventArgs e)
+        {
+            await CheckForUpdates();
         }
         #endregion
         
@@ -123,6 +313,13 @@ namespace OxidePack.Client.Forms
             }
 
             action();
+        }
+        #endregion
+
+        #region [Method] ShowMessage
+        public static void ShowMessage(string message, string caption)
+        {
+            RunInMainThread(() => MessageBox.Show(message, caption));
         }
         #endregion
 
