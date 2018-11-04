@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SapphireEngine;
 
@@ -42,7 +43,7 @@ namespace OxidePack
                 m_ConfigWatcher.Close();
                 m_ConfigWatcher = null;
             }
-            m_ConfigWatcher = new FSWatcher(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            m_ConfigWatcher = new FSWatcher(Directory.GetCurrentDirectory(), "config.json");
             m_ConfigWatcher.Subscribe(OnConfigChanged);
         }
 
