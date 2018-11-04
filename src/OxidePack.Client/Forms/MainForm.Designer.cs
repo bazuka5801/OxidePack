@@ -459,7 +459,7 @@
             this.btnRustUpdate.Size = new System.Drawing.Size(49, 32);
             this.btnRustUpdate.TabIndex = 13;
             this.btnRustUpdate.UseVisualStyleBackColor = true;
-            this.btnRustUpdate.Click += new System.EventHandler(this.btnRustUpdate_Click);
+            this.btnRustUpdate.Click += new System.EventHandler(this.btnRustUpdate_ClickAsync);
             // 
             // btnCheckForUpdates
             // 
