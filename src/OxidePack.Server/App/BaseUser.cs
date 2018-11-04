@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using Ether.Network.Common;
 using Ether.Network.Packets;
+using OxidePack.CoreLib;
 using OxidePack.Data;
 using OxidePack.Server.App.Data;
 using SapphireEngine;
+using SilentOrbit.ProtocolBuffers;
 
 namespace OxidePack.Server.App
 {
-    public class User : NetUser
+    public class BaseUser : NetUser
     {
         static HashSet<string> ActiveUsers = new HashSet<string>();
         
@@ -17,17 +19,47 @@ namespace OxidePack.Server.App
         
         public override void HandleMessage(INetPacketStream stream)
         {
-            var packet = (NetPacket) stream;
-            var msgType = packet.ReadPacketID();
-            switch (msgType)
+            try
             {
-                case PacketType.GiveUserInformation:
-                    var uInfo = UserInformation.Deserialize(packet);
-                    OnGiveUserInformation(uInfo);
-                    break;
-                default:
-                    ConsoleSystem.LogError($"{this} sent invalid message");
-                    break;
+                var packet = (NetPacket) stream;
+                var msgType = packet.ReadPacketID();
+                switch (msgType)
+                {
+                    case PacketType.GiveUserInformation:
+                        var uInfo = UserInformation.Deserialize(packet);
+                        OnGiveUserInformation(uInfo);
+                        break;
+                    case PacketType.RPCMessage:
+                        var rpcmessagetype = (RPCMessageType)stream.Read<UInt32>();
+                        HandleRPCMessage(rpcmessagetype, packet);
+                        break;
+                    default:
+                        ConsoleSystem.LogError($"{this} sent invalid message");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+//                Server.DisconnectClient();
+                throw;
+            }
+        }
+
+        public virtual void HandleRPCMessage(RPCMessageType type, NetPacket stream)
+        {
+        }
+
+        public void SendRPC(RPCMessageType type, params IProto[] args)
+        {
+            using (NetPacket packet = new NetPacket())
+            {
+                packet.WritePackketID(PacketType.RPCMessage);
+                packet.Write((uint)type);
+                for (var i = 0; i < args.Length; i++)
+                {
+                    args[i].WriteToStream(packet);
+                }
+                Send(packet);
             }
         }
 

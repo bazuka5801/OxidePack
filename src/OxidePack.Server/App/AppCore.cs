@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using OxidePack.CoreLib;
 using OxidePack.Server.App.Data;
 using SapphireEngine;
 using Timer = SapphireEngine.Functions.Timer;
@@ -10,12 +13,13 @@ namespace OxidePack.Server.App
 {
     public class AppCore : SapphireType
     {
-        private BaseServer Server;
+        private OPServer Server;
         public override void OnAwake()
         {
             this.AddType<ConfigManager>().RunWatcher();
             this.Initialize();
             ConsoleSystem.OnConsoleInput += OnConsoleCommand;
+            ModuleMgr.Init();
         }
 
         public override void OnDestroy()
@@ -52,7 +56,7 @@ namespace OxidePack.Server.App
 
         private void ServerWorker(object o)
         {
-            using (Server = new BaseServer())
+            using (Server = new OPServer())
             {
                 Server.Start();
             }

@@ -1,7 +1,6 @@
 namespace OxidePack.Server.App
 {
-    public class OPServer : BaseServer
+    public class OPServer : BaseServer<OPUser>
     {
-        
     }
 }

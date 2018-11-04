@@ -1,10 +1,12 @@
 using System;
+using Ether.Network.Common;
 using Ether.Network.Server;
 using SapphireEngine;
 
 namespace OxidePack.Server.App
 {
-    public class BaseServer : NetServer<User>
+    public class BaseServer<T> : NetServer<T>
+        where T : BaseUser, new() 
     {
         public BaseServer()
         {
@@ -21,14 +23,14 @@ namespace OxidePack.Server.App
             ConsoleSystem.Log("Server is Ready");
         }
 
-        protected override void OnClientConnected(User user)
+        protected override void OnClientConnected(T baseUser)
         {
-            user.OnConnected();
+            baseUser.OnConnected();
         }
 
-        protected override void OnClientDisconnected(User user)
+        protected override void OnClientDisconnected(T baseUser)
         {
-            user.OnDisconnected();
+            baseUser.OnDisconnected();
         }
 
         protected override void OnError(Exception e)
