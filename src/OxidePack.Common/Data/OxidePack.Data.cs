@@ -23,4 +23,44 @@ namespace OxidePack.Data
 
     }
 
+    public partial class GeneratedFileRequest : IDisposable, Pool.IPooled, IProto
+    {
+        public string pluginname;
+
+        public List<string> modules;
+
+    }
+
+    public partial class GeneratedFileResponse : IDisposable, Pool.IPooled, IProto
+    {
+        public string pluginname;
+
+        public string content;
+
+    }
+
+    public partial class BuildRequest : IDisposable, Pool.IPooled, IProto
+    {
+        public OxidePack.Data.BuildOptions options;
+
+        public List<OxidePack.Data.SourceFile> sources;
+
+    }
+
+    public partial class BuildOptions : IDisposable, Pool.IPooled, IProto
+    {
+        public string name;
+
+    }
+
+    public partial class SourceFile : IDisposable, Pool.IPooled, IProto
+    {
+        public string filename;
+
+        public string content;
+
+        public string sha256;
+
+    }
+
 }

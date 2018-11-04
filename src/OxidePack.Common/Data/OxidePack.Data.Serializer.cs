@@ -313,4 +313,1588 @@ namespace OxidePack.Data
         #endregion
     }
 
+    public partial class GeneratedFileRequest
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(GeneratedFileRequest instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [string] pluginname
+            instance.pluginname = default(string);
+
+            // [string] modules
+            if (instance.modules != null)
+            {
+                List<string> insmodules = instance.modules;
+                Pool.FreeList<string>(ref insmodules);
+                instance.modules = insmodules;
+            }
+
+            Pool.Free<OxidePack.Data.GeneratedFileRequest>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileRequest Deserialize(Stream stream)
+        {
+            GeneratedFileRequest instance = Pool.Get<GeneratedFileRequest>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileRequest DeserializeLengthDelimited(Stream stream)
+        {
+            GeneratedFileRequest instance = Pool.Get<GeneratedFileRequest>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileRequest DeserializeLength(Stream stream, int length)
+        {
+            GeneratedFileRequest instance = Pool.Get<GeneratedFileRequest>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static GeneratedFileRequest Deserialize(byte[] buffer)
+        {
+            GeneratedFileRequest instance = Pool.Get<GeneratedFileRequest>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.GeneratedFileRequest Deserialize(byte[] buffer, OxidePack.Data.GeneratedFileRequest instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileRequest Deserialize(Stream stream, OxidePack.Data.GeneratedFileRequest instance)
+        {
+            if (instance.modules == null)
+                instance.modules = Pool.GetList<string>();
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.modules.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileRequest DeserializeLengthDelimited(Stream stream, OxidePack.Data.GeneratedFileRequest instance)
+        {
+            if (instance.modules == null)
+                instance.modules = Pool.GetList<string>();
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.modules.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileRequest DeserializeLength(Stream stream, int length, OxidePack.Data.GeneratedFileRequest instance)
+        {
+            if (instance.modules == null)
+                instance.modules = Pool.GetList<string>();
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.modules.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, GeneratedFileRequest instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.pluginname == null)
+                throw new ArgumentNullException("pluginname", "Required by proto specification.");
+            // Key for field: 1, LengthDelimited
+            stream.WriteByte(10);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.pluginname));
+            if (instance.modules != null)
+            {
+                foreach (var i2 in instance.modules)
+                {
+                    // Key for field: 2, LengthDelimited
+                    stream.WriteByte(18);
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(i2));
+                }
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(GeneratedFileRequest instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, GeneratedFileRequest instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, GeneratedFileRequest instance, GeneratedFileRequest previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.pluginname != previous.pluginname)
+            {
+                if (instance.pluginname == null)
+                    throw new ArgumentNullException("pluginname", "Required by proto specification.");
+                // Key for field: 1, LengthDelimited
+                stream.WriteByte(10);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.pluginname));
+            }
+            if (instance.modules != previous.modules)
+            {
+                if (instance.modules != null)
+                {
+                    foreach (var i2 in instance.modules)
+                    {
+                        // Key for field: 2, LengthDelimited
+                        stream.WriteByte(18);
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(i2));
+                    }
+                }
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, GeneratedFileRequest previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class GeneratedFileResponse
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(GeneratedFileResponse instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [string] pluginname
+            instance.pluginname = default(string);
+
+            // [string] content
+            instance.content = default(string);
+
+            Pool.Free<OxidePack.Data.GeneratedFileResponse>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileResponse Deserialize(Stream stream)
+        {
+            GeneratedFileResponse instance = Pool.Get<GeneratedFileResponse>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileResponse DeserializeLengthDelimited(Stream stream)
+        {
+            GeneratedFileResponse instance = Pool.Get<GeneratedFileResponse>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static GeneratedFileResponse DeserializeLength(Stream stream, int length)
+        {
+            GeneratedFileResponse instance = Pool.Get<GeneratedFileResponse>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static GeneratedFileResponse Deserialize(byte[] buffer)
+        {
+            GeneratedFileResponse instance = Pool.Get<GeneratedFileResponse>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.GeneratedFileResponse Deserialize(byte[] buffer, OxidePack.Data.GeneratedFileResponse instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileResponse Deserialize(Stream stream, OxidePack.Data.GeneratedFileResponse instance)
+        {
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileResponse DeserializeLengthDelimited(Stream stream, OxidePack.Data.GeneratedFileResponse instance)
+        {
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.GeneratedFileResponse DeserializeLength(Stream stream, int length, OxidePack.Data.GeneratedFileResponse instance)
+        {
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.pluginname = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, GeneratedFileResponse instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.pluginname == null)
+                throw new ArgumentNullException("pluginname", "Required by proto specification.");
+            // Key for field: 1, LengthDelimited
+            stream.WriteByte(10);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.pluginname));
+            if (instance.content == null)
+                throw new ArgumentNullException("content", "Required by proto specification.");
+            // Key for field: 2, LengthDelimited
+            stream.WriteByte(18);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(GeneratedFileResponse instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, GeneratedFileResponse instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, GeneratedFileResponse instance, GeneratedFileResponse previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.pluginname != previous.pluginname)
+            {
+                if (instance.pluginname == null)
+                    throw new ArgumentNullException("pluginname", "Required by proto specification.");
+                // Key for field: 1, LengthDelimited
+                stream.WriteByte(10);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.pluginname));
+            }
+            if (instance.content != previous.content)
+            {
+                if (instance.content == null)
+                    throw new ArgumentNullException("content", "Required by proto specification.");
+                // Key for field: 2, LengthDelimited
+                stream.WriteByte(18);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, GeneratedFileResponse previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class BuildRequest
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(BuildRequest instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [BuildOptions] options
+            if (instance.options != null)
+            {
+                instance.options.ResetToPool();
+                instance.options = null;
+            }
+
+            // [SourceFile] sources
+            if (instance.sources != null)
+            {
+                for (int i = 0; i < instance.sources.Count; i++)
+                {
+                    if (instance.sources[i] != null)
+                    {
+                        instance.sources[i].ResetToPool();
+                        instance.sources[i] = null;
+                    }
+                }
+                List<OxidePack.Data.SourceFile> inssources = instance.sources;
+                Pool.FreeList<OxidePack.Data.SourceFile>(ref inssources);
+                instance.sources = inssources;
+            }
+
+            Pool.Free<OxidePack.Data.BuildRequest>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildRequest Deserialize(Stream stream)
+        {
+            BuildRequest instance = Pool.Get<BuildRequest>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildRequest DeserializeLengthDelimited(Stream stream)
+        {
+            BuildRequest instance = Pool.Get<BuildRequest>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildRequest DeserializeLength(Stream stream, int length)
+        {
+            BuildRequest instance = Pool.Get<BuildRequest>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static BuildRequest Deserialize(byte[] buffer)
+        {
+            BuildRequest instance = Pool.Get<BuildRequest>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.BuildRequest Deserialize(byte[] buffer, OxidePack.Data.BuildRequest instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildRequest Deserialize(Stream stream, OxidePack.Data.BuildRequest instance)
+        {
+            if (instance.sources == null)
+                instance.sources = Pool.GetList<OxidePack.Data.SourceFile>();
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        if (instance.options == null)
+                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildRequest DeserializeLengthDelimited(Stream stream, OxidePack.Data.BuildRequest instance)
+        {
+            if (instance.sources == null)
+                instance.sources = Pool.GetList<OxidePack.Data.SourceFile>();
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        if (instance.options == null)
+                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildRequest DeserializeLength(Stream stream, int length, OxidePack.Data.BuildRequest instance)
+        {
+            if (instance.sources == null)
+                instance.sources = Pool.GetList<OxidePack.Data.SourceFile>();
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        if (instance.options == null)
+                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        // repeated
+                        instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, BuildRequest instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.options == null)
+                throw new ArgumentNullException("options", "Required by proto specification.");
+            // Key for field: 1, LengthDelimited
+            stream.WriteByte(10);
+            ﻿msField.SetLength(0);
+            OxidePack.Data.BuildOptions.Serialize(msField, instance.options);
+            // Length delimited byte array
+            uint length1 = (uint)msField.Length;
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            stream.Write(msField.GetBuffer(), 0, (int)length1);
+
+            if (instance.sources != null)
+            {
+                foreach (var i2 in instance.sources)
+                {
+                    // Key for field: 2, LengthDelimited
+                    stream.WriteByte(18);
+                    ﻿msField.SetLength(0);
+                    OxidePack.Data.SourceFile.Serialize(msField, i2);
+                    // Length delimited byte array
+                    uint length2 = (uint)msField.Length;
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+                    stream.Write(msField.GetBuffer(), 0, (int)length2);
+
+                }
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(BuildRequest instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, BuildRequest instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, BuildRequest instance, BuildRequest previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.options != previous.options)
+            {
+                if (instance.options == null)
+                    throw new ArgumentNullException("options", "Required by proto specification.");
+                // Key for field: 1, LengthDelimited
+                stream.WriteByte(10);
+                ﻿msField.SetLength(0);
+                OxidePack.Data.BuildOptions.SerializeDelta(msField, instance.options, previous.options);
+                // Length delimited byte array
+                uint length1 = (uint)msField.Length;
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                stream.Write(msField.GetBuffer(), 0, (int)length1);
+
+            }
+            if (instance.sources != previous.sources)
+            {
+                if (instance.sources != null)
+                {
+                    foreach (var i2 in instance.sources)
+                    {
+                        // Key for field: 2, LengthDelimited
+                        stream.WriteByte(18);
+                        ﻿msField.SetLength(0);
+                        OxidePack.Data.SourceFile.Serialize(msField, i2);
+                        // Length delimited byte array
+                        uint length2 = (uint)msField.Length;
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+                        stream.Write(msField.GetBuffer(), 0, (int)length2);
+
+                    }
+                }
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, BuildRequest previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class BuildOptions
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(BuildOptions instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [string] name
+            instance.name = default(string);
+
+            Pool.Free<OxidePack.Data.BuildOptions>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildOptions Deserialize(Stream stream)
+        {
+            BuildOptions instance = Pool.Get<BuildOptions>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildOptions DeserializeLengthDelimited(Stream stream)
+        {
+            BuildOptions instance = Pool.Get<BuildOptions>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static BuildOptions DeserializeLength(Stream stream, int length)
+        {
+            BuildOptions instance = Pool.Get<BuildOptions>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static BuildOptions Deserialize(byte[] buffer)
+        {
+            BuildOptions instance = Pool.Get<BuildOptions>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.BuildOptions Deserialize(byte[] buffer, OxidePack.Data.BuildOptions instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildOptions Deserialize(Stream stream, OxidePack.Data.BuildOptions instance)
+        {
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.name = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildOptions DeserializeLengthDelimited(Stream stream, OxidePack.Data.BuildOptions instance)
+        {
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.name = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.BuildOptions DeserializeLength(Stream stream, int length, OxidePack.Data.BuildOptions instance)
+        {
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.name = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, BuildOptions instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.name == null)
+                throw new ArgumentNullException("name", "Required by proto specification.");
+            // Key for field: 1, LengthDelimited
+            stream.WriteByte(10);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.name));
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(BuildOptions instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, BuildOptions instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, BuildOptions instance, BuildOptions previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.name != previous.name)
+            {
+                if (instance.name == null)
+                    throw new ArgumentNullException("name", "Required by proto specification.");
+                // Key for field: 1, LengthDelimited
+                stream.WriteByte(10);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.name));
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, BuildOptions previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class SourceFile
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(SourceFile instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [string] filename
+            instance.filename = default(string);
+
+            // [string] content
+            instance.content = default(string);
+
+            // [string] sha256
+            instance.sha256 = default(string);
+
+            Pool.Free<OxidePack.Data.SourceFile>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static SourceFile Deserialize(Stream stream)
+        {
+            SourceFile instance = Pool.Get<SourceFile>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static SourceFile DeserializeLengthDelimited(Stream stream)
+        {
+            SourceFile instance = Pool.Get<SourceFile>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static SourceFile DeserializeLength(Stream stream, int length)
+        {
+            SourceFile instance = Pool.Get<SourceFile>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static SourceFile Deserialize(byte[] buffer)
+        {
+            SourceFile instance = Pool.Get<SourceFile>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.SourceFile Deserialize(byte[] buffer, OxidePack.Data.SourceFile instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.SourceFile Deserialize(Stream stream, OxidePack.Data.SourceFile instance)
+        {
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.filename = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.sha256 = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.SourceFile DeserializeLengthDelimited(Stream stream, OxidePack.Data.SourceFile instance)
+        {
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.filename = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.sha256 = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.SourceFile DeserializeLength(Stream stream, int length, OxidePack.Data.SourceFile instance)
+        {
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 LengthDelimited
+                    case 10:
+                        instance.filename = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 2 LengthDelimited
+                    case 18:
+                        instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.sha256 = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, SourceFile instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.filename == null)
+                throw new ArgumentNullException("filename", "Required by proto specification.");
+            // Key for field: 1, LengthDelimited
+            stream.WriteByte(10);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.filename));
+            if (instance.content == null)
+                throw new ArgumentNullException("content", "Required by proto specification.");
+            // Key for field: 2, LengthDelimited
+            stream.WriteByte(18);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            if (instance.sha256 == null)
+                throw new ArgumentNullException("sha256", "Required by proto specification.");
+            // Key for field: 3, LengthDelimited
+            stream.WriteByte(26);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.sha256));
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(SourceFile instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, SourceFile instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, SourceFile instance, SourceFile previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.filename != previous.filename)
+            {
+                if (instance.filename == null)
+                    throw new ArgumentNullException("filename", "Required by proto specification.");
+                // Key for field: 1, LengthDelimited
+                stream.WriteByte(10);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.filename));
+            }
+            if (instance.content != previous.content)
+            {
+                if (instance.content == null)
+                    throw new ArgumentNullException("content", "Required by proto specification.");
+                // Key for field: 2, LengthDelimited
+                stream.WriteByte(18);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            }
+            if (instance.sha256 != previous.sha256)
+            {
+                if (instance.sha256 == null)
+                    throw new ArgumentNullException("sha256", "Required by proto specification.");
+                // Key for field: 3, LengthDelimited
+                stream.WriteByte(26);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.sha256));
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, SourceFile previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
 }
