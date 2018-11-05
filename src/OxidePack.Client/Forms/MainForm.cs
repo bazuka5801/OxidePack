@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OxidePack.Client.App;
+using OxidePack.Client.Core.ILMerger;
 using OxidePack.Client.Core.MsBuildProject;
 using OxidePack.Client.Core.OxideDownloader;
 using OxidePack.Data;
@@ -260,10 +261,43 @@ namespace OxidePack.Client.Forms
         #endregion
 
 
-        #region btnAddReference_Click
-        private void btnAddReference_Click(object sender, System.EventArgs e)
+        #region btnEditReference_Click
+        private void btnEditReference_Click(object sender, System.EventArgs e)
         {
-            OPClientCore.Solution.TestReference();
+            var project = OPClientCore.Solution.CsProjects[0];
+            var refsDir = Path.Combine(Directory.GetCurrentDirectory(), ".references-cache");
+            var form = new DependenciesModel()
+            {
+                Directory = refsDir,
+                Bundle = Config.Dependencies.Bundle,
+                SelectedFiles = project.ReferenceList
+            };
+            new DependenciesForm(form).ShowDialog();
+            if (form.Changed)
+            {
+                Config.Dependencies.Bundle = form.Bundle;
+                var addedRefs = form.SelectedFiles.Except(project.ReferenceList)
+                    .Select(filename => Path.Combine(refsDir, filename)).ToList();
+                var removedRefs = project.ReferenceList.Except(form.SelectedFiles).ToList();
+                if (form.Bundle == false)
+                {
+                    addedRefs.ForEach(project.AddReference);
+                    removedRefs.ForEach(project.RemoveReferenceByFile);
+                }
+                else
+                {
+                    if (Directory.Exists(".references-bundle") == false)
+                        Directory.CreateDirectory(".references-bundle");
+                    string outputFileName = Path.Combine(Directory.GetCurrentDirectory(), ".references-bundle",
+                        "bundle.dll");
+                    List<string> MergeFiles = form.SelectedFiles.Select(filename => Path.Combine(refsDir, filename)).ToList();
+                    MergeSession session = new MergeSession(refsDir, MergeFiles);
+                    session.Merge(outputFileName);
+
+                    project.ReferenceList.ToList().ForEach(project.RemoveReferenceByFile);
+                    project.AddReference(outputFileName);
+                }
+            }
         }
         #endregion
 

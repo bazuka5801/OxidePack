@@ -62,7 +62,7 @@
             this.btnCheckForUpdates = new System.Windows.Forms.Button();
             this.btnSendPluginRequest = new System.Windows.Forms.Button();
             this.tpSettings = new System.Windows.Forms.TabPage();
-            this.btnAddReference = new System.Windows.Forms.Button();
+            this.btnEditReference = new System.Windows.Forms.Button();
             this.btnAddProject = new System.Windows.Forms.Button();
             this.btnCreateNewSolution = new System.Windows.Forms.Button();
             this.Settings_pnlSolution = new System.Windows.Forms.Panel();
@@ -133,7 +133,7 @@
             this.lblStatus});
             this.mStatus.Location = new System.Drawing.Point(0, 451);
             this.mStatus.Name = "mStatus";
-            this.mStatus.Size = new System.Drawing.Size(569, 22);
+            this.mStatus.Size = new System.Drawing.Size(480, 22);
             this.mStatus.TabIndex = 5;
             this.mStatus.Text = "statusStrip1";
             // 
@@ -186,7 +186,7 @@
             this.msBuySubscription});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(569, 24);
+            this.menuStrip.Size = new System.Drawing.Size(480, 24);
             this.menuStrip.TabIndex = 7;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -217,7 +217,7 @@
             this.tbMain.Location = new System.Drawing.Point(0, 24);
             this.tbMain.Name = "tbMain";
             this.tbMain.SelectedIndex = 0;
-            this.tbMain.Size = new System.Drawing.Size(569, 427);
+            this.tbMain.Size = new System.Drawing.Size(480, 427);
             this.tbMain.TabIndex = 8;
             // 
             // tpMain
@@ -267,7 +267,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 47F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 49F));
             this.tableLayoutPanel1.Controls.Add(this.btnOxideUpdate, 3, 3);
             this.tableLayoutPanel1.Controls.Add(this.lblOxideCurrentVersion, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.label6, 2, 0);
@@ -299,10 +299,10 @@
             this.btnOxideUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnOxideUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnOxideUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOxideUpdate.Location = new System.Drawing.Point(486, 96);
+            this.btnOxideUpdate.Location = new System.Drawing.Point(485, 96);
             this.btnOxideUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnOxideUpdate.Name = "btnOxideUpdate";
-            this.btnOxideUpdate.Size = new System.Drawing.Size(49, 32);
+            this.btnOxideUpdate.Size = new System.Drawing.Size(50, 32);
             this.btnOxideUpdate.TabIndex = 14;
             this.btnOxideUpdate.UseVisualStyleBackColor = true;
             this.btnOxideUpdate.Click += new System.EventHandler(this.btnOxideUpdate_Click);
@@ -311,7 +311,7 @@
             // 
             this.lblOxideCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxideCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxideCurrentVersion.Location = new System.Drawing.Point(165, 96);
+            this.lblOxideCurrentVersion.Location = new System.Drawing.Point(164, 96);
             this.lblOxideCurrentVersion.Name = "lblOxideCurrentVersion";
             this.lblOxideCurrentVersion.Size = new System.Drawing.Size(156, 32);
             this.lblOxideCurrentVersion.TabIndex = 8;
@@ -321,7 +321,7 @@
             // label6
             // 
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(327, 0);
+            this.label6.Location = new System.Drawing.Point(326, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(156, 32);
             this.label6.TabIndex = 5;
@@ -331,7 +331,7 @@
             // label5
             // 
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(165, 0);
+            this.label5.Location = new System.Drawing.Point(164, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(156, 32);
             this.label5.TabIndex = 4;
@@ -344,7 +344,7 @@
             this.label3.Font = new System.Drawing.Font("Verdana", 12F);
             this.label3.Location = new System.Drawing.Point(3, 96);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(156, 32);
+            this.label3.Size = new System.Drawing.Size(155, 32);
             this.label3.TabIndex = 2;
             this.label3.Text = "Oxide";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -355,7 +355,7 @@
             this.label2.Font = new System.Drawing.Font("Verdana", 12F);
             this.label2.Location = new System.Drawing.Point(3, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(156, 32);
+            this.label2.Size = new System.Drawing.Size(155, 32);
             this.label2.TabIndex = 1;
             this.label2.Text = "Rust";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -366,7 +366,7 @@
             this.label1.Font = new System.Drawing.Font("Verdana", 12F);
             this.label1.Location = new System.Drawing.Point(3, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 32);
+            this.label1.Size = new System.Drawing.Size(155, 32);
             this.label1.TabIndex = 0;
             this.label1.Text = "Oxide Pack";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -376,7 +376,7 @@
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Location = new System.Drawing.Point(3, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(156, 32);
+            this.label4.Size = new System.Drawing.Size(155, 32);
             this.label4.TabIndex = 3;
             this.label4.Text = "Package";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -385,7 +385,7 @@
             // 
             this.lblOxidePackCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxidePackCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxidePackCurrentVersion.Location = new System.Drawing.Point(165, 32);
+            this.lblOxidePackCurrentVersion.Location = new System.Drawing.Point(164, 32);
             this.lblOxidePackCurrentVersion.Name = "lblOxidePackCurrentVersion";
             this.lblOxidePackCurrentVersion.Size = new System.Drawing.Size(156, 32);
             this.lblOxidePackCurrentVersion.TabIndex = 6;
@@ -396,7 +396,7 @@
             // 
             this.lblRustCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblRustCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblRustCurrentVersion.Location = new System.Drawing.Point(165, 64);
+            this.lblRustCurrentVersion.Location = new System.Drawing.Point(164, 64);
             this.lblRustCurrentVersion.Name = "lblRustCurrentVersion";
             this.lblRustCurrentVersion.Size = new System.Drawing.Size(156, 32);
             this.lblRustCurrentVersion.TabIndex = 7;
@@ -407,7 +407,7 @@
             // 
             this.lblOxidePackAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxidePackAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxidePackAvailableVersion.Location = new System.Drawing.Point(327, 32);
+            this.lblOxidePackAvailableVersion.Location = new System.Drawing.Point(326, 32);
             this.lblOxidePackAvailableVersion.Name = "lblOxidePackAvailableVersion";
             this.lblOxidePackAvailableVersion.Size = new System.Drawing.Size(156, 32);
             this.lblOxidePackAvailableVersion.TabIndex = 9;
@@ -418,7 +418,7 @@
             // 
             this.lblRustAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblRustAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblRustAvailableVersion.Location = new System.Drawing.Point(327, 64);
+            this.lblRustAvailableVersion.Location = new System.Drawing.Point(326, 64);
             this.lblRustAvailableVersion.Name = "lblRustAvailableVersion";
             this.lblRustAvailableVersion.Size = new System.Drawing.Size(156, 32);
             this.lblRustAvailableVersion.TabIndex = 10;
@@ -429,7 +429,7 @@
             // 
             this.lblOxideAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxideAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxideAvailableVersion.Location = new System.Drawing.Point(327, 96);
+            this.lblOxideAvailableVersion.Location = new System.Drawing.Point(326, 96);
             this.lblOxideAvailableVersion.Name = "lblOxideAvailableVersion";
             this.lblOxideAvailableVersion.Size = new System.Drawing.Size(156, 32);
             this.lblOxideAvailableVersion.TabIndex = 11;
@@ -441,10 +441,10 @@
             this.btnOxidePackUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnOxidePackUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnOxidePackUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOxidePackUpdate.Location = new System.Drawing.Point(486, 32);
+            this.btnOxidePackUpdate.Location = new System.Drawing.Point(485, 32);
             this.btnOxidePackUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnOxidePackUpdate.Name = "btnOxidePackUpdate";
-            this.btnOxidePackUpdate.Size = new System.Drawing.Size(49, 32);
+            this.btnOxidePackUpdate.Size = new System.Drawing.Size(50, 32);
             this.btnOxidePackUpdate.TabIndex = 12;
             this.btnOxidePackUpdate.UseVisualStyleBackColor = true;
             // 
@@ -453,10 +453,10 @@
             this.btnRustUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnRustUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnRustUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRustUpdate.Location = new System.Drawing.Point(486, 64);
+            this.btnRustUpdate.Location = new System.Drawing.Point(485, 64);
             this.btnRustUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnRustUpdate.Name = "btnRustUpdate";
-            this.btnRustUpdate.Size = new System.Drawing.Size(49, 32);
+            this.btnRustUpdate.Size = new System.Drawing.Size(50, 32);
             this.btnRustUpdate.TabIndex = 13;
             this.btnRustUpdate.UseVisualStyleBackColor = true;
             this.btnRustUpdate.Click += new System.EventHandler(this.btnRustUpdate_ClickAsync);
@@ -485,33 +485,35 @@
             // 
             // tpSettings
             // 
-            this.tpSettings.Controls.Add(this.btnAddReference);
+            this.tpSettings.Controls.Add(this.btnEditReference);
             this.tpSettings.Controls.Add(this.btnAddProject);
             this.tpSettings.Controls.Add(this.btnCreateNewSolution);
             this.tpSettings.Controls.Add(this.Settings_pnlSolution);
             this.tpSettings.Location = new System.Drawing.Point(4, 27);
             this.tpSettings.Name = "tpSettings";
             this.tpSettings.Padding = new System.Windows.Forms.Padding(5);
-            this.tpSettings.Size = new System.Drawing.Size(561, 396);
+            this.tpSettings.Size = new System.Drawing.Size(472, 396);
             this.tpSettings.TabIndex = 2;
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
             // 
-            // btnAddReference
+            // btnEditReference
             // 
-            this.btnAddReference.Location = new System.Drawing.Point(284, 103);
-            this.btnAddReference.Name = "btnAddReference";
-            this.btnAddReference.Size = new System.Drawing.Size(152, 43);
-            this.btnAddReference.TabIndex = 4;
-            this.btnAddReference.Text = "AddReference";
-            this.btnAddReference.UseVisualStyleBackColor = true;
-            this.btnAddReference.Click += new System.EventHandler(this.btnAddReference_Click);
+            this.btnEditReference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditReference.Location = new System.Drawing.Point(313, 103);
+            this.btnEditReference.Name = "btnEditReference";
+            this.btnEditReference.Size = new System.Drawing.Size(152, 43);
+            this.btnEditReference.TabIndex = 4;
+            this.btnEditReference.Text = "Edit References";
+            this.btnEditReference.UseVisualStyleBackColor = true;
+            this.btnEditReference.Click += new System.EventHandler(this.btnEditReference_Click);
             // 
             // btnAddProject
             // 
-            this.btnAddProject.Location = new System.Drawing.Point(302, 58);
+            this.btnAddProject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddProject.Location = new System.Drawing.Point(313, 58);
             this.btnAddProject.Name = "btnAddProject";
-            this.btnAddProject.Size = new System.Drawing.Size(137, 39);
+            this.btnAddProject.Size = new System.Drawing.Size(152, 39);
             this.btnAddProject.TabIndex = 3;
             this.btnAddProject.Text = "Add project";
             this.btnAddProject.UseVisualStyleBackColor = true;
@@ -519,9 +521,11 @@
             // 
             // btnCreateNewSolution
             // 
+            this.btnCreateNewSolution.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCreateNewSolution.Location = new System.Drawing.Point(8, 357);
             this.btnCreateNewSolution.Name = "btnCreateNewSolution";
-            this.btnCreateNewSolution.Size = new System.Drawing.Size(431, 31);
+            this.btnCreateNewSolution.Size = new System.Drawing.Size(457, 31);
             this.btnCreateNewSolution.TabIndex = 2;
             this.btnCreateNewSolution.Text = "Create new solution";
             this.btnCreateNewSolution.UseVisualStyleBackColor = true;
@@ -536,7 +540,7 @@
             this.Settings_pnlSolution.Controls.Add(this.Settings_lblSolutionFilePath);
             this.Settings_pnlSolution.Location = new System.Drawing.Point(8, 8);
             this.Settings_pnlSolution.Name = "Settings_pnlSolution";
-            this.Settings_pnlSolution.Size = new System.Drawing.Size(431, 44);
+            this.Settings_pnlSolution.Size = new System.Drawing.Size(457, 44);
             this.Settings_pnlSolution.TabIndex = 1;
             // 
             // Settings_lblSolutionFile
@@ -552,7 +556,7 @@
             // 
             this.Settings_btnSolutionOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Settings_btnSolutionOpen.Image = global::OxidePack.Client.Properties.Resources.btnOpenFolder;
-            this.Settings_btnSolutionOpen.Location = new System.Drawing.Point(388, 2);
+            this.Settings_btnSolutionOpen.Location = new System.Drawing.Point(414, 2);
             this.Settings_btnSolutionOpen.Name = "Settings_btnSolutionOpen";
             this.Settings_btnSolutionOpen.Size = new System.Drawing.Size(40, 40);
             this.Settings_btnSolutionOpen.TabIndex = 1;
@@ -566,7 +570,7 @@
             this.Settings_lblSolutionFilePath.AutoEllipsis = true;
             this.Settings_lblSolutionFilePath.Location = new System.Drawing.Point(128, 10);
             this.Settings_lblSolutionFilePath.Name = "Settings_lblSolutionFilePath";
-            this.Settings_lblSolutionFilePath.Size = new System.Drawing.Size(254, 24);
+            this.Settings_lblSolutionFilePath.Size = new System.Drawing.Size(280, 24);
             this.Settings_lblSolutionFilePath.TabIndex = 0;
             this.Settings_lblSolutionFilePath.Text = "...";
             this.Settings_lblSolutionFilePath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -710,7 +714,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(569, 473);
+            this.ClientSize = new System.Drawing.Size(480, 473);
             this.Controls.Add(this.tbMain);
             this.Controls.Add(this.mStatus);
             this.Controls.Add(this.menuStrip);
@@ -788,7 +792,7 @@
         private System.Windows.Forms.Button btnSendPluginRequest;
         private System.Windows.Forms.Button btnCreateNewSolution;
         private System.Windows.Forms.Button btnAddProject;
-        private System.Windows.Forms.Button btnAddReference;
+        private System.Windows.Forms.Button btnEditReference;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label1;
