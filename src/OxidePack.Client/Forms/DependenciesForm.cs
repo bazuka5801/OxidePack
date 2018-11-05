@@ -8,6 +8,7 @@ namespace OxidePack.Client.Forms
 {
     public class DependenciesModel
     {
+        public string Directory;
         public List<string> SelectedFiles;
         public Boolean Bundle;
         public Boolean Changed = false;
@@ -15,24 +16,24 @@ namespace OxidePack.Client.Forms
 
     public partial class DependenciesForm : Form
     {
+        private string Dir = "";
+        
         private DependencyTreeModel _model;
         private DependenciesModel _formModel;
         
         public DependenciesForm(DependenciesModel formModel)
         {
             InitializeComponent();
-            InitTree();
             ApplyModel(formModel);
+            InitTree();
         }
 
         public void ApplyModel(DependenciesModel formModel)
         {
+            Dir = formModel.Directory;
             _formModel = formModel;
-            _model.Load(formModel.SelectedFiles);
             cbBundle.Checked = formModel.Bundle;
         }
-
-        private string Dir = ".references-cache";
         
         public void InitTree()
         {
@@ -41,6 +42,7 @@ namespace OxidePack.Client.Forms
                 return;
             }
             _model = new DependencyTreeModel(Dir);
+            _model.Load(_formModel.SelectedFiles);
             tvDependencies.Model = _model;
         }
 
