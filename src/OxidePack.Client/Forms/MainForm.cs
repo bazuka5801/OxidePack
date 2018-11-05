@@ -268,7 +268,7 @@ namespace OxidePack.Client.Forms
         #endregion
 
         #region btnRustUpdate_Click
-        private async Task btnRustUpdate_ClickAsync(object sender, System.EventArgs e)
+        private async void btnRustUpdate_ClickAsync(object sender, System.EventArgs e)
         {
             await OPClientCore.DownloadRustDLLs(null, null);
         }
