@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using FubuCsProjFile;
 using FubuCsProjFile.MSBuild;
 using Mono.Cecil;
 using OxidePack.Client.Forms;
+using SapphireEngine;
 
 namespace OxidePack.Client.Core.MsBuildProject
 {
@@ -16,6 +18,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         public string Name, FilePath;
         public CsProjFile Project;
         private MSBuildItemGroup _references;
+        public List<String> ReferenceList { get; private set; }
         
         public CsProject(Solution solution, CsProjFile project, string name, string relativeFilePath)
         {
@@ -38,6 +41,19 @@ namespace OxidePack.Client.Core.MsBuildProject
             if (_references == null)
             {
                 MainForm.ShowMessage($"[CsProject] I can't find references itemgroup in '{Project.ProjectName}' project","Error");
+            }
+            else
+            {
+                (ReferenceList ?? (ReferenceList = new List<string>())).Clear();
+                foreach (var refItem in _references.Items)
+                {
+                    if (refItem.HasMetadata("HintPath"))
+                    {
+                        var filePath = refItem.GetMetadata("HintPath");
+                        var asmFileName = Path.GetFileName(filePath);
+                        ReferenceList.Add(asmFileName);
+                    }
+                }
             }
         }
 
@@ -75,7 +91,37 @@ namespace OxidePack.Client.Core.MsBuildProject
                 _references.AddNewItem("Reference", asmFullName)
                     .SetMetadata("HintPath", asmRelativePath);
             }
+
+            var asmFileName = Path.GetFileName(filepath);
+            if (ReferenceList.Contains(asmFileName) == false)
+                ReferenceList.Add(asmFileName);
             Project.Save();
+        }
+
+        public void RemoveReferenceByFile(string filename)
+        {
+            if (_references == null)
+            {
+                throw new NullReferenceException("_references is null!");
+            }
+
+            foreach (var refItem in _references.Items)
+            {
+                if (refItem.HasMetadata("HintPath"))
+                {
+                    var filePath = refItem.GetMetadata("HintPath");
+                    var asmFileName = Path.GetFileName(filePath);
+                    if (asmFileName == filename)
+                    {
+                        ReferenceList.Remove(filename);
+                        refItem.Remove();
+                        Project.Save();
+                        return;
+                    }
+                }
+            }
+            
+            ConsoleSystem.LogError($"[CsProject] [{Name}] Failed to delete <{filename}> reference");
         }
     }
 }
