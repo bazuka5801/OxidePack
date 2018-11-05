@@ -9,24 +9,30 @@ namespace OxidePack.Client.Core.ILMerger
     {
         public string Directory;
         public string[] Files;
+        
+        public MergeSession(string directory, List<string> files)
+            : this(directory)
+        {
+            this.Files = files.ToArray();
+        }
+        
         public MergeSession(string directory)
         {
             this.Directory = directory;
-            LoadFiles();
         }
 
-        public void LoadFiles()
+        public void LoadAllFiles()
         {
             this.Files = new DirectoryInfo(Directory).GetFiles("*.dll").Select(p=>p.FullName).ToArray();
         }
         
-        public void Merge()
+        public void Merge(string outputFile)
         {
             var repOptions = new RepackOptions()
             {
                 InputAssemblies = Files,
                 SearchDirectories = new []{ Directory },
-                OutputFile = "References.dll"
+                OutputFile = outputFile
             };
             var r = new ILRepack(repOptions);
             r.Repack();
