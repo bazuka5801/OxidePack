@@ -45,17 +45,6 @@ namespace OxidePack.Client.Forms
                 UpdateProgressBar(value: 2, max: 3);
                 AppCore.ConnectToServer();
             });
-            var form = new DependenciesModel()
-            {
-                Bundle = Config.Dependencies.Bundle,
-                SelectedFiles = Config.Dependencies.SelectedFiles
-            };
-            new DependenciesForm(form).ShowDialog();
-            if (form.Changed)
-            {
-                Config.Dependencies.Bundle = form.Bundle;
-                Config.Dependencies.SelectedFiles = form.SelectedFiles;
-            }
         }
 
         private static void UpdateKey(string key)
