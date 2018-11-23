@@ -1,6 +1,6 @@
 using System;
 
-namespace OxidePack.Utils
+namespace OxidePack
 {
     public static class FileSystemUtils
     {
