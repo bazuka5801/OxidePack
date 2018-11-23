@@ -4,7 +4,7 @@ namespace OxidePack
 {
     public static class FileSystemUtils
     {
-        public static (double, string) AdjustFileSize(long fileSizeInBytes)
+        public static (double sizeResult, string sizeTitle) AdjustFileSize(long fileSizeInBytes)
         {
             var names = new[] {"B", "KB", "MB", "GB", "TB"};
 
