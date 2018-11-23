@@ -44,6 +44,7 @@ namespace OxidePack.Server.App
         {
             if (line == ":q")
             {
+                ConsoleSystem.Log("Quiting...");
                 Framework.Quit();
             }
         }
@@ -64,6 +65,7 @@ namespace OxidePack.Server.App
 
         public virtual void UpdateTitle()
         {
+            // TODO: Set real counter
             int online = 10;
             Console.Title = Config.Title.Replace("{online}", online.ToString());
         }
