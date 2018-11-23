@@ -41,15 +41,36 @@ namespace OxidePack.Client.Core.OxideDownloader
             string zipPath = Path.Combine(directory, "Oxide.Rust.zip");
             progress?.Invoke($"Getting oxide version...", 5);
             string version = GetVersion();
+
+            string lastProgressLine = "";
             
             void WClientOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
             {
-                progress?.Invoke($"Downloading...", e.ProgressPercentage);
+                var downloadingSize = FileSystemUtils.AdjustFileSize(e.BytesReceived);
+                var totalSize = FileSystemUtils.AdjustFileSize(e.TotalBytesToReceive);
+                
+                string progressLine =
+                    $"Downloading Oxide... (" +
+                    $"{downloadingSize.sizeResult:f2}{downloadingSize.sizeTitle}" +
+                    $"/" +
+                    $"{totalSize.sizeResult:f2}{totalSize.sizeTitle}" +
+                    $")";
+                
+                if (lastProgressLine == progressLine)
+                {
+                    return;
+                }
+                
+                lastProgressLine = progressLine;
+                
+                progress?.Invoke(progressLine, e.ProgressPercentage);
             }
+            
             void WClientOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
             {
                 progress?.Invoke($"Extracting DLLs...", 100);
             }
+            
             // Download Oxide build
             wClient.DownloadProgressChanged += WClientOnDownloadProgressChanged;
             wClient.DownloadFileCompleted += WClientOnDownloadFileCompleted;
