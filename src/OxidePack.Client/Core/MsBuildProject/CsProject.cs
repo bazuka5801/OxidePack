@@ -18,6 +18,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         public string Name, FilePath;
         public CsProjFile Project;
         private MSBuildItemGroup _references;
+        private MSBuildItemGroup _compile;
         public List<String> ReferenceList { get; private set; }
         
         public CsProject(Solution solution, CsProjFile project, string name, string relativeFilePath)
@@ -38,6 +39,8 @@ namespace OxidePack.Client.Core.MsBuildProject
         {
             _references = this.Project.BuildProject.ItemGroups
                 .FirstOrDefault(i => i.Items.Any(item => item.Name == "Reference"));
+            _compile = this.Project.BuildProject.ItemGroups
+                           .FirstOrDefault(i => i.Items.Any(p => p.Name == "Compile")) ?? this.Project.BuildProject.AddNewItemGroup();
             if (_references == null)
             {
                 MainForm.ShowMessage($"[CsProject] I can't find references itemgroup in '{Project.ProjectName}' project","Error");
@@ -54,6 +57,34 @@ namespace OxidePack.Client.Core.MsBuildProject
                         ReferenceList.Add(asmFileName);
                     }
                 }
+            }
+        }
+
+        public void CompileAdd(string filepath)
+        {
+            string relativePath = filepath;
+            if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
+                relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
+
+            var existingCompile = _compile.Items.FirstOrDefault(i => i.Include == relativePath);
+            if (existingCompile == null)
+            {
+                _compile.AddNewItem("Compile", relativePath);
+                Project.Save();
+            }
+        }
+        
+        public void CompileRemove(string filepath)
+        {
+            string relativePath = filepath;
+            if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
+                relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
+
+            var existingCompile = _compile.Items.FirstOrDefault(i => i.Include == relativePath);
+            if (existingCompile != null)
+            {
+                existingCompile.Remove();
+                Project.Save();
             }
         }
 
