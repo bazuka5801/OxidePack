@@ -63,6 +63,16 @@ namespace OxidePack.Client.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btnAdd {
+            get {
+                object obj = ResourceManager.GetObject("btnAdd", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap btnCopy {
             get {
                 object obj = ResourceManager.GetObject("btnCopy", resourceCulture);
@@ -93,9 +103,29 @@ namespace OxidePack.Client.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btnRemove {
+            get {
+                object obj = ResourceManager.GetObject("btnRemove", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap download_icon {
             get {
                 object obj = ResourceManager.GetObject("download-icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap info {
+            get {
+                object obj = ResourceManager.GetObject("info", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -107,6 +137,21 @@ namespace OxidePack.Client.Properties {
             get {
                 object obj = ResourceManager.GetObject("oxidepack", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на namespace OxidePack.Client.Templates
+        ///{
+        ///    public class RustPlugin_Template
+        ///    {
+        ///        
+        ///    }
+        ///}.
+        /// </summary>
+        internal static string RustPlugin_Template {
+            get {
+                return ResourceManager.GetString("RustPlugin_Template", resourceCulture);
             }
         }
         

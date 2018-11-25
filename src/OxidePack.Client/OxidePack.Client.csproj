@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\Templates\RustPlugin.Template.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="DepotDownloader.Lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\Dependencies\DepotDownloader.Lib\DepotDownloader.Lib.dll</HintPath>
     </Reference>
@@ -51,6 +55,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Core\Templates\RustPlugin.Template.cs">
+      <LogicalName>RustPluginTemplate</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   
   <ItemGroup>
