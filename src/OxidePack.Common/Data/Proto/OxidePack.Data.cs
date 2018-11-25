@@ -27,6 +27,8 @@ namespace OxidePack.Data
     {
         public string pluginname;
 
+        public string @namespace;
+
         public List<string> modules;
 
     }
@@ -60,6 +62,22 @@ namespace OxidePack.Data
         public string content;
 
         public string sha256;
+
+    }
+
+    public partial class ModuleInfo : IDisposable, Pool.IPooled, IProto
+    {
+        public string name;
+
+        public string version;
+
+        public string description;
+
+    }
+
+    public partial class ModuleListResponse : IDisposable, Pool.IPooled, IProto
+    {
+        public List<OxidePack.Data.ModuleInfo> modules;
 
     }
 
