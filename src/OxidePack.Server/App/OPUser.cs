@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Ether.Network.Packets;
 using OxidePack.CoreLib;
 using OxidePack.Data;
@@ -34,6 +35,9 @@ namespace OxidePack.Server.App
                 case RPCMessageType.GeneratedFileRequest:
                     OnRPC_GeneratedFileRequest(GeneratedFileRequest.Deserialize(stream));
                     break;
+                case RPCMessageType.ModuleListRequest:
+                    SendModuleList();
+                    break;
             }
         }
 
@@ -47,6 +51,23 @@ namespace OxidePack.Server.App
             };
             
             SendRPC(RPCMessageType.GeneratedFileResponse, response);
+        }
+
+        public void SendModuleList()
+        {
+            var moduleList = ModuleMgr.GetModuleList().Select(module => new ModuleInfo()
+            {
+                name = module.Manifest.Name,
+                version = module.Manifest.Version,
+                description = module.Manifest.Description
+            }).ToList();
+            
+            var moduleListResponse = new ModuleListResponse()
+            {
+                modules = moduleList
+            };
+            
+            SendRPC(RPCMessageType.ModuleListResponse, moduleListResponse);
         }
     }
 }

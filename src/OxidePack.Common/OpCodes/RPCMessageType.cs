@@ -17,5 +17,9 @@ namespace OxidePack
         // GeneratedFile
         GeneratedFileRequest = 10,
         GeneratedFileResponse = 11,
+        
+        // Modules
+        ModuleListRequest = 12,
+        ModuleListResponse = 13,
     }
 }

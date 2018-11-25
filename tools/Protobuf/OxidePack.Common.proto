@@ -29,3 +29,13 @@ message SourceFile {
 	required string  content = 2;
 	required string   sha256 = 3;
 }
+
+message ModuleInfo {
+	required string        name = 1;
+	required string     version = 2;
+	required string description = 3;
+}
+
+message ModuleListResponse {
+	repeated ModuleInfo modules = 1;
+}

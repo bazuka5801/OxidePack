@@ -20,6 +20,8 @@ namespace OxidePack.CoreLib
     {
         public string Name;
         public string Version;
+        public string Description;
+        
         public string[] Files;
     }
     

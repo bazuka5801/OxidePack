@@ -27,6 +27,9 @@ namespace OxidePack.Client.App
                 case RPCMessageType.GeneratedFileResponse:
                     OnRPC_GeneratedFileResponse(GeneratedFileResponse.Deserialize(stream));
                     break;
+                case RPCMessageType.ModuleListResponse:
+                    ModuleMgr.OnModulesUpdate(stream);
+                    break;
             }
         }
 
