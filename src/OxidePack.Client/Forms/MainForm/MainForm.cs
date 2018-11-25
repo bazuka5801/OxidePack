@@ -253,7 +253,6 @@ namespace OxidePack.Client
         }
         #endregion
 
-
         #region btnEditReference_Click
         private void btnEditReference_Click(object sender, System.EventArgs e)
         {
