@@ -16,7 +16,7 @@ namespace OxidePack.CoreLib
         private (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings) GeneratedCache; 
         
 
-        public string GetGeneratedFile(List<string> modulesNames)
+        public string GetGeneratedFile(List<string> modulesNames, string @namespace)
         {
             var modules = modulesNames.Select(mName => ModuleMgr.GetModule(mName, out var module) ? module : null)
                 .Where(p => p != null);
@@ -30,12 +30,12 @@ namespace OxidePack.CoreLib
                         Token(PartialKeyword)))
                 .WithMembers(classBody);
 
-            var @namespace = NamespaceDeclaration(ParseName("Oxide.Plugins"))
+            var @namespaceDeclaration = NamespaceDeclaration(ParseName(@namespace))
                 .WithUsings(usings)
                 .AddMembers(generatedClass);
 
             _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (@namespace, _workspace);
+            var formattedCode = Formatter.Format (@namespaceDeclaration, _workspace);
             return formattedCode.ToFullString();
         }
     }

@@ -39,7 +39,7 @@ namespace OxidePack.Server.App
 
         public void OnRPC_GeneratedFileRequest(GeneratedFileRequest request)
         {
-            var generatedFile = ActivePlugin.GetGeneratedFile(request.modules);
+            var generatedFile = ActivePlugin.GetGeneratedFile(request.modules, request.@namespace);
             var response = new GeneratedFileResponse()
             {
                 pluginname = request.pluginname,

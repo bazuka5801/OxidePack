@@ -7,7 +7,8 @@ message UserInformation {
 
 message GeneratedFileRequest {
 	required string pluginname = 1;
-	repeated string    modules = 2;
+	required string @namespace = 2;
+	repeated string    modules = 3;
 }
 message GeneratedFileResponse {
 	required string pluginname = 1;
