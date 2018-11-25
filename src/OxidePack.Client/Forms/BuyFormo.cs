@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OxidePack.Client.App;
 
-namespace OxidePack.Client.Forms
+namespace OxidePack.Client
 {
     public partial class AuthForm : Form
     {

@@ -7,7 +7,7 @@ using System.Xml.XPath;
 using FubuCsProjFile;
 using FubuCsProjFile.MSBuild;
 using Mono.Cecil;
-using OxidePack.Client.Forms;
+using OxidePack.Client;
 using SapphireEngine;
 
 namespace OxidePack.Client.Core.MsBuildProject

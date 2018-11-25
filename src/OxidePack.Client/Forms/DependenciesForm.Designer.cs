@@ -1,4 +1,4 @@
-﻿namespace OxidePack.Client.Forms
+﻿namespace OxidePack.Client
 {
     partial class DependenciesForm
     {

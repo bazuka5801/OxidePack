@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using OxidePack.Client.Forms.Components;
+using OxidePack.Client.Components;
 
-namespace OxidePack.Client.Forms
+namespace OxidePack.Client
 {
     public class DependenciesModel
     {

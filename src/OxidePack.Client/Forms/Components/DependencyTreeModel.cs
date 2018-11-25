@@ -10,7 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Aga.Controls.Tree;
 
-namespace OxidePack.Client.Forms.Components
+namespace OxidePack.Client.Components
 {
     public class DependencyTreeModel : TreeModel
     {

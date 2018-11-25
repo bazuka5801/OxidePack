@@ -8,7 +8,7 @@ using FubuCsProjFile;
 using Mono.Cecil;
 using OxidePack.Client.App;
 using OxidePack.Client.Core.OxideDownloader;
-using OxidePack.Client.Forms;
+using OxidePack.Client;
 using SapphireEngine;
 using Solution = OxidePack.Client.Core.MsBuildProject.Solution;
 

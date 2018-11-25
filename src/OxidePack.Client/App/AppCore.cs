@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Windows.Forms;
-using OxidePack.Client.Forms;
+using OxidePack.Client;
 using SapphireEngine;
 
 namespace OxidePack.Client.App

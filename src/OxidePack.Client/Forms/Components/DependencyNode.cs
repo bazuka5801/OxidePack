@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Aga.Controls.Tree;
 
-namespace OxidePack.Client.Forms.Components
+namespace OxidePack.Client.Components
 {
     /// <summary>
     /// Inherits the node class to show how the class can be extended.
