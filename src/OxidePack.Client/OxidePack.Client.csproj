@@ -39,20 +39,43 @@
   <ItemGroup>
     <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
+    <Compile Update="Forms\MainForm\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\MainForm\MainForm.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>Forms\MainForm\MainForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\MainForm\MainForm.resx">
+      <DependentUpon>Forms\MainForm\MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Forms\DependenciesForm\DependenciesForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\DependenciesForm\DependenciesForm.Designer.cs">
       <SubType>Form</SubType>
+      <DependentUpon>Forms\DependenciesForm\DependenciesForm.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Forms\AuthForm\AuthForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\AuthForm\AuthForm.Designer.cs">
       <SubType>Form</SubType>
+      <DependentUpon>Forms\AuthForm\AuthForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\PluginManager\PluginManagerForm.Designer.cs">
+
+    <Compile Update="Forms\PluginManagerForm\PluginManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\PluginManagerForm\PluginManagerForm.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>Forms\PluginManagerForm\PluginManagerForm.cs</DependentUpon>
+    </Compile>
+
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
