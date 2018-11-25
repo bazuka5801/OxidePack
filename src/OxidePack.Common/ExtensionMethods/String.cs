@@ -1,7 +1,6 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using SapphireEngine;
 
 namespace OxidePack
 {
@@ -20,6 +19,7 @@ namespace OxidePack
         }
 
         public static string ToSHA512(this string data) => ToSHA512(data.ToByteArray());
+        
         public static string ToSHA512(this byte[] data)
         {
             using (SHA512 shaM = new SHA512Managed())
