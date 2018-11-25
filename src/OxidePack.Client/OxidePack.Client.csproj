@@ -41,13 +41,13 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="Forms\MainForm.Designer.cs">
+    <Compile Update="Forms\MainForm\MainForm.Designer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\DependenciesForm.Designer.cs">
+    <Compile Update="Forms\DependenciesForm\DependenciesForm.Designer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\BuyFormo.Designer.cs">
+    <Compile Update="Forms\AuthForm\AuthForm.Designer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\PluginManager\PluginManagerForm.Designer.cs">

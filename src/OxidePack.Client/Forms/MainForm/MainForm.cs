@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OxidePack.Client.App;
 using OxidePack.Client.Core.ILMerger;
 using OxidePack.Client.Core.MsBuildProject;
-using OxidePack.Client.Core.OxideDownloader;
 using OxidePack.Data;
 using SapphireEngine;
-using DepotDownloader = DepotDownloader.DepotDownloader;
 using Timer = SapphireEngine.Functions.Timer;
 
-namespace OxidePack.Client.Forms
+namespace OxidePack.Client
 {
     public partial class MainForm : Form
     {
@@ -321,7 +314,14 @@ namespace OxidePack.Client.Forms
             await CheckForUpdates();
         }
         #endregion
-        
+
+        #region btnOpenPluginManager_Click
+        private void btnOpenPluginManager_Click(object sender, System.EventArgs e)
+        {
+            new PluginManagerForm(new PluginsProject(OPClientCore.Solution.CsProjects[0])).Show(this);
+        }
+        #endregion
+
         #endregion
 
         #region [Helper Methods]
