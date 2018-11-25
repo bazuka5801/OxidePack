@@ -164,6 +164,11 @@ namespace OxidePack
             {
                 size = poolCollection.buffer?.Length * 2 ?? 2;
             }
+
+            if (size > MaxPoolSize)
+            {
+                size = MaxPoolSize;
+            }
             Array.Resize<T>(ref poolCollection.buffer, size);
         }
         #endregion
