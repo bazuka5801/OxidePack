@@ -50,6 +50,9 @@
     <Compile Update="Forms\BuyFormo.Designer.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\PluginManager\PluginManagerForm.Designer.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
