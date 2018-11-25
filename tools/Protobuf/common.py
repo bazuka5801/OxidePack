@@ -6,5 +6,5 @@ INPUT_FILES = [
 ]
 OUTPUT_FILE = "OxidePack.Data.cs"
 COPY_PATHS = [
-	"../../src/OxidePack.Common/Data"
+	"../../src/OxidePack.Common/Data/Proto"
 ]
