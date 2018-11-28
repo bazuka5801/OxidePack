@@ -72,6 +72,10 @@ namespace OxidePack.CoreLib
                             
                             continue;
                         }
+                        else
+                        {
+                            pluginBody.Add(method);
+                        }
                     }
                     else
                     {
