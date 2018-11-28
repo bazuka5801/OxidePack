@@ -20,8 +20,10 @@ namespace OxidePack.Client.App
                 case RPCMessageType.StatusResponse:
                     break;
                 case RPCMessageType.BuildResponse:
-                    GeneratedFileResponse gFile = GeneratedFileResponse.Deserialize(stream);
-                    File.WriteAllText($"{gFile.pluginname}.compiled.cs", gFile.content);
+                    using (BuildResponse bResponse = BuildResponse.Deserialize(stream))
+                    {
+                        OnRPC_BuildResponse(bResponse);
+                    }
                     break;
                 case RPCMessageType.EncryptionResponse:   
                     break;
@@ -32,6 +34,18 @@ namespace OxidePack.Client.App
                     ModuleMgr.OnModulesUpdate(stream);
                     break;
             }
+        }
+
+        private void OnRPC_BuildResponse(BuildResponse bResponse)
+        {
+            var plugin = OPClientCore.PluginsProject.GetPlugin(bResponse.pluginname);
+            if (plugin == null)
+            {
+                PluginNotExistError(bResponse.pluginname);
+                return;
+            }
+
+            plugin.OnBuildResponse(bResponse.content);
         }
 
         private void OnRPC_GeneratedFileResponse(GeneratedFileResponse response)
