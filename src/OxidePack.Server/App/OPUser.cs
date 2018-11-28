@@ -43,6 +43,11 @@ namespace OxidePack.Server.App
 
         public void OnRPC_GeneratedFileRequest(GeneratedFileRequest request)
         {
+            if (ActivePlugin == null || ActivePlugin.PluginName != request.pluginname)
+            {
+                var pOptions = new PluginOptions() { Debug = true, Encrypt = false, ReferencesPath = ".references" };
+                ActivePlugin = new Plugin(request.pluginname, pOptions);
+            }
             var generatedFile = ActivePlugin.GetGeneratedFile(request.modules, request.@namespace);
             var response = new GeneratedFileResponse()
             {
