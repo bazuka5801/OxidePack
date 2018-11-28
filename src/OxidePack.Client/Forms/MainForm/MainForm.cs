@@ -43,7 +43,7 @@ namespace OxidePack.Client
 
         private static void UpdateKey(string key)
         {
-            RunInMainThread(() =>
+            ThreadUtils.RunInUI(() =>
             {
                 Instance.tbUID.Text = key;
                 Instance.btnCopyUID.Enabled = string.IsNullOrEmpty(key) == false;
@@ -53,7 +53,7 @@ namespace OxidePack.Client
         static string currentStatus = "";
         public static void UpdateStatus(string text)
         {
-            RunInMainThread(() =>
+            ThreadUtils.RunInUI(() =>
             {
                 currentStatus = text;
                 Instance.lblStatus.Text = $"Status: {text}";
@@ -62,7 +62,7 @@ namespace OxidePack.Client
 
         public static void UpdateProgressBar(int value = 0, int max = 100, ProgressBarStyle style = ProgressBarStyle.Blocks)
         {
-            RunInMainThread(() =>
+            ThreadUtils.RunInUI(() =>
             {
                 Instance.pbStatus.Style = style;
                 Instance.pbStatus.Maximum = max;
@@ -78,7 +78,7 @@ namespace OxidePack.Client
 
         private void LoadConfig()
         {
-            RunInMainThread(() =>
+            ThreadUtils.RunInUI(() =>
             {
                 SetSolutionFile(Config.SolutionFile);
 //                Solution solution = (Config.SolutionFile);
@@ -108,7 +108,7 @@ namespace OxidePack.Client
             UpdateStatus("Checking rust update...");
             UpdateProgressBar(33);
             var RustAvailableVersion = OPClientCore.GetRustAvailableVersion();
-            RunInMainThread(() => lblRustAvailableVersion.Text = RustAvailableVersion);
+            ThreadUtils.RunInUI(() => lblRustAvailableVersion.Text = RustAvailableVersion);
             if (Config.RustVersion != RustAvailableVersion)
             {
                 if (MessageBox.Show($"Rust update available! ({RustAvailableVersion})\nUpdate?", "Rust Update", MessageBoxButtons.YesNo) ==
@@ -120,7 +120,7 @@ namespace OxidePack.Client
             UpdateStatus("Checking oxide update...");
             UpdateProgressBar(66);
             var OxideAvailableVersion = OPClientCore.GetOxideAvailableVersion();
-            RunInMainThread(() => lblOxideAvailableVersion.Text = OxideAvailableVersion);
+            ThreadUtils.RunInUI(() => lblOxideAvailableVersion.Text = OxideAvailableVersion);
             if (Config.OxideVersion != OxideAvailableVersion)
             {
                 if (MessageBox.Show($"Oxide update available! ({OxideAvailableVersion})\nUpdate?", "Oxide Update", MessageBoxButtons.YesNo) ==
@@ -325,23 +325,10 @@ namespace OxidePack.Client
 
         #region [Helper Methods]
 
-        #region [Method] RunInMainThread
-        private static void RunInMainThread(Action action)
-        {
-            if (Instance.InvokeRequired)
-            {
-                Instance.Invoke(action);
-                return;
-            }
-
-            action();
-        }
-        #endregion
-
         #region [Method] ShowMessage
         public static void ShowMessage(string message, string caption)
         {
-            RunInMainThread(() => MessageBox.Show(message, caption));
+            ThreadUtils.RunInUI(() => MessageBox.Show(message, caption));
         }
         #endregion
 
