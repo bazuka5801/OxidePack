@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Ether.Network.Packets;
 using OxidePack.CoreLib;
 using OxidePack.Data;
@@ -19,16 +20,23 @@ namespace OxidePack.Server.App
                     break;
                 case RPCMessageType.BuildRequest:
                     BuildRequest bRequest = BuildRequest.Deserialize(stream);
-                    var pOptions = new PluginOptions() { Debug = true, Encrypt = false, ReferencesPath = ".references" };
-                    ActivePlugin = new Plugin(bRequest.options.name, pOptions);
-                    
-                    GeneratedFileResponse gFile = new GeneratedFileResponse()
+                    if (ActivePlugin == null || ActivePlugin.PluginName != bRequest.options.name)
                     {
-                        pluginname = bRequest.options.name,
-                        content = ActivePlugin.Build(bRequest)
-                    };
+                        var pOptions = new PluginOptions() { Debug = true, Encrypt = false, ReferencesPath = ".references" };
+                        ActivePlugin = new Plugin(bRequest.options.name, pOptions);
+                    }
+
+                    ThreadPool.QueueUserWorkItem((s) =>
+                    {
+                        string buildResult = ActivePlugin.Build(bRequest);
+                        BuildResponse bResponse = new BuildResponse()
+                        {
+                            pluginname = bRequest.options.name,
+                            content = buildResult
+                        };
                     
-                    SendRPC(RPCMessageType.BuildResponse, gFile);
+                        SendRPC(RPCMessageType.BuildResponse, bResponse);
+                    });
                     break;
                 case RPCMessageType.EncryptionRequest:
                     break;
