@@ -2180,11 +2180,12 @@ namespace OxidePack.Data
             // Key for field: 2, LengthDelimited
             stream.WriteByte(18);
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.version));
-            if (instance.description == null)
-                throw new ArgumentNullException("description", "Required by proto specification.");
-            // Key for field: 3, LengthDelimited
-            stream.WriteByte(26);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
+            if (instance.description != null)
+            {
+                // Key for field: 3, LengthDelimited
+                stream.WriteByte(26);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
+            }
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -2226,11 +2227,12 @@ namespace OxidePack.Data
             }
             if (instance.description != previous.description)
             {
-                if (instance.description == null)
-                    throw new ArgumentNullException("description", "Required by proto specification.");
-                // Key for field: 3, LengthDelimited
-                stream.WriteByte(26);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
+                if (instance.description != null)
+                {
+                    // Key for field: 3, LengthDelimited
+                    stream.WriteByte(26);
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
+                }
             }
             Pool.FreeMemoryStream(ref msField);
         }
