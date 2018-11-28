@@ -57,13 +57,28 @@ namespace OxidePack.CoreLib
                 pluginBody.AddRange(generated.members);
                 pluginUsings.AddRange(generated.usings);
             }
-            
+
+            var plugininfo = request.options.plugininfo;
+            var attributes = new List<AttributeSyntax>()
+            {
+                Attribute(ParseName("Info"),
+                    ParseAttributeArgumentList(
+                        $"(\"{plugininfo.name}\", \"{plugininfo.author}\", \"{plugininfo.version}\")"))
+            };
+            if (string.IsNullOrEmpty(plugininfo.description) == false)
+            {
+                attributes.Add(
+                    Attribute(ParseName("Description"), ParseAttributeArgumentList($"(\"{plugininfo.description}\")")));
+            }
             var generatedClass = ClassDeclaration(PluginName)
-                .WithModifiers(
-                    TokenList(
-                        Token(PublicKeyword),
-                        Token(PartialKeyword)))
-                .WithMembers(pluginBody);
+                .WithModifiers(TokenList(Token(PublicKeyword)))
+                .WithBaseList(
+                    BaseList(SeparatedList<BaseTypeSyntax>(new[] {SimpleBaseType(ParseTypeName("RustPlugin"))})))
+                .WithMembers(pluginBody)
+                .WithAttributeLists(List<AttributeListSyntax>(new[]
+                {
+                    AttributeList(SeparatedList(attributes))
+                }));
             
             var @namespace = NamespaceDeclaration(ParseName("Oxide.Plugins"))
                 .WithUsings(pluginUsings)
