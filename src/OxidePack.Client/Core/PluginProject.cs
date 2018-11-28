@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using OxidePack.Client.App;
 using OxidePack.Client.Core.MsBuildProject;
@@ -36,11 +37,12 @@ namespace OxidePack.Client
         public PluginProjectData config;
 
         public Action<PluginProject> OnModulesChanged;
+        public Action<PluginProject> OnCompiled;
 
         private string _Directory;
         
         private string DataFileName => Path.Combine(_Directory, "plugin.json");
-        private string Name => Path.GetFileName(_Directory);
+        public string Name => Path.GetFileName(_Directory);
 
         public PluginProject(CsProject csProject, string directory)
         {
@@ -105,14 +107,31 @@ namespace OxidePack.Client
 
         public void RequestGeneratedFile()
         {
-            using (GeneratedFileRequest gfRequest = new GeneratedFileRequest()
+            using (GeneratedFileRequest gfRequest = new GeneratedFileRequest
             {
                 modules = config.Modules.ToList(),
                 @namespace = $"Oxide.Plugins.{Name}",
-                pluginname = Name,
+                pluginname = Name
             })
             {
                 Net.cl.SendRPC(RPCMessageType.GeneratedFileRequest, gfRequest);
+            }
+        }
+        
+        private static Boolean Compiling;
+
+        void SetCompilingState(bool compiling)
+        {
+            Compiling = compiling;
+            if (compiling)
+            {
+                MainForm.UpdateStatus($"[{Name}] Compiling ..");
+                MainForm.UpdateProgressBar(style: ProgressBarStyle.Marquee);
+            }
+            else
+            {
+                MainForm.UpdateStatus($"[{Name}] Compiled..");
+                MainForm.UpdateProgressBar(value: 100, max: 100, ProgressBarStyle.Blocks);
             }
         }
 
@@ -127,6 +146,50 @@ namespace OxidePack.Client
             }
         }
         #endregion
+
+        
+        public void RequestCompile()
+        {
+            if (Compiling)
+            {
+                return;
+            }
+            SetCompilingState(true);
+            config.Version.Build++;
+            SaveConfig();
+            var sources = Directory.GetFiles(_Directory, "*.cs").Select(filename =>
+            {
+                var content = File.ReadAllText(filename);
+                return new SourceFile {filename = Path.GetFileName(filename), content = content, sha256 = content.ToSHA512()};
+            }).ToList();
+            BuildRequest bRequest = new BuildRequest
+            {
+                options = new BuildOptions
+                {
+                    name = Name,
+                    plugininfo = new PluginInfo
+                    {
+                        name = config.Name,
+                        author = config.Author,
+                        version = config.Version.ToString(),
+                        description = config.Description
+                    }
+                },
+                sources = sources
+            };
+            Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
+        }
+        
+        public void OnBuildResponse(string content)
+        {
+            var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
+            if (Directory.Exists(outputDir) == false)
+                Directory.CreateDirectory(outputDir);
+            var outputPath = Path.Combine(outputDir, $"{Name}.cs");
+            File.WriteAllText(outputPath, content);
+            OnCompiled?.Invoke(this);
+            SetCompilingState(false);
+        }
 
         #region [Methods] Config
         void ReloadConfig()
