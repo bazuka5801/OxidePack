@@ -46,10 +46,10 @@
     </Compile>
     <Compile Update="Forms\MainForm\MainForm.Designer.cs">
       <SubType>Form</SubType>
-      <DependentUpon>Forms\MainForm\MainForm.cs</DependentUpon>
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Forms\MainForm\MainForm.resx">
-      <DependentUpon>Forms\MainForm\MainForm.cs</DependentUpon>
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
 
     <Compile Update="Forms\DependenciesForm\DependenciesForm.cs">
@@ -57,7 +57,7 @@
     </Compile>
     <Compile Update="Forms\DependenciesForm\DependenciesForm.Designer.cs">
       <SubType>Form</SubType>
-      <DependentUpon>Forms\DependenciesForm\DependenciesForm.cs</DependentUpon>
+      <DependentUpon>DependenciesForm.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Forms\AuthForm\AuthForm.cs">
@@ -65,7 +65,7 @@
     </Compile>
     <Compile Update="Forms\AuthForm\AuthForm.Designer.cs">
       <SubType>Form</SubType>
-      <DependentUpon>Forms\AuthForm\AuthForm.cs</DependentUpon>
+      <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Forms\PluginManagerForm\PluginManagerForm.cs">
@@ -73,7 +73,7 @@
     </Compile>
     <Compile Update="Forms\PluginManagerForm\PluginManagerForm.Designer.cs">
       <SubType>Form</SubType>
-      <DependentUpon>Forms\PluginManagerForm\PluginManagerForm.cs</DependentUpon>
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Properties\Resources.Designer.cs">
