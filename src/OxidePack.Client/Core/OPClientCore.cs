@@ -17,6 +17,8 @@ namespace OxidePack.Client
     public static class OPClientCore
     {
         public static Solution Solution { get; private set; }
+        
+        public static PluginsProject PluginsProject { get; private set; }
 
         public static void Init()
         {
@@ -31,6 +33,11 @@ namespace OxidePack.Client
             }
         }
 
+        public static void SetPluginsProject(PluginsProject project)
+        {
+            PluginsProject = project;
+        }
+
         public static void SetSolution(string path)
         {
             if (File.Exists(path))
@@ -38,6 +45,7 @@ namespace OxidePack.Client
             else
                 SetSolution((Solution)null);
         }
+        
         public static void SetSolution(Solution solution)
         {
             Solution = solution;
@@ -50,12 +58,6 @@ namespace OxidePack.Client
             
             Solution.AddProject(filename, projectName, projectRelativePath);
         }
-
-        #region MyRegion
-
-        
-
-        #endregion
 
         #region MyRegion
 

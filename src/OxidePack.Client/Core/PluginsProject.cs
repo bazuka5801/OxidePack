@@ -28,6 +28,7 @@ namespace OxidePack.Client
         {
             this.csProject = csProject;
             ReloadConfig();
+            OPClientCore.SetPluginsProject(this);
         }
 
         public PluginProject GetPlugin(string pluginName)
