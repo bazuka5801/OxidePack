@@ -14,15 +14,15 @@ namespace OxidePack.Client
     {
         public CsProject csProject;
         private PluginsProjectData _Config;
-        
+
         private string DataFileName => Path.Combine(Path.GetDirectoryName(csProject.FilePath), "plugins-project.json");
 
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
-        
+
         private FSWatcher _Watcher;
 
         private string _Directory => Path.GetDirectoryName(csProject.FilePath);
-        
+
         class PluginsProjectData
         {
             public List<string> PluginList = new List<string>();
@@ -40,7 +40,7 @@ namespace OxidePack.Client
         {
             if (_Plugins.TryGetValue(pluginName, out var plugin))
                 return plugin;
-            
+
             var pluginFolder = Path.Combine(_Directory, pluginName);
             if (Directory.Exists(pluginFolder) == false)
             {
@@ -61,7 +61,7 @@ namespace OxidePack.Client
         }
 
         public List<string> GetPluginList() => _Config?.PluginList.ToList() ?? new List<string>();
-        
+
         private void StartWatching()
         {
             _Watcher?.Close();
