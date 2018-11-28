@@ -40,6 +40,7 @@ namespace OxidePack.Server.App
             }
             catch (Exception e)
             {
+                ConsoleSystem.LogError($"[HandleMessage] => {e.Message}\n{e.StackTrace}");
 //                Server.DisconnectClient();
                 throw;
             }
