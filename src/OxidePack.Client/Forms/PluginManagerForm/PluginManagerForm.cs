@@ -392,6 +392,26 @@ namespace OxidePack.Client
         }
         #endregion
 
+        #region [Method] btnAddPlugin_Click
+        private void btnAddPlugin_Click(object sender, EventArgs e)
+        {
+            AddPluginModel model = new AddPluginModel();
+            new AddPluginForm(model).ShowDialog();
+            if (model.Success)
+            {
+                var pluginname = model.Name;
+                if (_PluginsProject.AddPlugin(pluginname, out var plugin) == false)
+                {
+                    MessageBox.Show($"Plugin '{pluginname}' already exists!", "Error");
+                    return;
+                }
+
+                lbPlugins.Items.Add(new ModuleListViewItem(plugin, lbPlugins));
+            }
+        }
         #endregion
+
+        #endregion
+
     }
 }

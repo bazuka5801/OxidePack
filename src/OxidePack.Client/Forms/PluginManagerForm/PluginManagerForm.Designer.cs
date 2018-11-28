@@ -97,6 +97,7 @@
             this.btnAddPlugin.TabIndex = 0;
             this.btnAddPlugin.Text = "Add";
             this.btnAddPlugin.UseVisualStyleBackColor = true;
+            this.btnAddPlugin.Click += new System.EventHandler(this.btnAddPlugin_Click);
             // 
             // tableLayoutPanel2
             // 
