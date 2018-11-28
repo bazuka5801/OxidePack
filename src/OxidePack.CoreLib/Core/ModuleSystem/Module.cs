@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using OxidePack.CoreLib.Utils;
 using SapphireEngine;
 
 using MemberList = Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax>;
@@ -89,24 +90,7 @@ namespace OxidePack.CoreLib
                 memberList.AddRange(members);
             }
 
-
-            var list = memberList[0].GetLeadingTrivia().ToList();
-            list.Insert(0, Trivia(RegionDirectiveTrivia( true)
-                .WithHashToken(Token(HashToken))
-                .WithRegionKeyword(Token(RegionKeyword)) 
-                .WithEndOfDirectiveToken(
-                    Token(TriviaList(PreprocessingMessage($" [Module] {_manifest.Name}")),
-                        EndOfDirectiveToken,
-                        TriviaList()) )));
-            list.Insert(1, EndOfLine("\r\n"));
-            memberList[0] = memberList[0].WithLeadingTrivia(list);
-
-            var list2 = memberList[memberList.Count - 1].GetTrailingTrivia().ToList();
-            list2.Add(Trivia(EndRegionDirectiveTrivia(true)
-                .WithHashToken(Token(HashToken))
-                .WithEndRegionKeyword(Token(EndRegionKeyword))));
-            list2.Add(EndOfLine(""));
-            memberList[memberList.Count - 1] = memberList[memberList.Count - 1].WithTrailingTrivia(list2);
+            EditUtils.InRegion(memberList, $"[Module] {_manifest.Name}");
 
             var slMembers = new SyntaxList<MemberDeclarationSyntax>(memberList);
             var compilationUnit = CompilationUnit(List<ExternAliasDirectiveSyntax>(), List<UsingDirectiveSyntax>(),
