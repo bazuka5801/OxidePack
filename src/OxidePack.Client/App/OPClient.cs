@@ -39,14 +39,19 @@ namespace OxidePack.Client.App
             var plugin = OPClientCore.PluginsProject.GetPlugin(response.pluginname);
             if (plugin == null)
             {
-                var enabled = ConsoleSystem.ShowCallerInLog;
-                ConsoleSystem.ShowCallerInLog = true;
-                ConsoleSystem.LogError($"plugin '{response.pluginname}' is NULL");
-                ConsoleSystem.ShowCallerInLog = enabled;
+                PluginNotExistError(response.pluginname);
                 return;
             }
             
             plugin.OnGeneratedFileResponse(response.content);
+        }
+
+        private void PluginNotExistError(string pluginname)
+        {
+            var enabled = ConsoleSystem.ShowCallerInLog;
+            ConsoleSystem.ShowCallerInLog = true;
+            ConsoleSystem.LogError($"plugin '{pluginname}' is NULL");
+            ConsoleSystem.ShowCallerInLog = enabled;
         }
     }
 }
