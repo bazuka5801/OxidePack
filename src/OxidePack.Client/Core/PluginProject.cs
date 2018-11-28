@@ -103,7 +103,7 @@ namespace OxidePack.Client
             SaveConfig();
         }
 
-        private void RequestGeneratedFile()
+        public void RequestGeneratedFile()
         {
             using (GeneratedFileRequest gfRequest = new GeneratedFileRequest()
             {
