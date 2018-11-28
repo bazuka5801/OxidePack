@@ -344,6 +344,18 @@ namespace OxidePack.Client
         }
         #endregion
 
+        #region [Method] btnCompile_Click
+        private void btnCompile_Click(object sender, EventArgs e)
+        {
+            if (_PluginSelected == null)
+            {
+                throw new Exception("PluginSelected is null");
+            }
+
+            _PluginSelected.RequestCompile();
+        }
+        #endregion
+
         #endregion
     }
 }

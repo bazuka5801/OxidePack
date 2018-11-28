@@ -44,9 +44,10 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.pnlModulesContainer = new System.Windows.Forms.Panel();
-            this.btnDeletePlugin = new System.Windows.Forms.Button();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.btnRefreshGeneratedFile = new System.Windows.Forms.Button();
+            this.btnDeletePlugin = new System.Windows.Forms.Button();
+            this.btnCompile = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.pnlPlugin.SuspendLayout();
@@ -252,27 +253,14 @@
             this.pnlModulesContainer.Size = new System.Drawing.Size(350, 254);
             this.pnlModulesContainer.TabIndex = 1;
             // 
-            // btnDeletePlugin
-            // 
-            this.btnDeletePlugin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btnDeletePlugin.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnDeletePlugin.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnDeletePlugin.ForeColor = System.Drawing.Color.Silver;
-            this.btnDeletePlugin.Location = new System.Drawing.Point(182, 48);
-            this.btnDeletePlugin.Name = "btnDeletePlugin";
-            this.btnDeletePlugin.Size = new System.Drawing.Size(165, 40);
-            this.btnDeletePlugin.TabIndex = 0;
-            this.btnDeletePlugin.Text = "Delete Plugin";
-            this.btnDeletePlugin.UseVisualStyleBackColor = false;
-            this.btnDeletePlugin.Click += new System.EventHandler(this.btnDeletePlugin_Click);
-            // 
             // tableLayoutPanel6
             // 
             this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.42857F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.57143F));
-            this.tableLayoutPanel6.Controls.Add(this.btnRefreshGeneratedFile, 0, 0);
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.28571F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.71429F));
             this.tableLayoutPanel6.Controls.Add(this.btnDeletePlugin, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.btnCompile, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.btnRefreshGeneratedFile, 1, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 303);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
@@ -288,13 +276,41 @@
             this.btnRefreshGeneratedFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRefreshGeneratedFile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
             this.btnRefreshGeneratedFile.ForeColor = System.Drawing.Color.Black;
-            this.btnRefreshGeneratedFile.Location = new System.Drawing.Point(3, 3);
+            this.btnRefreshGeneratedFile.Location = new System.Drawing.Point(150, 3);
             this.btnRefreshGeneratedFile.Name = "btnRefreshGeneratedFile";
-            this.btnRefreshGeneratedFile.Size = new System.Drawing.Size(173, 39);
+            this.btnRefreshGeneratedFile.Size = new System.Drawing.Size(197, 39);
             this.btnRefreshGeneratedFile.TabIndex = 1;
             this.btnRefreshGeneratedFile.Text = "Refresh Generated";
             this.btnRefreshGeneratedFile.UseVisualStyleBackColor = false;
             this.btnRefreshGeneratedFile.Click += new System.EventHandler(this.btnRefreshGeneratedFile_Click);
+            // 
+            // btnDeletePlugin
+            // 
+            this.btnDeletePlugin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnDeletePlugin.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnDeletePlugin.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnDeletePlugin.ForeColor = System.Drawing.Color.Silver;
+            this.btnDeletePlugin.Location = new System.Drawing.Point(150, 48);
+            this.btnDeletePlugin.Name = "btnDeletePlugin";
+            this.btnDeletePlugin.Size = new System.Drawing.Size(197, 40);
+            this.btnDeletePlugin.TabIndex = 0;
+            this.btnDeletePlugin.Text = "Delete Plugin";
+            this.btnDeletePlugin.UseVisualStyleBackColor = false;
+            this.btnDeletePlugin.Click += new System.EventHandler(this.btnDeletePlugin_Click);
+            // 
+            // btnCompile
+            // 
+            this.btnCompile.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.btnCompile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCompile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnCompile.ForeColor = System.Drawing.Color.Black;
+            this.btnCompile.Location = new System.Drawing.Point(3, 3);
+            this.btnCompile.Name = "btnCompile";
+            this.btnCompile.Size = new System.Drawing.Size(141, 39);
+            this.btnCompile.TabIndex = 2;
+            this.btnCompile.Text = "Compile";
+            this.btnCompile.UseVisualStyleBackColor = false;
+            this.btnCompile.Click += new System.EventHandler(this.btnCompile_Click);
             // 
             // PluginManagerForm
             // 
@@ -342,5 +358,6 @@
         private System.Windows.Forms.Button btnDeletePlugin;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.Button btnRefreshGeneratedFile;
+        private System.Windows.Forms.Button btnCompile;
     }
 }
