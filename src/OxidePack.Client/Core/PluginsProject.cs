@@ -57,6 +57,7 @@ namespace OxidePack.Client
 
         public List<string> GetPluginList() => _Config?.PluginList.ToList() ?? new List<string>();
 
+        #region [Methods] Config
         void ReloadConfig()
         {
             if (File.Exists(this.DataFileName) == false)
@@ -85,5 +86,6 @@ namespace OxidePack.Client
             
             File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(_Config, Formatting.Indented));
         }
+        #endregion
     }
 }
