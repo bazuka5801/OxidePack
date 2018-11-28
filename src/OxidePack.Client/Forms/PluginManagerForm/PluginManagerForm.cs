@@ -1,6 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using OxidePack.Client.Properties;
+using OxidePack.Data;
+using SapphireEngine;
 
 namespace OxidePack.Client
 {
@@ -12,8 +17,39 @@ namespace OxidePack.Client
         {
             InitializeComponent();
             LoadProject(pluginsProject);
+            
+            ModuleMgr.OnModulesUpdateEvent += OnModulesUpdateEvent;
+            ModuleMgr.Refresh();
+        }
+        
+        private List<ModuleView> moduleViews = new List<ModuleView>();
+        private PluginProject _PluginSelected;
+
+        private void OnModulesUpdateEvent()
+        {
+            ThreadUtils.RunInUI(() =>
+            {
+                var modulesCount = ModuleMgr.Modules.Count;
+                var needCreate = modulesCount - moduleViews.Count;
+                for (int j = 0; j < needCreate; j++)
+                {
+                    moduleViews.Add(GenerateModuleView());
+                }
+                
+                for (var i = 0; i < ModuleMgr.Modules.Count; i++)
+                {
+                    var mView = moduleViews[i];
+                    mView.LoadModuleInfo(ModuleMgr.Modules[i]);
+                    mView.SetIndex(i);
+                    
+                    // Reload selected plugin
+                    SelectPlugin(_PluginSelected);
+                }
+            });
         }
 
+        #region [Type] ModuleListViewItem
+        
         class ModuleListViewItem
         {
             public string Name;
@@ -30,7 +66,9 @@ namespace OxidePack.Client
                 return $"{Name} ({Version})";
             }
         }
+        #endregion
 
+        #region [Method] LoadProject
         void LoadProject(PluginsProject pluginsProject)
         {
             this._PluginsProject = pluginsProject;
@@ -46,11 +84,13 @@ namespace OxidePack.Client
 
             if (exist)
             {
-                // Auto-Select first item
+                // Select first plugin
                 lbPlugins.SetSelected(0, true);
             }
         }
+        #endregion
 
+        #region [Type] ModuleView
         class ModuleView
         {
             private const int HEIGHT = 52;
@@ -59,12 +99,52 @@ namespace OxidePack.Client
             private Label lblName;
             private Button btnInfo, btnAddRemove;
 
+            public Boolean Enabled = false;
+
+            /// <summary>
+            /// 1 - ModuleView, 2 - Enabled
+            /// </summary>
+            public Action<ModuleView, Boolean> OnEnabledChanged;
+
+            /// <summary>
+            /// For set use LoadModuleInfo
+            /// </summary>
+            public ModuleInfo ModuleInfo { get; private set; }
+
             public ModuleView(Panel pnlModule, Label lblName, Button btnInfo, Button btnAddRemove)
             {
                 this.pnlModule = pnlModule;
                 this.lblName = lblName;
                 this.btnInfo = btnInfo;
                 this.btnAddRemove = btnAddRemove;
+                
+                this.btnInfo.Click += BtnInfo_OnClick;
+                this.btnAddRemove.Click += BtnAddRemove_OnClick;
+            }
+
+            private void BtnAddRemove_OnClick(object sender, EventArgs e)
+            {
+                this.Enabled = !Enabled;
+                OnEnabledChanged?.Invoke(this, this.Enabled);
+                SetImageAddRemoveButton(this.Enabled);
+            }
+
+            public void LoadModuleInfo(ModuleInfo info)
+            {
+                ModuleInfo = info;
+                SetModuleName($"{info.name} ({info.version})");
+            }
+
+            private void BtnInfo_OnClick(object sender, EventArgs e)
+            {
+                if (ModuleInfo == null)
+                {
+                    ConsoleSystem.LogError($"ModuleView: _ModuleInfo == null");
+                    return;
+                }
+
+                MessageBox.Show(ModuleInfo.description, $"{ModuleInfo.name} ({ModuleInfo.version})",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             public void SetIndex(int index)
@@ -82,6 +162,7 @@ namespace OxidePack.Client
                 this.btnAddRemove.BackgroundImage = enabled ? Resources.btnRemove : Resources.btnAdd;
             }
         }
+        #endregion
 
         #region [Method] GenerateModuleView
         private ModuleView GenerateModuleView()
@@ -168,8 +249,34 @@ namespace OxidePack.Client
             tlpModuleButtons.Controls.Add(btnModuleInfo, 0, 0);
             tlpModuleButtons.Controls.Add(btnAddRemove, 1, 0);
             pnlModulesContainer.Controls.Add(pnlModule);
+            var mView = new ModuleView(pnlModule, lblModuleName, btnModuleInfo, btnAddRemove);
+            mView.OnEnabledChanged += OnModuleEnabledChanged;
+            return mView;
+        }
+        #endregion
+
+        #region [Method] SelectPlugin
+
+        private void SelectPlugin(PluginProject plugin)
+        {
+            this._PluginSelected = plugin;
             
-            return new ModuleView(pnlModule, lblModuleName, btnModuleInfo, btnAddRemove);
+            
+            this.lblPluginName.Text = plugin.config.Name;
+            this.lblVersion.Text = plugin.config.Version.ToString();
+            this.lblAuthor.Text = plugin.config.Author;
+
+            this.moduleViews.ForEach(mView =>
+            {
+                var enabled = plugin.config.Modules.Contains(mView.ModuleInfo.name);
+                mView.Enabled = enabled;
+                mView.SetImageAddRemoveButton(enabled);
+            });
+
+            this.moduleViews = this.moduleViews
+                .OrderBy(mView => mView.ModuleInfo.name)
+                .ThenByDescending(p => p.Enabled)
+                .ToList();
         }
         #endregion
 
@@ -200,10 +307,28 @@ namespace OxidePack.Client
             }
             
             var plugin = _PluginsProject.GetPlugin(selected.Name);
+            SelectPlugin(plugin);
+        }
+        #endregion
 
-            lblPluginName.Text = plugin.config.Name;
-            lblVersion.Text = plugin.config.Version.ToString();
-            lblAuthor.Text = plugin.config.Author;
+
+        #region [Method] OnModuleEnabledChanged
+        private void OnModuleEnabledChanged(ModuleView mView, bool enabled)
+        {
+            if (_PluginSelected == null)
+            {
+                throw new NullReferenceException("Plugin Selected is NULL!");
+                return;
+            }
+
+            if (enabled)
+            {
+                _PluginSelected.AddModule(mView.ModuleInfo.name);
+            }
+            else
+            {
+                _PluginSelected.RemoveModule(mView.ModuleInfo.name);
+            }
         }
         #endregion
 
