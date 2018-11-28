@@ -41,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\AddPluginForm\AddPluginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\MainForm\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +77,14 @@
     <Compile Update="Forms\PluginManagerForm\PluginManagerForm.Designer.cs">
       <SubType>Form</SubType>
       <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </Compile>
+    
+    <Compile Update="Forms\AddPluginForm\AddPluginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\AddPluginForm\AddPluginForm.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>AddPluginForm.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Properties\Resources.Designer.cs">
