@@ -44,7 +44,7 @@ namespace OxidePack
                 m_ConfigWatcher = null;
             }
             m_ConfigWatcher = new FSWatcher(Directory.GetCurrentDirectory(), "config.json");
-            m_ConfigWatcher.Subscribe(OnConfigChanged);
+            m_ConfigWatcher.Subscribe(ConfigFileChanged);
         }
 
         public void DisableWatcher()
@@ -56,7 +56,7 @@ namespace OxidePack
             }
         }
 
-        private void OnConfigChanged(string obj)
+        private void ConfigFileChanged(string obj)
         {
             Load();
         }
