@@ -31,7 +31,7 @@ namespace OxidePack.CoreLib
             
             var mainClass = sTree.DescendantNodes(node => node.IsKind(SyntaxKind.ClassDeclaration) == false)
                 .OfType<ClassDeclarationSyntax>().FirstOrDefault();
-            
+
             if (mainClass == null)
             {
                 throw new Exception($"Plugin Class not found in '{data.filename}' file");
@@ -39,6 +39,13 @@ namespace OxidePack.CoreLib
             }
 
             var members = mainClass.Members.ToList();
+
+            if (mainClass.CloseBraceToken.HasLeadingTrivia)
+            {
+                var lastElement = members[members.Count - 1];
+                members[members.Count - 1] = lastElement.WithTrailingTrivia(lastElement.GetLeadingTrivia()
+                    .AddRange(mainClass.CloseBraceToken.LeadingTrivia));
+            }
 
             this.Members = members.ToArray();
         }
