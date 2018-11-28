@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Ether.Network.Packets;
 using OxidePack.Data;
+using SapphireEngine;
 
 namespace OxidePack.Client.App
 {
@@ -35,7 +36,17 @@ namespace OxidePack.Client.App
 
         private void OnRPC_GeneratedFileResponse(GeneratedFileResponse response)
         {
-            throw new NotImplementedException();
+            var plugin = OPClientCore.PluginsProject.GetPlugin(response.pluginname);
+            if (plugin == null)
+            {
+                var enabled = ConsoleSystem.ShowCallerInLog;
+                ConsoleSystem.ShowCallerInLog = true;
+                ConsoleSystem.LogError($"plugin '{response.pluginname}' is NULL");
+                ConsoleSystem.ShowCallerInLog = enabled;
+                return;
+            }
+            
+            plugin.OnGeneratedFileResponse(response.content);
         }
     }
 }
