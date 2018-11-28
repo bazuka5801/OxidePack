@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using OxidePack.Client.App;
@@ -34,6 +35,8 @@ namespace OxidePack.Client
         public CsProject csProject;
         public PluginProjectData config;
 
+        public Action<PluginProject> OnModulesChanged;
+
         private string _Directory;
         
         private string DataFileName => Path.Combine(_Directory, "plugin.json");
@@ -63,6 +66,69 @@ namespace OxidePack.Client
             }
         }
 
+        #region [Methods] Modules
+        public void AddModule(string mName)
+        {
+            if (config.Modules.Contains(mName))
+            {
+                throw new Exception($"Module {mName} already exists in {Name} plugin!");
+            }
+
+            config.Modules.Add(mName);
+            OnModulesChanged?.Invoke(this);
+            RequestGeneratedFile();
+            SaveConfig();
+        }
+        
+        public void RemoveModule(string mName)
+        {
+            if (config.Modules.Contains(mName) == false)
+            {
+                throw new Exception($"Missing {mName} module in {Name} plugin!");
+            }
+
+            config.Modules.Remove(mName);
+            OnModulesChanged?.Invoke(this);
+            var filename = Path.Combine(_Directory, $"{Name}.generated.cs");
+            if (config.Modules.Count == 0 && File.Exists(filename))
+            {
+                csProject.CompileRemove(filename);
+                File.Delete(filename);
+            }
+            else
+            {
+                RequestGeneratedFile();
+            }
+
+            SaveConfig();
+        }
+
+        private void RequestGeneratedFile()
+        {
+            using (GeneratedFileRequest gfRequest = new GeneratedFileRequest()
+            {
+                modules = config.Modules.ToList(),
+                @namespace = $"Oxide.Plugins.{Name}",
+                pluginname = Name,
+            })
+            {
+                Net.cl.SendRPC(RPCMessageType.GeneratedFileRequest, gfRequest);
+            }
+        }
+
+        public void OnGeneratedFileResponse(string content)
+        {
+            var filename = Path.Combine(_Directory, $"{Name}.generated.cs");
+            var exists = File.Exists(filename);
+            File.WriteAllText(filename, content);
+            if (exists == false)
+            {
+                csProject.CompileAdd(filename);
+            }
+        }
+        #endregion
+
+        #region [Methods] Config
         void ReloadConfig()
         {
             string pluginNameDefault = Path.GetFileName(_Directory);
@@ -92,5 +158,6 @@ namespace OxidePack.Client
             
             File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(config, Formatting.Indented));
         }
+        #endregion
     }
 }
