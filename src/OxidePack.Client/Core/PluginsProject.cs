@@ -84,7 +84,19 @@ namespace OxidePack.Client
                 plugin.RequestCompile();
             }
         }
+        
+        public bool AddPlugin(string pName, out PluginProject plugin)
+        {
+            if (_Config.PluginList.Contains(pName))
+            {
+                plugin = null;
+                return false;
+            }
 
+            plugin = GetPlugin(pName);
+            _Config.PluginList.Add(pName);
+            return true;
+        }
 
         #region [Methods] Config
         void ReloadConfig()
