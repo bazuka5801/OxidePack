@@ -19,6 +19,8 @@ namespace OxidePack.Client
 
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
         
+        private string _Directory => Path.GetDirectoryName(csProject.FilePath);
+        
         class PluginsProjectData
         {
             public List<string> PluginList = new List<string>();
@@ -36,7 +38,7 @@ namespace OxidePack.Client
             if (_Plugins.TryGetValue(pluginName, out var plugin))
                 return plugin;
             
-            var pluginFolder = Path.Combine(Path.GetDirectoryName(csProject.FilePath), pluginName);
+            var pluginFolder = Path.Combine(_Directory, pluginName);
             if (Directory.Exists(pluginFolder) == false)
             {
                 Directory.CreateDirectory(pluginFolder);
@@ -47,7 +49,7 @@ namespace OxidePack.Client
 
         public void RemovePlugin(string name)
         {
-            var pluginFolder = Path.Combine(Path.GetDirectoryName(csProject.FilePath), name);
+            var pluginFolder = Path.Combine(_Directory, name);
             if (Directory.Exists(pluginFolder))
             {
                 var csFiles = Directory.GetFiles(pluginFolder, "*.cs", SearchOption.AllDirectories).ToList();
