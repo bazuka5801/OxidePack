@@ -49,9 +49,31 @@ namespace OxidePack.Data
 
     }
 
+    public partial class BuildResponse : IDisposable, Pool.IPooled, IProto
+    {
+        public string pluginname;
+
+        public string content;
+
+    }
+
     public partial class BuildOptions : IDisposable, Pool.IPooled, IProto
     {
         public string name;
+
+        public OxidePack.Data.PluginInfo plugininfo;
+
+    }
+
+    public partial class PluginInfo : IDisposable, Pool.IPooled, IProto
+    {
+        public string name;
+
+        public string author;
+
+        public string version;
+
+        public string description;
 
     }
 

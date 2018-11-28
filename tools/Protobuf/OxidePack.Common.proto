@@ -20,8 +20,21 @@ message BuildRequest {
 	repeated   SourceFile sources = 2;
 }
 
+message BuildResponse {
+	required string pluginname = 1;
+	required string content = 2;
+}
+
 message BuildOptions {
 	required string name = 1;
+	required PluginInfo plugininfo = 2;
+}
+
+message PluginInfo {
+	required string        name = 1;
+	required string      author = 2;
+	required string     version = 3;
+	optional string description = 4;
 }
 
 message SourceFile {
