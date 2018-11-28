@@ -53,17 +53,53 @@ namespace OxidePack.Client
         class ModuleListViewItem
         {
             public string Name;
-            public string Version;
+            public string ViewName;
+            public PluginProject Plugin;
+            public ListBox lbPlugin;
 
-            public ModuleListViewItem(string name, string version)
+            public ModuleListViewItem()
             {
-                this.Name = name;
-                this.Version = version;
+            }
+
+            public ModuleListViewItem(PluginProject plugin, ListBox lbPlugins)
+            {
+                this.Plugin = plugin;
+                this.lbPlugin = lbPlugins;
+                this.Name = plugin.Name;
+                this.ViewName = $"{this.Plugin.Name} ({this.Plugin.config.Version})";
+                Subscribe();
+            }
+
+            public void Subscribe()
+            {
+                this.Plugin.OnCompiled += OnPluginCompiled;
+            }
+
+            public void Unsubscribe()
+            {
+                if (this.Plugin.OnCompiled != null)
+                    this.Plugin.OnCompiled -= OnPluginCompiled;
+            }
+            private void OnPluginCompiled(PluginProject plugin)
+            {
+                UpdateViewName();
+            }
+
+            public void UpdateViewName()
+            {
+                this.ViewName = $"{this.Plugin.Name} ({this.Plugin.config.Version})";
+                ThreadUtils.RunInUI(() =>
+                {
+                    var index = this.lbPlugin.Items.IndexOf(this);
+                    this.lbPlugin.Items.RemoveAt(index);
+                    this.lbPlugin.Items.Insert(index, this);
+                    this.lbPlugin.SetSelected(index, true);
+                });
             }
 
             public override string ToString()
             {
-                return $"{Name} ({Version})";
+                return ViewName;
             }
         }
         #endregion
@@ -79,9 +115,10 @@ namespace OxidePack.Client
             {
                 exist = true;
                 var plugin = pluginsProject.GetPlugin(name);
-                lbPlugins.Items.Add(new ModuleListViewItem(plugin.config.Name, plugin.config.Version.ToString()));
+                lbPlugins.Items.Add(new ModuleListViewItem(plugin, lbPlugins));
             });
 
+            
             if (exist)
             {
                 // Select first plugin
@@ -310,7 +347,6 @@ namespace OxidePack.Client
             SelectPlugin(plugin);
         }
         #endregion
-
 
         #region [Method] OnModuleEnabledChanged
         private void OnModuleEnabledChanged(ModuleView mView, bool enabled)
