@@ -51,6 +51,12 @@ namespace OxidePack.CoreLib
                     }
                 }
 
+                if (pluginBody.Count > 0)
+                {
+                    // Add new line
+                    pluginBody[pluginBody.Count - 1] = EditUtils.AddTrailingNewLine(pluginBody[pluginBody.Count - 1]);
+                }
+
                 foreach (var sourceMember in source.Members)
                 {
                     if (sourceMember is MethodDeclarationSyntax method)
@@ -82,6 +88,12 @@ namespace OxidePack.CoreLib
                         pluginBody.Add(sourceMember);
                     }
                 }
+            }
+
+            // Add new line
+            if (pluginBody.Count > 0)
+            {
+                pluginBody[pluginBody.Count - 1] = EditUtils.AddTrailingNewLine(pluginBody[pluginBody.Count - 1]);
             }
 
             var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value)).ToList();

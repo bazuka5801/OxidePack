@@ -36,5 +36,12 @@ namespace OxidePack.CoreLib.Utils
 
             return memberList;
         }
+
+        public static MemberDeclarationSyntax AddTrailingNewLine(MemberDeclarationSyntax member)
+        {
+            var list = member.GetTrailingTrivia().ToList();
+            list.Add(EndOfLine("\r\n"));
+            return member.WithTrailingTrivia(list);
+        }
     }
 }
