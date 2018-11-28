@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-
+using OxidePack.CoreLib.Utils;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace OxidePack.CoreLib
@@ -85,6 +85,7 @@ namespace OxidePack.CoreLib
             }
 
             var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value)).ToList();
+            EditUtils.InRegion(hookMethods, "[Generated] [Hook Methods]");
             pluginBody.AddRange(hookMethods);
             return (List(pluginBody), List(usings));
         }
