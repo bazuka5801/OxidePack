@@ -24,7 +24,6 @@ namespace OxidePack.CoreLib
         {
             this.PluginName = pluginname;
             this.Options = options;
-            BuildingInit();
         }
 
         public void Dispose()

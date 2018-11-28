@@ -43,14 +43,7 @@ namespace OxidePack.CoreLib
         }
         #endregion
         
-        private AdhocWorkspace _workspace;
-
-        #region [Method] BuildingInit
-        void BuildingInit()
-        {
-            this._workspace = new AdhocWorkspace();
-        }
-        #endregion
+        private static AdhocWorkspace _workspace = new AdhocWorkspace();
 
         public string Build(BuildRequest request)
         {
