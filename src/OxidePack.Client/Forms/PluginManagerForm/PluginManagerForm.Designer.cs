@@ -2,24 +2,6 @@
 {
     partial class PluginManagerForm
     {
-        private System.Windows.Forms.ListBox lbPlugins;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button btnAddPlugin;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel pnlPlugin;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Label lblPluginName;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.Label lblAuthor;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblVersion;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel pnlModules;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Panel pnlModulesContainer;
-        private System.Windows.Forms.Button btnDeletePlugin;
-
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -63,6 +45,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pnlModulesContainer = new System.Windows.Forms.Panel();
             this.btnDeletePlugin = new System.Windows.Forms.Button();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnRefreshGeneratedFile = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.pnlPlugin.SuspendLayout();
@@ -70,7 +54,7 @@
             this.tableLayoutPanel4.SuspendLayout();
             this.pnlModules.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            this.pnlModulesContainer.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbPlugins
@@ -237,12 +221,14 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Controls.Add(this.label4, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.pnlModulesContainer, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 2);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowCount = 3;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 97F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(356, 397);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
@@ -260,25 +246,55 @@
             // pnlModulesContainer
             // 
             this.pnlModulesContainer.AutoScroll = true;
-            this.pnlModulesContainer.Controls.Add(this.btnDeletePlugin);
             this.pnlModulesContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlModulesContainer.Location = new System.Drawing.Point(3, 43);
             this.pnlModulesContainer.Name = "pnlModulesContainer";
-            this.pnlModulesContainer.Size = new System.Drawing.Size(350, 351);
+            this.pnlModulesContainer.Size = new System.Drawing.Size(350, 254);
             this.pnlModulesContainer.TabIndex = 1;
             // 
             // btnDeletePlugin
             // 
             this.btnDeletePlugin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnDeletePlugin.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnDeletePlugin.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnDeletePlugin.ForeColor = System.Drawing.Color.Silver;
-            this.btnDeletePlugin.Location = new System.Drawing.Point(196, 306);
+            this.btnDeletePlugin.Location = new System.Drawing.Point(182, 48);
             this.btnDeletePlugin.Name = "btnDeletePlugin";
-            this.btnDeletePlugin.Size = new System.Drawing.Size(148, 39);
+            this.btnDeletePlugin.Size = new System.Drawing.Size(165, 40);
             this.btnDeletePlugin.TabIndex = 0;
             this.btnDeletePlugin.Text = "Delete Plugin";
             this.btnDeletePlugin.UseVisualStyleBackColor = false;
             this.btnDeletePlugin.Click += new System.EventHandler(this.btnDeletePlugin_Click);
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 2;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.42857F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 48.57143F));
+            this.tableLayoutPanel6.Controls.Add(this.btnRefreshGeneratedFile, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.btnDeletePlugin, 1, 1);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 303);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 2;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(350, 91);
+            this.tableLayoutPanel6.TabIndex = 2;
+            // 
+            // btnRefreshGeneratedFile
+            // 
+            this.btnRefreshGeneratedFile.BackColor = System.Drawing.Color.Silver;
+            this.btnRefreshGeneratedFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRefreshGeneratedFile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnRefreshGeneratedFile.ForeColor = System.Drawing.Color.Black;
+            this.btnRefreshGeneratedFile.Location = new System.Drawing.Point(3, 3);
+            this.btnRefreshGeneratedFile.Name = "btnRefreshGeneratedFile";
+            this.btnRefreshGeneratedFile.Size = new System.Drawing.Size(173, 39);
+            this.btnRefreshGeneratedFile.TabIndex = 1;
+            this.btnRefreshGeneratedFile.Text = "Refresh Generated";
+            this.btnRefreshGeneratedFile.UseVisualStyleBackColor = false;
+            this.btnRefreshGeneratedFile.Click += new System.EventHandler(this.btnRefreshGeneratedFile_Click);
             // 
             // PluginManagerForm
             // 
@@ -300,11 +316,31 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.pnlModules.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
-            this.pnlModulesContainer.ResumeLayout(false);
+            this.tableLayoutPanel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.ListBox lbPlugins;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button btnAddPlugin;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Panel pnlPlugin;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label lblPluginName;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Label lblAuthor;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel pnlModules;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel pnlModulesContainer;
+        private System.Windows.Forms.Button btnDeletePlugin;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.Button btnRefreshGeneratedFile;
     }
 }

@@ -332,6 +332,18 @@ namespace OxidePack.Client
         }
         #endregion
 
+        #region [Method] btnRefreshGeneratedFile_Click
+        private void btnRefreshGeneratedFile_Click(object sender, EventArgs e)
+        {
+            if (_PluginSelected == null)
+            {
+                throw new Exception("PluginSelected is null");                
+            }
+
+            _PluginSelected.RequestGeneratedFile();
+        }
+        #endregion
+
         #endregion
     }
 }
