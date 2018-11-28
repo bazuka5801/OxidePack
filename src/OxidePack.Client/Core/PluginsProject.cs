@@ -19,6 +19,8 @@ namespace OxidePack.Client
 
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
         
+        private FSWatcher _Watcher;
+
         private string _Directory => Path.GetDirectoryName(csProject.FilePath);
         
         class PluginsProjectData
@@ -31,6 +33,7 @@ namespace OxidePack.Client
             this.csProject = csProject;
             ReloadConfig();
             OPClientCore.SetPluginsProject(this);
+            StartWatching();
         }
 
         public PluginProject GetPlugin(string pluginName)
@@ -58,6 +61,30 @@ namespace OxidePack.Client
         }
 
         public List<string> GetPluginList() => _Config?.PluginList.ToList() ?? new List<string>();
+        
+        private void StartWatching()
+        {
+            _Watcher?.Close();
+            _Watcher = new FSWatcher(_Directory, "*.cs");
+            _Watcher.Subscribe(OnSourceFileChanged);
+        }
+
+        private void OnSourceFileChanged(string file)
+        {
+            var relPath = FileUtils.GetRelativePath(file, _Directory);
+            var pluginname = relPath.Substring(0, relPath.IndexOf('\\'));
+            // .builded, etc...
+            if (pluginname.StartsWith("."))
+            {
+                return;
+            }
+            var plugin = GetPlugin(pluginname);
+            if (plugin != null)
+            {
+                plugin.RequestCompile();
+            }
+        }
+
 
         #region [Methods] Config
         void ReloadConfig()
