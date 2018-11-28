@@ -107,10 +107,13 @@ namespace OxidePack.CoreLib
                 .WithEndRegionKeyword(Token(EndRegionKeyword))));
             list2.Add(EndOfLine(""));
             memberList[memberList.Count - 1] = memberList[memberList.Count - 1].WithTrailingTrivia(list2);
-            
-            Members = ParseCompilationUnit(new SyntaxList<MemberDeclarationSyntax>(memberList).ToFullString()).NormalizeWhitespace().Members.ToArray();
-            
-            File.WriteAllText(Path.Combine(_directory.FullName, "result_test.cs"), new SyntaxList<MemberDeclarationSyntax>(Members).ToFullString());
+
+            var slMembers = new SyntaxList<MemberDeclarationSyntax>(memberList);
+            var compilationUnit = CompilationUnit(List<ExternAliasDirectiveSyntax>(), List<UsingDirectiveSyntax>(),
+                List<AttributeListSyntax>(), slMembers).NormalizeWhitespace();
+            Members = compilationUnit.Members.ToArray();
+
+            File.WriteAllText(Path.Combine(_directory.FullName, "result_test.cs"), compilationUnit.ToFullString());
             
             sw.Stop();
             ConsoleSystem.Log($"Loaded <{_manifest.Name}> module in {sw.Elapsed:s\\.fff} sec.");
