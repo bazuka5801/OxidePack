@@ -80,6 +80,8 @@ namespace OxidePack.CoreLib
                 }
             }
 
+            var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value)).ToList();
+            pluginBody.AddRange(hookMethods);
             return (List(pluginBody), List(usings));
         }
     }
