@@ -984,11 +984,18 @@ namespace OxidePack.Data
         {
             if (!instance.ShouldPool)
                 return;
-            // [BuildOptions] options
-            if (instance.options != null)
+            // [BuildOptions] buildOptions
+            if (instance.buildOptions != null)
             {
-                instance.options.ResetToPool();
-                instance.options = null;
+                instance.buildOptions.ResetToPool();
+                instance.buildOptions = null;
+            }
+
+            // [EncryptOptions] encryptOptions
+            if (instance.encryptOptions != null)
+            {
+                instance.encryptOptions.ResetToPool();
+                instance.encryptOptions = null;
             }
 
             // [SourceFile] sources
@@ -1089,13 +1096,20 @@ namespace OxidePack.Data
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        if (instance.options == null)
-                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        if (instance.buildOptions == null)
+                            instance.buildOptions = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
                         else
-                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.buildOptions);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
+                        if (instance.encryptOptions == null)
+                            instance.encryptOptions = OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream, instance.encryptOptions);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
                         // repeated
                         instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
                         continue;
@@ -1141,13 +1155,20 @@ namespace OxidePack.Data
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        if (instance.options == null)
-                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        if (instance.buildOptions == null)
+                            instance.buildOptions = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
                         else
-                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.buildOptions);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
+                        if (instance.encryptOptions == null)
+                            instance.encryptOptions = OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream, instance.encryptOptions);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
                         // repeated
                         instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
                         continue;
@@ -1192,13 +1213,20 @@ namespace OxidePack.Data
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        if (instance.options == null)
-                            instance.options = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
+                        if (instance.buildOptions == null)
+                            instance.buildOptions = OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream);
                         else
-                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.options);
+                            OxidePack.Data.BuildOptions.DeserializeLengthDelimited(stream, instance.buildOptions);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
+                        if (instance.encryptOptions == null)
+                            instance.encryptOptions = OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream);
+                        else
+                            OxidePack.Data.EncryptOptions.DeserializeLengthDelimited(stream, instance.encryptOptions);
+                        continue;
+                    // Field 3 LengthDelimited
+                    case 26:
                         // repeated
                         instance.sources.Add(OxidePack.Data.SourceFile.DeserializeLengthDelimited(stream));
                         continue;
@@ -1226,29 +1254,40 @@ namespace OxidePack.Data
         public static void Serialize(Stream stream, BuildRequest instance)
         {
             var msField = Pool.Get<MemoryStream>();
-            if (instance.options == null)
-                throw new ArgumentNullException("options", "Required by proto specification.");
+            if (instance.buildOptions == null)
+                throw new ArgumentNullException("buildOptions", "Required by proto specification.");
             // Key for field: 1, LengthDelimited
             stream.WriteByte(10);
             ﻿msField.SetLength(0);
-            OxidePack.Data.BuildOptions.Serialize(msField, instance.options);
+            OxidePack.Data.BuildOptions.Serialize(msField, instance.buildOptions);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
+            if (instance.encryptOptions == null)
+                throw new ArgumentNullException("encryptOptions", "Required by proto specification.");
+            // Key for field: 2, LengthDelimited
+            stream.WriteByte(18);
+            ﻿msField.SetLength(0);
+            OxidePack.Data.EncryptOptions.Serialize(msField, instance.encryptOptions);
+            // Length delimited byte array
+            uint length2 = (uint)msField.Length;
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+            stream.Write(msField.GetBuffer(), 0, (int)length2);
+
             if (instance.sources != null)
             {
-                foreach (var i2 in instance.sources)
+                foreach (var i3 in instance.sources)
                 {
-                    // Key for field: 2, LengthDelimited
-                    stream.WriteByte(18);
+                    // Key for field: 3, LengthDelimited
+                    stream.WriteByte(26);
                     ﻿msField.SetLength(0);
-                    OxidePack.Data.SourceFile.Serialize(msField, i2);
+                    OxidePack.Data.SourceFile.Serialize(msField, i3);
                     // Length delimited byte array
-                    uint length2 = (uint)msField.Length;
-                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
-                    stream.Write(msField.GetBuffer(), 0, (int)length2);
+                    uint length3 = (uint)msField.Length;
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+                    stream.Write(msField.GetBuffer(), 0, (int)length3);
 
                 }
             }
@@ -1275,34 +1314,48 @@ namespace OxidePack.Data
         public static void SerializeDelta(Stream stream, BuildRequest instance, BuildRequest previous)
         {
             var msField = Pool.Get<MemoryStream>();
-            if (instance.options != previous.options)
+            if (instance.buildOptions != previous.buildOptions)
             {
-                if (instance.options == null)
-                    throw new ArgumentNullException("options", "Required by proto specification.");
+                if (instance.buildOptions == null)
+                    throw new ArgumentNullException("buildOptions", "Required by proto specification.");
                 // Key for field: 1, LengthDelimited
                 stream.WriteByte(10);
                 ﻿msField.SetLength(0);
-                OxidePack.Data.BuildOptions.SerializeDelta(msField, instance.options, previous.options);
+                OxidePack.Data.BuildOptions.SerializeDelta(msField, instance.buildOptions, previous.buildOptions);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             }
+            if (instance.encryptOptions != previous.encryptOptions)
+            {
+                if (instance.encryptOptions == null)
+                    throw new ArgumentNullException("encryptOptions", "Required by proto specification.");
+                // Key for field: 2, LengthDelimited
+                stream.WriteByte(18);
+                ﻿msField.SetLength(0);
+                OxidePack.Data.EncryptOptions.SerializeDelta(msField, instance.encryptOptions, previous.encryptOptions);
+                // Length delimited byte array
+                uint length2 = (uint)msField.Length;
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+                stream.Write(msField.GetBuffer(), 0, (int)length2);
+
+            }
             if (instance.sources != previous.sources)
             {
                 if (instance.sources != null)
                 {
-                    foreach (var i2 in instance.sources)
+                    foreach (var i3 in instance.sources)
                     {
-                        // Key for field: 2, LengthDelimited
-                        stream.WriteByte(18);
+                        // Key for field: 3, LengthDelimited
+                        stream.WriteByte(26);
                         ﻿msField.SetLength(0);
-                        OxidePack.Data.SourceFile.Serialize(msField, i2);
+                        OxidePack.Data.SourceFile.Serialize(msField, i3);
                         // Length delimited byte array
-                        uint length2 = (uint)msField.Length;
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
-                        stream.Write(msField.GetBuffer(), 0, (int)length2);
+                        uint length3 = (uint)msField.Length;
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+                        stream.Write(msField.GetBuffer(), 0, (int)length3);
 
                     }
                 }
@@ -1355,6 +1408,9 @@ namespace OxidePack.Data
 
             // [string] content
             instance.content = default(string);
+
+            // [string] encrypted
+            instance.encrypted = default(string);
 
             Pool.Free<OxidePack.Data.BuildResponse>(ref instance);
         }
@@ -1442,6 +1498,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1488,6 +1548,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1533,6 +1597,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.content = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1567,6 +1635,12 @@ namespace OxidePack.Data
             // Key for field: 2, LengthDelimited
             stream.WriteByte(18);
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            if (instance.encrypted != null)
+            {
+                // Key for field: 3, LengthDelimited
+                stream.WriteByte(26);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.encrypted));
+            }
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -1605,6 +1679,15 @@ namespace OxidePack.Data
                 // Key for field: 2, LengthDelimited
                 stream.WriteByte(18);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.content));
+            }
+            if (instance.encrypted != previous.encrypted)
+            {
+                if (instance.encrypted != null)
+                {
+                    // Key for field: 3, LengthDelimited
+                    stream.WriteByte(26);
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.encrypted));
+                }
             }
             Pool.FreeMemoryStream(ref msField);
         }
@@ -1937,6 +2020,273 @@ namespace OxidePack.Data
             Serialize(stream, this);
         }
         public void WriteToStreamDelta(Stream stream, BuildOptions previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class EncryptOptions
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(EncryptOptions instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [bool] enabled
+            instance.enabled = default(bool);
+
+            Pool.Free<OxidePack.Data.EncryptOptions>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static EncryptOptions Deserialize(Stream stream)
+        {
+            EncryptOptions instance = Pool.Get<EncryptOptions>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static EncryptOptions DeserializeLengthDelimited(Stream stream)
+        {
+            EncryptOptions instance = Pool.Get<EncryptOptions>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static EncryptOptions DeserializeLength(Stream stream, int length)
+        {
+            EncryptOptions instance = Pool.Get<EncryptOptions>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static EncryptOptions Deserialize(byte[] buffer)
+        {
+            EncryptOptions instance = Pool.Get<EncryptOptions>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.EncryptOptions Deserialize(byte[] buffer, OxidePack.Data.EncryptOptions instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.EncryptOptions Deserialize(Stream stream, OxidePack.Data.EncryptOptions instance)
+        {
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.EncryptOptions DeserializeLengthDelimited(Stream stream, OxidePack.Data.EncryptOptions instance)
+        {
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.EncryptOptions DeserializeLength(Stream stream, int length, OxidePack.Data.EncryptOptions instance)
+        {
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, EncryptOptions instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            // Key for field: 1, Varint
+            stream.WriteByte(8);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.enabled);
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(EncryptOptions instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, EncryptOptions instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, EncryptOptions instance, EncryptOptions previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.enabled != previous.enabled)
+            {
+                // Key for field: 1, Varint
+                stream.WriteByte(8);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.enabled);
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, EncryptOptions previous)
         {
             if (previous != null)
             {

@@ -164,7 +164,7 @@ namespace OxidePack.Client
             }).ToList();
             BuildRequest bRequest = new BuildRequest
             {
-                options = new BuildOptions
+                buildOptions = new BuildOptions
                 {
                     name = Name,
                     plugininfo = new PluginInfo

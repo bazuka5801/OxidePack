@@ -58,7 +58,7 @@ namespace OxidePack.CoreLib
                 pluginUsings.AddRange(generated.usings);
             }
 
-            var plugininfo = request.options.plugininfo;
+            var plugininfo = request.buildOptions.plugininfo;
             var attributes = new List<AttributeSyntax>()
             {
                 Attribute(ParseName("Info"),

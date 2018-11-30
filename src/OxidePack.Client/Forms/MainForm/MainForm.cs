@@ -198,7 +198,7 @@ namespace OxidePack.Client
                     new SourceFile()
                         {filename = "plugin.cs", content = pluginContent, sha256 = pluginContent.ToSHA512()}
                 },
-                options = new BuildOptions()
+                buildOptions = new BuildOptions()
                 {
                     name = "plugin"
                 }

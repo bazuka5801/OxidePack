@@ -20,10 +20,10 @@ namespace OxidePack.Server.App
                     break;
                 case RPCMessageType.BuildRequest:
                     BuildRequest bRequest = BuildRequest.Deserialize(stream);
-                    if (ActivePlugin == null || ActivePlugin.PluginName != bRequest.options.name)
+                    if (ActivePlugin == null || ActivePlugin.PluginName != bRequest.buildOptions.name)
                     {
                         var pOptions = new PluginOptions() { Debug = true, Encrypt = false, ReferencesPath = ".references" };
-                        ActivePlugin = new Plugin(bRequest.options.name, pOptions);
+                        ActivePlugin = new Plugin(bRequest.buildOptions.name, pOptions);
                     }
 
                     ThreadPool.QueueUserWorkItem((s) =>

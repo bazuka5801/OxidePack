@@ -43,7 +43,9 @@ namespace OxidePack.Data
 
     public partial class BuildRequest : IDisposable, Pool.IPooled, IProto
     {
-        public OxidePack.Data.BuildOptions options;
+        public OxidePack.Data.BuildOptions buildOptions;
+
+        public OxidePack.Data.EncryptOptions encryptOptions;
 
         public List<OxidePack.Data.SourceFile> sources;
 
@@ -55,6 +57,8 @@ namespace OxidePack.Data
 
         public string content;
 
+        public string encrypted;
+
     }
 
     public partial class BuildOptions : IDisposable, Pool.IPooled, IProto
@@ -62,6 +66,12 @@ namespace OxidePack.Data
         public string name;
 
         public OxidePack.Data.PluginInfo plugininfo;
+
+    }
+
+    public partial class EncryptOptions : IDisposable, Pool.IPooled, IProto
+    {
+        public bool enabled;
 
     }
 

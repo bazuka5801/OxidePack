@@ -16,18 +16,24 @@ message GeneratedFileResponse {
 }
 
 message BuildRequest {
-	required BuildOptions options = 1;
-	repeated   SourceFile sources = 2;
+	required   BuildOptions   buildOptions = 1;
+	required EncryptOptions encryptOptions = 2;
+	repeated     SourceFile 	   sources = 3;
 }
 
 message BuildResponse {
 	required string pluginname = 1;
 	required string content = 2;
+	optional string encrypted = 3;
 }
 
 message BuildOptions {
 	required string name = 1;
 	required PluginInfo plugininfo = 2;
+}
+
+message EncryptOptions {
+	required bool enabled = 1;	
 }
 
 message PluginInfo {
