@@ -148,7 +148,7 @@ namespace OxidePack.Client
         #endregion
 
         
-        public void RequestCompile()
+        public void RequestCompile(bool encrypt = false)
         {
             if (Compiling)
             {
@@ -175,6 +175,7 @@ namespace OxidePack.Client
                         description = config.Description
                     }
                 },
+                encryptOptions = { enabled = encrypt },
                 sources = sources
             };
             Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
