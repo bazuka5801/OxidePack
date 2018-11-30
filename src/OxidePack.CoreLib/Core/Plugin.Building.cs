@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using OxidePack.Data;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -12,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
+using OxidePack.CoreLib.Utils;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -87,6 +89,29 @@ namespace OxidePack.CoreLib
             _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
             var formattedCode = Formatter.Format (@namespace, _workspace);
             return formattedCode.ToFullString();
+        }
+
+        public (CompilerResults cResults, string output) EncryptWithCompiling(string source)
+        {
+            var encrypted = Encrypt(source);
+            var cResults = CompileUtils.Compile(encrypted);
+            return (cResults, encrypted);
+        }
+
+        public string Encrypt(string source)
+        {
+            var encryptorOptions = new EncryptorOptions()
+            {
+                LocalVarsCompressing = true,
+                FieldsCompressing = true,
+                TypesCompressing = true,
+                MethodsCompressing = true,
+                SpacesRemoving = true,
+                TrashRemoving = true,
+            };
+            PluginEncryptor encryptor = new PluginEncryptor(encryptorOptions);
+            var output = encryptor.MinifyFromString(source);
+            return output;
         }
     }
 }
