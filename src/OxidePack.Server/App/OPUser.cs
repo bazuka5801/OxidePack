@@ -29,10 +29,17 @@ namespace OxidePack.Server.App
                     ThreadPool.QueueUserWorkItem((s) =>
                     {
                         string buildResult = ActivePlugin.Build(bRequest);
+                        string encryptResult = null;
+                        if (bRequest.encryptOptions.enabled)
+                        {
+                            encryptResult = ActivePlugin.Encrypt(buildResult);
+                        }
+
                         BuildResponse bResponse = new BuildResponse()
                         {
-                            pluginname = bRequest.options.name,
-                            content = buildResult
+                            pluginname = bRequest.buildOptions.name,
+                            content = buildResult,
+                            encrypted = encryptResult
                         };
                     
                         SendRPC(RPCMessageType.BuildResponse, bResponse);
