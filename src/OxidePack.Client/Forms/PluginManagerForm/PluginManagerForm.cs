@@ -411,7 +411,18 @@ namespace OxidePack.Client
         }
         #endregion
 
+        #region [Method] btnEncrypt_Click
+        private void btnEncrypt_Click(object sender, EventArgs e)
+        {
+            if (_PluginSelected == null)
+            {
+                throw new Exception("PluginSelected is null");
+            }
+
+            _PluginSelected.RequestCompile(true);
+        }
         #endregion
 
+        #endregion
     }
 }

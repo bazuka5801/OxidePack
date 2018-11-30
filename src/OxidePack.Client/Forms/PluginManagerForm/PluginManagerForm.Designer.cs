@@ -45,9 +45,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pnlModulesContainer = new System.Windows.Forms.Panel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnRefreshGeneratedFile = new System.Windows.Forms.Button();
             this.btnDeletePlugin = new System.Windows.Forms.Button();
             this.btnCompile = new System.Windows.Forms.Button();
+            this.btnRefreshGeneratedFile = new System.Windows.Forms.Button();
+            this.btnEncrypt = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.pnlPlugin.SuspendLayout();
@@ -259,6 +260,7 @@
             this.tableLayoutPanel6.ColumnCount = 2;
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.28571F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.71429F));
+            this.tableLayoutPanel6.Controls.Add(this.btnEncrypt, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.btnDeletePlugin, 1, 1);
             this.tableLayoutPanel6.Controls.Add(this.btnCompile, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.btnRefreshGeneratedFile, 1, 0);
@@ -270,20 +272,6 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(350, 91);
             this.tableLayoutPanel6.TabIndex = 2;
-            // 
-            // btnRefreshGeneratedFile
-            // 
-            this.btnRefreshGeneratedFile.BackColor = System.Drawing.Color.Silver;
-            this.btnRefreshGeneratedFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRefreshGeneratedFile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
-            this.btnRefreshGeneratedFile.ForeColor = System.Drawing.Color.Black;
-            this.btnRefreshGeneratedFile.Location = new System.Drawing.Point(150, 3);
-            this.btnRefreshGeneratedFile.Name = "btnRefreshGeneratedFile";
-            this.btnRefreshGeneratedFile.Size = new System.Drawing.Size(197, 39);
-            this.btnRefreshGeneratedFile.TabIndex = 1;
-            this.btnRefreshGeneratedFile.Text = "Refresh Generated";
-            this.btnRefreshGeneratedFile.UseVisualStyleBackColor = false;
-            this.btnRefreshGeneratedFile.Click += new System.EventHandler(this.btnRefreshGeneratedFile_Click);
             // 
             // btnDeletePlugin
             // 
@@ -312,6 +300,34 @@
             this.btnCompile.Text = "Compile";
             this.btnCompile.UseVisualStyleBackColor = false;
             this.btnCompile.Click += new System.EventHandler(this.btnCompile_Click);
+            // 
+            // btnRefreshGeneratedFile
+            // 
+            this.btnRefreshGeneratedFile.BackColor = System.Drawing.Color.Silver;
+            this.btnRefreshGeneratedFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRefreshGeneratedFile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnRefreshGeneratedFile.ForeColor = System.Drawing.Color.Black;
+            this.btnRefreshGeneratedFile.Location = new System.Drawing.Point(150, 3);
+            this.btnRefreshGeneratedFile.Name = "btnRefreshGeneratedFile";
+            this.btnRefreshGeneratedFile.Size = new System.Drawing.Size(197, 39);
+            this.btnRefreshGeneratedFile.TabIndex = 1;
+            this.btnRefreshGeneratedFile.Text = "Refresh Generated";
+            this.btnRefreshGeneratedFile.UseVisualStyleBackColor = false;
+            this.btnRefreshGeneratedFile.Click += new System.EventHandler(this.btnRefreshGeneratedFile_Click);
+            // 
+            // btnEncrypt
+            // 
+            this.btnEncrypt.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnEncrypt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEncrypt.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnEncrypt.ForeColor = System.Drawing.Color.Silver;
+            this.btnEncrypt.Location = new System.Drawing.Point(3, 48);
+            this.btnEncrypt.Name = "btnEncrypt";
+            this.btnEncrypt.Size = new System.Drawing.Size(141, 40);
+            this.btnEncrypt.TabIndex = 3;
+            this.btnEncrypt.Text = "Encrypt";
+            this.btnEncrypt.UseVisualStyleBackColor = false;
+            this.btnEncrypt.Click += new System.EventHandler(this.btnEncrypt_Click);
             // 
             // PluginManagerForm
             // 
@@ -360,5 +376,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.Button btnRefreshGeneratedFile;
         private System.Windows.Forms.Button btnCompile;
+        private System.Windows.Forms.Button btnEncrypt;
     }
 }
