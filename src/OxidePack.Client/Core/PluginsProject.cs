@@ -71,19 +71,58 @@ namespace OxidePack.Client
             _Watcher.Subscribe(OnSourceFileChanged);
         }
 
-        private void OnSourceFileChanged(string file)
+        bool GetPluginName(string filename, out string pluginname)
         {
-            var relPath = FileUtils.GetRelativePath(file, _Directory);
-            var pluginname = relPath.Substring(0, relPath.IndexOf('\\'));
+            var relPath = FileUtils.GetRelativePath(filename, _Directory);
+            pluginname = relPath.Substring(0, relPath.IndexOf('\\'));
+
+            // Equals root directory
+            if (pluginname.Equals(Path.GetFileName(_Directory)))
+            {
+                return false;
+            }
+                
             // .builded, etc...
             if (pluginname.StartsWith("."))
             {
-                return;
+                return false;
             }
-            var plugin = GetPlugin(pluginname);
-            if (plugin != null)
+
+            return true;
+        }
+        
+        private void OnSourceFileChanged(string file)
+        {
+            var extension = Path.GetExtension(file);
+            if (extension.Equals(".cs"))
             {
-                plugin.RequestCompile();
+                if (GetPluginName(file, out var pluginname) == false)
+                {
+                    return;
+                }
+                
+                var plugin = GetPlugin(pluginname);
+                if (plugin != null)
+                {
+                    plugin.RequestCompile();
+                }
+            }
+            else if (extension.Equals(".json"))
+            {
+                var filename = Path.GetFileName(file);
+                if (filename.Equals("plugin.json"))
+                {
+                    if (GetPluginName(file, out var pluginname) == false)
+                    {
+                        return;
+                    }
+
+                    var plugin = GetPlugin(pluginname);
+                    if (plugin != null)
+                    {
+                        plugin.OnConfigChanged();
+                    }
+                }
             }
         }
         

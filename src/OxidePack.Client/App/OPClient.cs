@@ -45,7 +45,7 @@ namespace OxidePack.Client.App
                 return;
             }
 
-            plugin.OnBuildResponse(bResponse.content);
+            plugin.OnBuildResponse(bResponse);
         }
 
         private void OnRPC_GeneratedFileResponse(GeneratedFileResponse response)

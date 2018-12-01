@@ -37,7 +37,7 @@ namespace OxidePack.Client
         public PluginProjectData config;
 
         public Action<PluginProject> OnModulesChanged;
-        public Action<PluginProject> OnCompiled;
+        public Action<PluginProject> OnChanged;
 
         private string _Directory;
         
@@ -181,15 +181,31 @@ namespace OxidePack.Client
             Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
         }
         
-        public void OnBuildResponse(string content)
+        public void OnBuildResponse(BuildResponse bResponse)
         {
             var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
             if (Directory.Exists(outputDir) == false)
                 Directory.CreateDirectory(outputDir);
             var outputPath = Path.Combine(outputDir, $"{Name}.cs");
-            File.WriteAllText(outputPath, content);
-            OnCompiled?.Invoke(this);
+            File.WriteAllText(outputPath, bResponse.content);
+
+            if (string.IsNullOrEmpty(bResponse.encrypted) == false)
+            {
+                var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
+                if (Directory.Exists(encryptedDir) == false)
+                    Directory.CreateDirectory(encryptedDir);
+                var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
+                File.WriteAllText(encryptedPath, bResponse.encrypted);
+            }
+            
+            OnChanged?.Invoke(this);
             SetCompilingState(false);
+        }
+
+        public void OnConfigChanged()
+        {
+            ReloadConfig();
+            OnChanged?.Invoke(this);
         }
 
         #region [Methods] Config

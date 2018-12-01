@@ -67,25 +67,25 @@ namespace OxidePack.Client
                 this.lbPlugin = lbPlugins;
                 this.Name = plugin.Name;
                 this.ViewName = $"{this.Plugin.Name} ({this.Plugin.config.Version})";
-                Subscribe();
+                this.Subscribe();
             }
 
             public void Subscribe()
             {
-                this.Plugin.OnCompiled += OnPluginCompiled;
+                this.Plugin.OnChanged += OnPluginChanged;
             }
 
             public void Unsubscribe()
             {
-                if (this.Plugin.OnCompiled != null)
-                    this.Plugin.OnCompiled -= OnPluginCompiled;
+                if (this.Plugin.OnChanged != null)
+                    this.Plugin.OnChanged -= OnPluginChanged;
             }
-            private void OnPluginCompiled(PluginProject plugin)
+            private void OnPluginChanged(PluginProject plugin)
             {
-                UpdateViewName();
+                this.Reload();
             }
 
-            public void UpdateViewName()
+            public void Reload()
             {
                 this.ViewName = $"{this.Plugin.Name} ({this.Plugin.config.Version})";
                 ThreadUtils.RunInUI(() =>
