@@ -65,7 +65,9 @@ namespace OxidePack.Client
         private void StartWatching()
         {
             _Watcher?.Close();
-            _Watcher = new FSWatcher(_Directory, "*.cs");
+            _Watcher = new FSWatcher(_Directory, "*.*");
+            _Watcher.AcceptExtensions.AddRange(new[] {".cs", ".json"});
+            _Watcher.ExcludeDirectories.AddRange(new[] {".encrypted", ".builded"});
             _Watcher.Subscribe(OnSourceFileChanged);
         }
 
