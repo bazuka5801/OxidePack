@@ -175,7 +175,7 @@ namespace OxidePack.Client
                         description = config.Description
                     }
                 },
-                encryptOptions = { enabled = encrypt },
+                encryptOptions = new EncryptOptions { enabled = encrypt },
                 sources = sources
             };
             Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
