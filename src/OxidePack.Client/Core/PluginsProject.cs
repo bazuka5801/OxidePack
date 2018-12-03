@@ -13,7 +13,7 @@ namespace OxidePack.Client
     public class PluginsProject
     {
         public CsProject csProject;
-        private PluginsProjectData _Config;
+        public PluginsProjectData Config;
 
         private string DataFileName => Path.Combine(Path.GetDirectoryName(csProject.FilePath), "plugins-project.json");
 
@@ -23,8 +23,9 @@ namespace OxidePack.Client
 
         private string _Directory => Path.GetDirectoryName(csProject.FilePath);
 
-        class PluginsProjectData
+        public class PluginsProjectData
         {
+            public string BuildedCopyPath = "";
             public List<string> PluginList = new List<string>();
         }
 
@@ -47,7 +48,7 @@ namespace OxidePack.Client
                 Directory.CreateDirectory(pluginFolder);
             }
 
-            return _Plugins[pluginName] = new PluginProject(csProject, pluginFolder);
+            return _Plugins[pluginName] = new PluginProject(this, pluginFolder);
         }
 
         public void RemovePlugin(string name)
@@ -60,7 +61,7 @@ namespace OxidePack.Client
             }
         }
 
-        public List<string> GetPluginList() => _Config?.PluginList.ToList() ?? new List<string>();
+        public List<string> GetPluginList() => Config?.PluginList.ToList() ?? new List<string>();
 
         private void StartWatching()
         {
@@ -128,14 +129,14 @@ namespace OxidePack.Client
         
         public bool AddPlugin(string pName, out PluginProject plugin)
         {
-            if (_Config.PluginList.Contains(pName))
+            if (Config.PluginList.Contains(pName))
             {
                 plugin = null;
                 return false;
             }
 
             plugin = GetPlugin(pName);
-            _Config.PluginList.Add(pName);
+            Config.PluginList.Add(pName);
             return true;
         }
 
@@ -144,29 +145,29 @@ namespace OxidePack.Client
         {
             if (File.Exists(this.DataFileName) == false)
             {
-                _Config = new PluginsProjectData();
+                Config = new PluginsProjectData();
                 SaveConfig();
             }
 
             try
             {
-                _Config = JsonConvert.DeserializeObject<PluginsProjectData>(File.ReadAllText(this.DataFileName));
+                Config = JsonConvert.DeserializeObject<PluginsProjectData>(File.ReadAllText(this.DataFileName));
             }
             catch
             {
                 ConsoleSystem.LogError("PluginsProject: Invalid Config");
-                _Config = new PluginsProjectData();
+                Config = new PluginsProjectData();
             }
         }
 
         void SaveConfig()
         {
-            if (_Config == null)
+            if (Config == null)
             {
                 throw new NullReferenceException("_Config is null!!!");
             }
             
-            File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(_Config, Formatting.Indented));
+            File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(Config, Formatting.Indented));
         }
         #endregion
     }

@@ -32,7 +32,8 @@ namespace OxidePack.Client
                 Version = Config.PluginTemplateDefault.Version;
             }
         }
-        
+
+        public PluginsProject Project;   
         public CsProject csProject;
         public PluginProjectData config;
 
@@ -44,9 +45,10 @@ namespace OxidePack.Client
         private string DataFileName => Path.Combine(_Directory, "plugin.json");
         public string Name => Path.GetFileName(_Directory);
 
-        public PluginProject(CsProject csProject, string directory)
+        public PluginProject(PluginsProject project, string directory)
         {
-            this.csProject = csProject;
+            this.Project = project;
+            this.csProject = project.csProject;
             this._Directory = directory;
             ReloadConfig();
             AdjustMainFile();
@@ -189,6 +191,15 @@ namespace OxidePack.Client
             var outputPath = Path.Combine(outputDir, $"{Name}.cs");
             File.WriteAllText(outputPath, bResponse.content);
 
+            var copyPath = this.Project.Config.BuildedCopyPath;
+
+            if (string.IsNullOrEmpty(copyPath) == false
+                && Directory.Exists(copyPath))
+            {
+                var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
+                File.WriteAllText(copyOutputPath, bResponse.content);
+            }
+            
             if (string.IsNullOrEmpty(bResponse.encrypted) == false)
             {
                 var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
@@ -196,6 +207,13 @@ namespace OxidePack.Client
                     Directory.CreateDirectory(encryptedDir);
                 var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
                 File.WriteAllText(encryptedPath, bResponse.encrypted);
+                
+                if (string.IsNullOrEmpty(copyPath) == false
+                    && Directory.Exists(copyPath))
+                {
+                    var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
+                    File.WriteAllText(copyOutputPath, bResponse.encrypted);
+                }
             }
             
             OnChanged?.Invoke(this);
