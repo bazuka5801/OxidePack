@@ -262,12 +262,13 @@ namespace OxidePack.Client
             {
                 Directory = refsDir,
                 Bundle = Config.Dependencies.Bundle,
-                SelectedFiles = project.ReferenceList
+                SelectedFiles = Config.Dependencies.SelectedFiles
             };
             new DependenciesForm(form).ShowDialog();
             if (form.Changed)
             {
                 Config.Dependencies.Bundle = form.Bundle;
+                Config.Dependencies.SelectedFiles = form.SelectedFiles;
                 var addedRefs = form.SelectedFiles.Except(project.ReferenceList)
                     .Select(filename => Path.Combine(refsDir, filename)).ToList();
                 var removedRefs = project.ReferenceList.Except(form.SelectedFiles).ToList();
