@@ -87,6 +87,13 @@ namespace OxidePack.CoreLib
                                                 $"\n"));
                 members[0] = members[0].WithLeadingTrivia(lTriviaList);
                 
+                if (mainClass.CloseBraceToken.HasLeadingTrivia)
+                {
+                    var lastElement = members[members.Count - 1];
+                    members[members.Count - 1] = lastElement.WithTrailingTrivia(lastElement.GetLeadingTrivia()
+                        .AddRange(mainClass.CloseBraceToken.LeadingTrivia));
+                }
+                
                 memberList.AddRange(members);
             }
 
