@@ -133,6 +133,9 @@ namespace OxidePack.Client.App
         public void WorkingLoop()
         {
             Connect();
+
+            int tryingCount = 0;
+            
             while (true)
             {
                 Thread.Sleep(1000);
@@ -148,8 +151,13 @@ namespace OxidePack.Client.App
                     Connect();
                     if (IsConnected == false)
                     {
-                        MainForm.UpdateStatus("Failed connect to server");
-                        break;
+                        if (++tryingCount > 5)
+                        {
+                            MainForm.UpdateStatus("Failed connect to server");
+                            break;
+                        }
+                        _needReconnect = true;
+                        continue;
                     }
                 }
             }
