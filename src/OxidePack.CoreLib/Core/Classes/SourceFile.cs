@@ -28,7 +28,13 @@ namespace OxidePack.CoreLib
             var sTree = ParseCompilationUnit(data.content);
             Usings?.Clear();
             Usings = new List<UsingDirectiveSyntax>(sTree.Usings);
-            
+
+            var @namespace = sTree.Members
+                .OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+            if (@namespace != null)
+            {
+                Usings.AddRange(@namespace.Usings);
+            }
             var mainClass = sTree.DescendantNodes(node => node.IsKind(SyntaxKind.ClassDeclaration) == false)
                 .OfType<ClassDeclarationSyntax>().FirstOrDefault();
 
