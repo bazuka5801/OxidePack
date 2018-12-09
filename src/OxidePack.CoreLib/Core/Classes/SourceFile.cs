@@ -46,7 +46,7 @@ namespace OxidePack.CoreLib
 
             var members = mainClass.Members.ToList();
 
-            if (mainClass.CloseBraceToken.HasLeadingTrivia)
+            if (members.Count > 0 && mainClass.CloseBraceToken.HasLeadingTrivia)
             {
                 var lastElement = members[members.Count - 1];
                 members[members.Count - 1] = lastElement.WithTrailingTrivia(lastElement.GetLeadingTrivia()
