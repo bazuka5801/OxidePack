@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.XPath;
+using FubuCore.Configuration;
 using FubuCsProjFile;
 using FubuCsProjFile.MSBuild;
 using Mono.Cecil;
@@ -20,13 +22,27 @@ namespace OxidePack.Client.Core.MsBuildProject
         private MSBuildItemGroup _references;
         private MSBuildItemGroup _compile;
         public List<String> ReferenceList { get; private set; }
+
+        public bool IsNewVersion;
         
         public CsProject(Solution solution, CsProjFile project, string name, string relativeFilePath)
         {
             this.Solution = solution;
             this.Name = name;
             this.Project = project;
+            this.IsNewVersion = HasNewVersion();
             SetFilePath(relativeFilePath);
+        }
+
+        public bool HasNewVersion()
+        {
+            var firstElem = this.Project.BuildProject.doc.FirstChild;
+            if (firstElem.Name == "Project" && firstElem.Attributes["Sdk"]?.Value == "Microsoft.NET.Sdk")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public void SetFilePath(string relativeFilePath)
@@ -37,10 +53,41 @@ namespace OxidePack.Client.Core.MsBuildProject
 
         public void Load()
         {
+            if (IsNewVersion)
+            {
+                foreach (XmlElement node in this.Project.BuildProject.doc.FirstChild)
+                {
+                    if (node.FirstChild?.Name == "Reference" || node.IsEmpty)
+                    {
+                        var msBuildItemGroup = (MSBuildItemGroup)typeof(MSBuildProject).GetMethod("GetItemGroup", BindingFlags.NonPublic | BindingFlags.Instance)
+                            .Invoke(this.Project.BuildProject, new object[] {node});
+                        _references = msBuildItemGroup;
+                        break;
+                    }
+                }
+
+                if (_references == null)
+                {
+                    var node = this.Project.BuildProject.doc.FirstChild.AddElement("ItemGroup");
+                    var msBuildItemGroup = (MSBuildItemGroup)typeof(MSBuildProject).GetMethod("GetItemGroup", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .Invoke(this.Project.BuildProject, new object[] {node});
+                    _references = msBuildItemGroup;
+                }
+            }
+            else
+            {
             _references = this.Project.BuildProject.ItemGroups
                 .FirstOrDefault(i => i.Items.Any(item => item.Name == "Reference"));
-            _compile = this.Project.BuildProject.ItemGroups
-                           .FirstOrDefault(i => i.Items.Any(p => p.Name == "Compile")) ?? this.Project.BuildProject.AddNewItemGroup();
+                
+            }
+
+            if (IsNewVersion == false)
+            {
+                _compile = this.Project.BuildProject.ItemGroups
+                               .FirstOrDefault(i => i.Items.Any(p => p.Name == "Compile")) ??
+                           this.Project.BuildProject.AddNewItemGroup();
+            }
+
             if (_references == null)
             {
                 MainForm.ShowMessage($"[CsProject] I can't find references itemgroup in '{Project.ProjectName}' project","Error");
@@ -62,6 +109,11 @@ namespace OxidePack.Client.Core.MsBuildProject
 
         public void CompileAdd(string filepath)
         {
+            if (IsNewVersion)
+            {
+                return;
+            }
+            
             string relativePath = filepath;
             if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
                 relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
@@ -76,6 +128,11 @@ namespace OxidePack.Client.Core.MsBuildProject
         
         public void CompileRemove(string filepath)
         {
+            if (IsNewVersion)
+            {
+                return;
+            }
+            
             string relativePath = filepath;
             if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
                 relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
