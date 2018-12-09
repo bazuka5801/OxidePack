@@ -52,6 +52,9 @@
       <SubType>Form</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Update="Forms\ProjectSelectForm\ProjectSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Update="Forms\MainForm\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -96,6 +99,14 @@
       <DependentUpon>AddSourceFileForm.cs</DependentUpon>
     </Compile>
 
+    <Compile Update="Forms\ProjectSelectForm\ProjectSelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\ProjectSelectForm\ProjectSelectForm.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>ProjectSelectForm.cs</DependentUpon>
+    </Compile>
+    
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

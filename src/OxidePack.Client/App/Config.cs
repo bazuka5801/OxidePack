@@ -29,7 +29,9 @@ namespace OxidePack.Client.App
             public VersionNumber Version = new VersionNumber(0, 0, 0);
         }
         
-        public static DependenciesConfig Dependencies = new DependenciesConfig();
+        // TODO: Extract it to class
+        public static Dictionary<string, DependenciesConfig> ProjectsConfig = new Dictionary<string, DependenciesConfig>();
+        
         public class DependenciesConfig
         {
             public List<string> SelectedFiles = new List<string>();

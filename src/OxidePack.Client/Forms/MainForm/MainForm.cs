@@ -256,19 +256,34 @@ namespace OxidePack.Client
         #region btnEditReference_Click
         private void btnEditReference_Click(object sender, System.EventArgs e)
         {
-            var project = OPClientCore.Solution.CsProjects[0];
+            ProjectSelectModel projectSelectModel = new ProjectSelectModel()
+            {
+                Projects = OPClientCore.Solution.CsProjects.Select(p=>p.Name).ToList()
+            };
+            new ProjectSelectForm(projectSelectModel).ShowDialog();
+            if (projectSelectModel.Success == false)
+            {
+                return;
+            }
+            
+            var project = OPClientCore.Solution.CsProjects[projectSelectModel.Selected];
             var refsDir = Path.Combine(Directory.GetCurrentDirectory(), ".references-cache");
+            if (Config.ProjectsConfig.TryGetValue(project.Name, out var projectConfig) == false)
+            {
+                Config.ProjectsConfig[project.Name] = projectConfig = new Config.DependenciesConfig();
+            }
+            
             var form = new DependenciesModel()
             {
                 Directory = refsDir,
-                Bundle = Config.Dependencies.Bundle,
-                SelectedFiles = Config.Dependencies.SelectedFiles
+                Bundle = projectConfig.Bundle,
+                SelectedFiles = projectConfig.SelectedFiles
             };
             new DependenciesForm(form).ShowDialog();
             if (form.Changed)
             {
-                Config.Dependencies.Bundle = form.Bundle;
-                Config.Dependencies.SelectedFiles = form.SelectedFiles;
+                projectConfig.Bundle = form.Bundle;
+                projectConfig.SelectedFiles = form.SelectedFiles;
                 var addedRefs = form.SelectedFiles.Except(project.ReferenceList)
                     .Select(filename => Path.Combine(refsDir, filename)).ToList();
                 var removedRefs = project.ReferenceList.Except(form.SelectedFiles).ToList();
