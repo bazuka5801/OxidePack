@@ -141,11 +141,38 @@ namespace OxidePack.Client.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на namespace OxidePack.Client.Templates
+        ///   Ищет локализованную строку, похожую на using Oxide.Core;
+        ///
+        ///namespace Oxide.Plugins.$name$
         ///{
-        ///    public class RustPlugin_Template
+        ///    public partial class $name$ : RustPlugin
         ///    {
-        ///        
+        ///    	
+        ///    }
+        ///}.
+        /// </summary>
+        internal static string RustPlugin_SourceFile {
+            get {
+                return ResourceManager.GetString("RustPlugin_SourceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на using Oxide.Core;
+        ///
+        ///namespace Oxide.Plugins.$name$
+        ///{
+        ///    public partial class $name$ : RustPlugin
+        ///    {
+        ///        void HOOK__OnServerInitialized()
+        ///        {
+        ///            
+        ///        }
+        ///
+        ///        void HOOK__Unload()
+        ///        {
+        ///            
+        ///        }
         ///    }
         ///}.
         /// </summary>

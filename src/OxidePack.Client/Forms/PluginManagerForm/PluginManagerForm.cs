@@ -423,6 +423,23 @@ namespace OxidePack.Client
         }
         #endregion
 
+        #region [Method] btnAddSourceFile_Click
+        private void btnAddSourceFile_Click(object sender, EventArgs e)
+        {
+            if (_PluginSelected == null)
+            {
+                throw new Exception("PluginSelected is null");
+            }
+
+            AddSourceFileModel model = new AddSourceFileModel();
+            new AddSourceFileForm(model).ShowDialog();
+            if (model.Success)
+            {
+                _PluginSelected.AddSourceFile(model.Name);
+            }
+        }
+        #endregion
+
         #endregion
     }
 }

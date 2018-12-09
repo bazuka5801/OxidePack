@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Remove="Core\Templates\RustPlugin.Template.cs" />
+    <Compile Remove="Resources\RustPlugin.SourceFile.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,13 +79,21 @@
       <SubType>Form</SubType>
       <DependentUpon>PluginManagerForm.cs</DependentUpon>
     </Compile>
-    
+
     <Compile Update="Forms\AddPluginForm\AddPluginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\AddPluginForm\AddPluginForm.Designer.cs">
       <SubType>Form</SubType>
       <DependentUpon>AddPluginForm.cs</DependentUpon>
+    </Compile>
+
+    <Compile Update="Forms\AddSourceFileForm\AddSourceFileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\AddSourceFileForm\AddSourceFileForm.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>AddSourceFileForm.cs</DependentUpon>
     </Compile>
 
     <Compile Update="Properties\Resources.Designer.cs">

@@ -149,7 +149,23 @@ namespace OxidePack.Client
         }
         #endregion
 
-        
+
+        public void AddSourceFile(string filename)
+        {
+            var sourceFilename = Path.Combine(_Directory, $"{Name}.{filename}.cs");
+            if (File.Exists(sourceFilename) == false)
+            {
+                var csFile = new StringBuilder(Resources.RustPlugin_SourceFile);
+                csFile.Replace("$name$", Name)
+                    .Replace("$info-name$", config.Name)
+                    .Replace("$author$", config.Author)
+                    .Replace("$version$", config.Version.ToString())
+                    .Replace("$description$", config.Description);
+                File.WriteAllText(sourceFilename, csFile.ToString());
+                csProject.CompileAdd(sourceFilename);
+            }
+        }
+
         public void RequestCompile(bool encrypt = false)
         {
             if (Compiling)

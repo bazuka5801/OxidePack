@@ -45,10 +45,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pnlModulesContainer = new System.Windows.Forms.Panel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnEncrypt = new System.Windows.Forms.Button();
             this.btnDeletePlugin = new System.Windows.Forms.Button();
             this.btnCompile = new System.Windows.Forms.Button();
             this.btnRefreshGeneratedFile = new System.Windows.Forms.Button();
-            this.btnEncrypt = new System.Windows.Forms.Button();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnAddSourceFile = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.pnlPlugin.SuspendLayout();
@@ -57,6 +59,7 @@
             this.pnlModules.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
+            this.tableLayoutPanel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbPlugins
@@ -223,8 +226,8 @@
             this.tableLayoutPanel5.ColumnCount = 1;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Controls.Add(this.label4, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.pnlModulesContainer, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel7, 0, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -250,9 +253,9 @@
             // 
             this.pnlModulesContainer.AutoScroll = true;
             this.pnlModulesContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlModulesContainer.Location = new System.Drawing.Point(3, 43);
+            this.pnlModulesContainer.Location = new System.Drawing.Point(3, 3);
             this.pnlModulesContainer.Name = "pnlModulesContainer";
-            this.pnlModulesContainer.Size = new System.Drawing.Size(350, 254);
+            this.pnlModulesContainer.Size = new System.Drawing.Size(344, 208);
             this.pnlModulesContainer.TabIndex = 1;
             // 
             // tableLayoutPanel6
@@ -272,6 +275,20 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(350, 91);
             this.tableLayoutPanel6.TabIndex = 2;
+            // 
+            // btnEncrypt
+            // 
+            this.btnEncrypt.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnEncrypt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEncrypt.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnEncrypt.ForeColor = System.Drawing.Color.Silver;
+            this.btnEncrypt.Location = new System.Drawing.Point(3, 48);
+            this.btnEncrypt.Name = "btnEncrypt";
+            this.btnEncrypt.Size = new System.Drawing.Size(141, 40);
+            this.btnEncrypt.TabIndex = 3;
+            this.btnEncrypt.Text = "Encrypt";
+            this.btnEncrypt.UseVisualStyleBackColor = false;
+            this.btnEncrypt.Click += new System.EventHandler(this.btnEncrypt_Click);
             // 
             // btnDeletePlugin
             // 
@@ -315,19 +332,34 @@
             this.btnRefreshGeneratedFile.UseVisualStyleBackColor = false;
             this.btnRefreshGeneratedFile.Click += new System.EventHandler(this.btnRefreshGeneratedFile_Click);
             // 
-            // btnEncrypt
+            // tableLayoutPanel7
             // 
-            this.btnEncrypt.BackColor = System.Drawing.Color.ForestGreen;
-            this.btnEncrypt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnEncrypt.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
-            this.btnEncrypt.ForeColor = System.Drawing.Color.Silver;
-            this.btnEncrypt.Location = new System.Drawing.Point(3, 48);
-            this.btnEncrypt.Name = "btnEncrypt";
-            this.btnEncrypt.Size = new System.Drawing.Size(141, 40);
-            this.btnEncrypt.TabIndex = 3;
-            this.btnEncrypt.Text = "Encrypt";
-            this.btnEncrypt.UseVisualStyleBackColor = false;
-            this.btnEncrypt.Click += new System.EventHandler(this.btnEncrypt_Click);
+            this.tableLayoutPanel7.ColumnCount = 1;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Controls.Add(this.btnAddSourceFile, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.pnlModulesContainer, 0, 0);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 43);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 2;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(350, 254);
+            this.tableLayoutPanel7.TabIndex = 3;
+            // 
+            // btnAddSourceFile
+            // 
+            this.btnAddSourceFile.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnAddSourceFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAddSourceFile.Font = new System.Drawing.Font("Verdana", 11F, System.Drawing.FontStyle.Bold);
+            this.btnAddSourceFile.ForeColor = System.Drawing.Color.Black;
+            this.btnAddSourceFile.Location = new System.Drawing.Point(3, 217);
+            this.btnAddSourceFile.Name = "btnAddSourceFile";
+            this.btnAddSourceFile.Size = new System.Drawing.Size(344, 34);
+            this.btnAddSourceFile.TabIndex = 3;
+            this.btnAddSourceFile.Text = "Add Source File";
+            this.btnAddSourceFile.UseVisualStyleBackColor = false;
+            this.btnAddSourceFile.Click += new System.EventHandler(this.btnAddSourceFile_Click);
             // 
             // PluginManagerForm
             // 
@@ -350,6 +382,7 @@
             this.pnlModules.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -377,5 +410,7 @@
         private System.Windows.Forms.Button btnRefreshGeneratedFile;
         private System.Windows.Forms.Button btnCompile;
         private System.Windows.Forms.Button btnEncrypt;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.Button btnAddSourceFile;
     }
 }
