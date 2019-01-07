@@ -14,7 +14,7 @@ namespace OxidePack.CoreLib
         private static Regex _HookIdentifierRegex = new Regex( @"^[a-zA-Z0-9_]+__" );
         
         public (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings)
-            MergeSources(List<SourceFile> sources)
+            MergeSources(List<SourceFile> sources, bool prepareEncrypt)
         {
             var pluginBody = new List<MemberDeclarationSyntax>();
             var usings = new List<UsingDirectiveSyntax>();
@@ -96,7 +96,7 @@ namespace OxidePack.CoreLib
                 pluginBody[pluginBody.Count - 1] = EditUtils.AddTrailingNewLine(pluginBody[pluginBody.Count - 1]);
             }
 
-            var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value)).ToList();
+            var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value, prepareEncrypt)).ToList();
             EditUtils.InRegion(hookMethods, "[Generated] [Hook Methods]");
             pluginBody.AddRange(hookMethods);
             return (List(pluginBody), List(usings));

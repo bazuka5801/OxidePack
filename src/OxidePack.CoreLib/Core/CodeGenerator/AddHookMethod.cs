@@ -2,7 +2,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using OxidePack.CoreLib.Utils;
 using MemberList = Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax>;
 // </Minified names>
 
@@ -13,7 +15,7 @@ namespace OxidePack.CoreLib
 {
     public partial class CodeGenerator
     {
-        public static MemberDeclarationSyntax AddHookMethod(string hookname, List<MethodDeclarationSyntax> methods)
+        public static MemberDeclarationSyntax AddHookMethod(string hookname, List<MethodDeclarationSyntax> methods, bool prepareEncrypt)
         {
             bool hasReturn = methods.Any(p => p.ReturnType.ToString() != "void");
             TypeSyntax retType = ParseTypeName(hasReturn ? "object" : "void");
@@ -21,10 +23,20 @@ namespace OxidePack.CoreLib
                 .OrderByDescending(p => p.ParameterList.Parameters.Count)
                 .First().ParameterList;
 
-            return MethodDeclaration(retType, hookname)
+            var methodResult = MethodDeclaration(retType, hookname)
                 .WithParameterList(parameters)
                 .WithBody(GenerateBody());
+            if (prepareEncrypt)
+            {
+                var name = SyntaxFactory.ParseName("Oxide.Core.Plugins.HookMethod");
+                var arguments = SyntaxFactory.ParseAttributeArgumentList($"(\"{hookname}\")");
+                methodResult = methodResult.WithAttributeLists(List(new[]
+                {
+                    AttributeList(SingletonSeparatedList(Attribute(name, arguments)))
+                }));
+            }
 
+            return methodResult;
 
             BlockSyntax GenerateBody()
             {

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -66,9 +68,37 @@ namespace OxidePack.CoreLib
 
         private static readonly string[] _IdentifierKeywords = new string[]
         {
-            "L0marinNeUmeetPisatPlaginiINeznaetOsnovCSharp", "L0marinXuesos", "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
+            "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII","llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+            "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
             "WulfNeHochetDelatDLLplugini", "WulfDelayDLLplugini", "GraimSolieshHanaTebe", "VsePidorasi",
+//"A", "B","C","D","E",
         };
+
+        StringBuilder sb = new StringBuilder(512);
+
+        HashSet<string> ExistingIdentifiers = new HashSet<string>();
+        static Random rand = new Random();
+        
+        
+        string GenerateFuckIdentifier(int length = 512)
+        {
+            string str = null;
+            do
+            {
+                sb.Clear();
+                for (int i = 0; i < length; i++)
+                {
+//                    sb.Append(chars[rand.Next(0, chars.Count)]);
+                    sb.Append(rand.Next(0, 2) > 0 ? "I" : "l");
+                }
+
+                str = sb.ToString();
+            } while (ExistingIdentifiers.Contains(str));
+
+            ExistingIdentifiers.Add(str);
+            return str;
+        }
+        
         
         public IdentifierGenerator()
         {
@@ -79,11 +109,14 @@ namespace OxidePack.CoreLib
             RenamedEnums = new Dictionary<EnumDeclarationSyntax, string>();
             RenamedEnumMembers = new Dictionary<EnumMemberDeclarationSyntax, string>();
             RenamedParameters = new Dictionary<ParameterSyntax, string>();
+//            AddCharRange(12544,12591);
+//            AddCharRange(12592,12687);
+//            AddCharRange(13056,13311);
         }
 
         public string GetNextName(SyntaxNode node)
         {
-            string nextName = GetNewIdentifier();
+            string nextName = GenerateFuckIdentifier();
             _existingNames.Add(nextName);
             AddToDictionary(node);
             return nextName;

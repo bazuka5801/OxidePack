@@ -37,18 +37,10 @@ namespace OxidePack.CoreLib
             get;
             set;
         }
-
-        public EncryptorOptions(bool maxCompression = true)
+        public bool Secret
         {
-            if (maxCompression)
-            {
-                LocalVarsCompressing = true;
-                FieldsCompressing = true;
-                TypesCompressing = true;
-                MethodsCompressing = true;
-                SpacesRemoving = true;
-                TrashRemoving = true;
-            }
+            get;
+            set;
         }
     }
 }

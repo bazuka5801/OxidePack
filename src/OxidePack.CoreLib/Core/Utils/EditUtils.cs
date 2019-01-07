@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -42,6 +40,12 @@ namespace OxidePack.CoreLib.Utils
             var list = member.GetTrailingTrivia().ToList();
             list.Add(EndOfLine("\r\n"));
             return member.WithTrailingTrivia(list);
+        }
+        public static MemberDeclarationSyntax AddLeadingText(MemberDeclarationSyntax member, string text)
+        {
+            var list = member.GetLeadingTrivia().ToList();
+            list.Insert(0, EndOfLine(text));
+            return member.WithLeadingTrivia(list);
         }
     }
 }

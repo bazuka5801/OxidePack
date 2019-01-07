@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.Rename;
+using SapphireEngine;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace OxidePack.CoreLib
@@ -21,6 +24,8 @@ namespace OxidePack.CoreLib
             _options = options ?? new EncryptorOptions();
             _identifierGenerator = new IdentifierGenerator();
             _workspace = workspace;
+            
+            _workspace.Options = _workspace.Options.WithChangedOption(RenameOptions.RenameOverloads, true);
             //Add cause MSBuild does not copy CSharp.Workspace.dll
             var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
         }
@@ -29,47 +34,58 @@ namespace OxidePack.CoreLib
         {
             foreach(var project in _workspace.CurrentSolution.Projects)
             {
-                foreach(var document in project.Documents)
+                foreach(var document in project.Documents.ToList())
                 {
                     _semanticModel = document.GetSemanticModelAsync().Result;
+                    foreach (var diagnostic in _semanticModel.Compilation.GetDiagnostics())
+                    {
+                        if (diagnostic.Severity == DiagnosticSeverity.Error)
+                            Console.WriteLine(diagnostic.ToString());
+                    }
                     var node = _semanticModel.SyntaxTree.GetRoot();
-                    node = node.ReplaceTrivia(node.DescendantTrivia(), ReplaceCommentsAndRegions);
-                    
                     node = Visit(node);
                     
                     
-                    RenameAll(document.WithSyntaxRoot(node));
+                    node = node.ReplaceTrivia(node.DescendantTrivia(), ReplaceCommentsAndRegions);
+                    var (newDoc, root) = RenameAll(document.WithSyntaxRoot(node));
+                    if (newDoc != null)
+                    {
+                        project.RemoveDocument(document.Id);
+                        project.AddDocument("Plugin", root);
+
+                    }
                 }
             }
 
             return _workspace;
         }
 
-        private void RenameAll(Document document)
+        private (Document doc, SyntaxNode node) RenameAll(Document document)
         {           
+            
             _semanticModel = document.GetSemanticModelAsync().Result;
             var newNode = _semanticModel.SyntaxTree.GetRoot();
             try
             {
-            foreach (KeyValuePair<VariableDeclaratorSyntax, string> variable in _identifierGenerator.RenamedVariables)
-            {
-                var nodeToSearch = newNode.DescendantNodes()
-                    .OfType<VariableDeclaratorSyntax>().FirstOrDefault(x => 
-                        x.Identifier.ValueText.Equals(variable.Key.Identifier.ValueText) &&
-                        x.SequenceToRoot(variable.Key));
-                if (nodeToSearch == null) continue;
-                (newNode, document) = Rename(nodeToSearch, document, variable.Value);
-            }
-
-            foreach(var method in _identifierGenerator.RenamedMethods)
-            {
-                var nodeToSearch = newNode.DescendantNodes()
-                    .OfType<MethodDeclarationSyntax>().FirstOrDefault(x =>
-                        x.Identifier.ValueText.Equals(method.Key.Identifier.ValueText) &&
-                        x.SequenceToRoot(method.Key));
-                if (nodeToSearch == null) continue;
-                (newNode, document) = Rename(nodeToSearch, document, method.Value);
-            }
+                foreach (var variable in _identifierGenerator.RenamedVariables)
+                {
+                    var nodeToSearch = newNode.DescendantNodes()
+                        .OfType<VariableDeclaratorSyntax>().FirstOrDefault(x => 
+                            x.Identifier.ValueText.Equals(variable.Key.Identifier.ValueText) &&
+                            x.SequenceToRoot(variable.Key));
+                    if (nodeToSearch == null) continue;
+                    (newNode, document) = Rename(nodeToSearch, document, variable.Value);
+                }
+    
+                foreach(var method in _identifierGenerator.RenamedMethods)
+                {
+                    var nodeToSearch = newNode.DescendantNodes()
+                        .OfType<MethodDeclarationSyntax>().FirstOrDefault(x =>
+                            x.Identifier.ValueText.Equals(method.Key.Identifier.ValueText) &&
+                            x.SequenceToRoot(method.Key));
+                    if (nodeToSearch == null) continue;
+                    (newNode, document) = Rename(nodeToSearch, document, method.Value);
+                }
                 foreach (var classToRename in _identifierGenerator.RenamedTypes)
                 {
                     var nodeToSearch = newNode.DescendantNodes()
@@ -114,12 +130,18 @@ namespace OxidePack.CoreLib
                 throw;
             }
 
-            
+            return (document, newNode);
+
         }
 
         private (SyntaxNode node, Document document) Rename(SyntaxNode nodeToRename, Document document, string newName)
         {
-            var symbolInfo = _semanticModel.GetSymbolInfo(nodeToRename).Symbol ?? _semanticModel.GetDeclaredSymbol(nodeToRename);
+//            var symbolInfo = _semanticModel.GetSymbolInfo(nodeToRename).Symbol;
+//            if (symbolInfo == null)
+//            {
+             var   symbolInfo = _semanticModel.GetDeclaredSymbol(nodeToRename);
+//                Console.WriteLine($"I can't use semantic model for "+nodeToRename);
+//            }
             var solution = Renamer.RenameSymbolAsync(document.Project.Solution, symbolInfo, newName,
                 _workspace.Options).Result;
             _workspace.TryApplyChanges(solution);
@@ -186,14 +208,14 @@ namespace OxidePack.CoreLib
             return base.VisitParameter(node);
         }
         
-//        public override SyntaxNode VisitArgument(ArgumentSyntax node)
-//        {
-//            if (_options.LocalVarsCompressing)
-//            {
-//                _identifierGenerator.GetNextName(node);
-//            }
-//            return base.VisitArgument(node);
-//        }
+        public override SyntaxNode VisitArgument(ArgumentSyntax node)
+        {
+            if (_options.LocalVarsCompressing)
+            {
+                _identifierGenerator.GetNextName(node);
+            }
+            return base.VisitArgument(node);
+        }
 
         public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {

@@ -14,8 +14,7 @@ namespace OxidePack.CoreLib
 
         public List<string> IgnoredComments { get; private set; }
 
-        private static AdhocWorkspace _workspace = new AdhocWorkspace();
-        private static PortableExecutableReference _mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+        private AdhocWorkspace _workspace = new AdhocWorkspace();
         private List<PortableExecutableReference> _references;
 
         public PluginEncryptor(EncryptorOptions options = null, string[] ignoredIdentifiers = null, string[] ignoredComments = null)
@@ -24,7 +23,7 @@ namespace OxidePack.CoreLib
             IgnoredIdentifiers = ignoredIdentifiers?.ToList() ?? new List<string>();
             IgnoredComments = ignoredComments?.ToList() ?? new List<string>();
             _references = Directory.GetFiles("references")
-                .Select(path => MetadataReference.CreateFromFile(path))
+                .Select(path => MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(),path)))
                 .ToList();
             
             var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
@@ -32,14 +31,19 @@ namespace OxidePack.CoreLib
 
         public string MinifyFromString(string csharpCode)
         {
-            var syntaxTree = CSharpSyntaxTree.ParseText(csharpCode);
+            var sourceTree = CSharpSyntaxTree.ParseText(csharpCode);
             var project = _workspace.AddProject("MinifierProject", LanguageNames.CSharp);
-            project = project.AddMetadataReference(_mscorlib);
+            project = project.WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             project = project.AddMetadataReferences(_references);
             _workspace.TryApplyChanges(project.Solution);
-            var document = _workspace.AddDocument(project.Id, "Doc", syntaxTree.GetText());
+            var document = _workspace.AddDocument(project.Id, "Doc", sourceTree.GetText());
             _workspace = Encrypt(_workspace);
-            
+
+//            var resultTree = _workspace.CurrentSolution.Projects.First()
+//                .Documents.First().GetSyntaxTreeAsync().Result;
+//            CompilationUnitSyntax root = resultTree.GetCompilationUnitRoot();
+//            root = root.NormalizeWhitespace();
+//            var formattedCode = Formatter.Format (root, _workspace);
             return _workspace.CurrentSolution.Projects.First()
                 .Documents.First().GetTextAsync().Result.ToString();
         }
@@ -50,6 +54,12 @@ namespace OxidePack.CoreLib
             workspace = tokensMinifier.MinifyIdentifiers();
             var membersShuffler = new MembersShuffler(workspace, Options);
             workspace = membersShuffler.Shuffle();
+            if (Options.Secret)
+            {
+                var encodingChanger = new EncodingChanger(workspace, Options);
+                workspace = encodingChanger.Process();
+            }
+
             return workspace;
         }
     }

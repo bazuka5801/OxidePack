@@ -51,8 +51,10 @@ namespace OxidePack.CoreLib
         {
             var generated = GeneratedCache;
 
+            var prepareEncrypt = request.encryptOptions?.enabled ?? false;
+            
             var sourceList = request.sources.Select(SourceFile.Create).ToList();
-            var (pluginBody, pluginUsings) = MergeSources(sourceList);
+            var (pluginBody, pluginUsings) = MergeSources(sourceList, prepareEncrypt);
 
             if (generated.members != null && generated.usings != null)
             {
@@ -91,24 +93,15 @@ namespace OxidePack.CoreLib
             return formattedCode.ToFullString();
         }
 
-        public (CompilerResults cResults, string output) EncryptWithCompiling(string source)
+        public (CompilerResults cResults, string output) EncryptWithCompiling(string source, EncryptorOptions encryptorOptions, bool forClient = false)
         {
-            var encrypted = Encrypt(source);
-            var cResults = CompileUtils.Compile(encrypted);
+            var encrypted = Encrypt(source, encryptorOptions);
+            var cResults = CompileUtils.Compile(encrypted, forClient ? "client" : "server");
             return (cResults, encrypted);
         }
 
-        public string Encrypt(string source)
+        public string Encrypt(string source, EncryptorOptions encryptorOptions)
         {
-            var encryptorOptions = new EncryptorOptions()
-            {
-                LocalVarsCompressing = true,
-                FieldsCompressing = true,
-                TypesCompressing = true,
-                MethodsCompressing = true,
-                SpacesRemoving = true,
-                TrashRemoving = true,
-            };
             PluginEncryptor encryptor = new PluginEncryptor(encryptorOptions);
             var output = encryptor.MinifyFromString(source);
             return output;
