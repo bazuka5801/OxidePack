@@ -25,10 +25,10 @@ namespace OxidePack
         private Type m_ConfigType;
         private FSWatcher m_ConfigWatcher;
         
-        public override void OnAwake()
+        public void SetConfigType(Type type)
         {
-            m_ConfigType = FindConfigType();
-            Load();
+            this.m_ConfigType = type;
+            this.Load();
         }
 
         public override void OnDestroy()
@@ -129,34 +129,6 @@ namespace OxidePack
             File.WriteAllText("config.json", config.ToString());
             if (m_ConfigWatcher != null)
                 m_ConfigWatcher.Enabled = true;
-        }
-
-        public Type FindConfigType()
-        {
-            Type configType = null;
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (type.BaseType == typeof(BaseConfig))
-                    {
-                        if (configType != null)
-                        {
-                            ConsoleSystem.LogError($"[ConfigManger] Multiple config found => <{configType.FullName}> <{type.FullName}>");
-                            return configType;
-                        }
-
-                        configType = type;
-                    }
-                }
-            }
-
-            if (configType == null)
-            {
-                ConsoleSystem.LogError("[ConfigManager] Config class not found");
-            }
-
-            return configType;
         }
     }
 }

@@ -16,7 +16,10 @@ namespace OxidePack.Server.App
         private OPServer Server;
         public override void OnAwake()
         {
-            this.AddType<ConfigManager>().RunWatcher();
+            var config = this.AddType<ConfigManager>();
+            config.SetConfigType(typeof(Config));
+            config.RunWatcher();
+            
             this.Initialize();
             ConsoleSystem.OnConsoleInput += OnConsoleCommand;
             ModuleMgr.Init();
