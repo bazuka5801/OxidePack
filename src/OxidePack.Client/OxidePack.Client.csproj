@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FubuCore" Version="2.0.1.321" />
     <PackageReference Include="FubuCsProjFile" Version="1.9.0.229" />
     <PackageReference Include="ILRepack.Lib" Version="2.0.16" />
     <PackageReference Include="Mono.Cecil" Version="0.10.1" />
