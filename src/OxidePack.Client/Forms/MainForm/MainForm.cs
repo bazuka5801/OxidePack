@@ -333,7 +333,17 @@ namespace OxidePack.Client
         #region btnOpenPluginManager_Click
         private void btnOpenPluginManager_Click(object sender, System.EventArgs e)
         {
-            new PluginManagerForm(new PluginsProject(OPClientCore.Solution.CsProjects[0])).Show(this);
+            var projects = OPClientCore.Solution.CsProjects;
+            ProjectSelectModel psModel = new ProjectSelectModel()
+            {
+                Projects = projects.Select(p=>p.Name).ToList()
+            };
+            new ProjectSelectForm(psModel).ShowDialog();
+            if (psModel.Success)
+            {
+                var selectedProject = OPClientCore.Solution.CsProjects[psModel.Selected];
+                new PluginManagerForm(new PluginsProject(selectedProject)).Show(this);
+            }
         }
         #endregion
 

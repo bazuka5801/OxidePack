@@ -41,10 +41,10 @@ namespace OxidePack.Client
                     var mView = moduleViews[i];
                     mView.LoadModuleInfo(ModuleMgr.Modules[i]);
                     mView.SetIndex(i);
-                    
-                    // Reload selected plugin
-                    SelectPlugin(_PluginSelected);
                 }
+                
+                // Reload selected plugin
+                SelectPlugin(_PluginSelected);
             });
         }
 
@@ -419,7 +419,7 @@ namespace OxidePack.Client
                 throw new Exception("PluginSelected is null");
             }
 
-            _PluginSelected.RequestCompile(true);
+            new EncryptionForm(new EncryptionModel() {Plugin = _PluginSelected}).ShowDialog();
         }
         #endregion
 

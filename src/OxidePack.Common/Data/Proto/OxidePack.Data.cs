@@ -59,6 +59,12 @@ namespace OxidePack.Data
 
         public string encrypted;
 
+        public List<OxidePack.Data.CompilerError> buildErrors;
+
+        public List<OxidePack.Data.CompilerError> encryptErrors;
+
+        public byte[] compiledAssembly;
+
     }
 
     public partial class BuildOptions : IDisposable, Pool.IPooled, IProto
@@ -67,11 +73,31 @@ namespace OxidePack.Data
 
         public OxidePack.Data.PluginInfo plugininfo;
 
+        public bool compileDll;
+
+        public bool forClient;
+
     }
 
     public partial class EncryptOptions : IDisposable, Pool.IPooled, IProto
     {
         public bool enabled;
+
+        public bool localvars;
+
+        public bool fields;
+
+        public bool methods;
+
+        public bool types;
+
+        public bool spacesremoving;
+
+        public bool trashremoving;
+
+        public bool secret;
+
+        public bool forClient;
 
     }
 
@@ -110,6 +136,20 @@ namespace OxidePack.Data
     public partial class ModuleListResponse : IDisposable, Pool.IPooled, IProto
     {
         public List<OxidePack.Data.ModuleInfo> modules;
+
+    }
+
+    public partial class CompilerError : IDisposable, Pool.IPooled, IProto
+    {
+        public int line;
+
+        public int column;
+
+        public int lineEnd;
+
+        public int columnEnd;
+
+        public string errorText;
 
     }
 

@@ -69,6 +69,8 @@ namespace OxidePack.Client
 
         public static async Task DownloadRustDLLs(Action<string, int> progress, Action completed)
         {
+            try
+            {
             Regex _rustFilesRegex = new Regex("RustDedicated_Data\\\\Managed\\\\.*.dll");
             var refPath = ".references-cache";
             var downloadConfig = new global::DepotDownloader.DownloadConfig()
@@ -99,7 +101,14 @@ namespace OxidePack.Client
             downloadConfig.OnReportProgressEvent -= OnProgress;
             downloader.ClearCache();
             Config.RustVersion = GetRustVersion(".references-cache/Assembly-CSharp.dll");
-            MainForm.ReloadStatus();
+            MainForm.ReloadStatus(); 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                File.AppendAllText("error.log", e.Message+"\n"+e.StackTrace+"\n");
+                throw;
+            }
         }
 
         public static async Task DownloadOxideDLLs(Action<string,int> progress, Action completed)

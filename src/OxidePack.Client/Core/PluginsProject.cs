@@ -26,6 +26,7 @@ namespace OxidePack.Client
         public class PluginsProjectData
         {
             public string BuildedCopyPath = "";
+            public bool ForClient = false;
             public List<string> PluginList = new List<string>();
         }
 
@@ -137,6 +138,7 @@ namespace OxidePack.Client
 
             plugin = GetPlugin(pName);
             Config.PluginList.Add(pName);
+            SaveConfig();
             return true;
         }
 

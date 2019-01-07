@@ -15,46 +15,31 @@ namespace OxidePack.Client
 {
     public class PluginProject
     {
-        public class PluginProjectData
-        {
-            public string Name;
-            public string Author;
-            public string Description;
-            public VersionNumber Version = new VersionNumber(0,0,0);
-            
-            public List<string> Modules = new List<string>();
-
-            public PluginProjectData(string name)
-            {
-                Name = Config.PluginTemplateDefault.Name.Replace("$name$", name);
-                Author = Config.PluginTemplateDefault.Author.Replace("$name$", name);
-                Description = Config.PluginTemplateDefault.Description.Replace("$name$", name);
-                Version = Config.PluginTemplateDefault.Version;
-            }
-        }
-
-        public PluginsProject Project;   
-        public CsProject csProject;
+        private readonly string _Directory;
         public PluginProjectData config;
-
-        public Action<PluginProject> OnModulesChanged;
+        public CsProject csProject;
+        public Action<BuildResponse> OnBuilded;
         public Action<PluginProject> OnChanged;
 
-        private string _Directory;
-        
-        private string DataFileName => Path.Combine(_Directory, "plugin.json");
-        public string Name => Path.GetFileName(_Directory);
+        public Action<PluginProject> OnModulesChanged;
+
+        public PluginsProject Project;
 
         public PluginProject(PluginsProject project, string directory)
         {
-            this.Project = project;
-            this.csProject = project.csProject;
-            this._Directory = directory;
+            Project = project;
+            csProject = project.csProject;
+            _Directory = directory;
             ReloadConfig();
             AdjustMainFile();
         }
 
-        void AdjustMainFile()
+        private string DataFileName => Path.Combine(_Directory, "plugin.json");
+        public string Name => Path.GetFileName(_Directory);
+
+        public bool ForClient => Project.Config.ForClient;
+
+        private void AdjustMainFile()
         {
             var pluginFile = Path.Combine(_Directory, $"{Name}.cs");
             if (File.Exists(pluginFile) == false)
@@ -70,26 +55,173 @@ namespace OxidePack.Client
             }
         }
 
+
+        public void AddSourceFile(string filename)
+        {
+            var sourceFilename = Path.Combine(_Directory, $"{Name}.{filename}.cs");
+            if (File.Exists(sourceFilename) == false)
+            {
+                var csFile = new StringBuilder(Resources.RustPlugin_SourceFile);
+                csFile.Replace("$name$", Name)
+                    .Replace("$info-name$", config.Name)
+                    .Replace("$author$", config.Author)
+                    .Replace("$version$", config.Version.ToString())
+                    .Replace("$description$", config.Description);
+                File.WriteAllText(sourceFilename, csFile.ToString());
+                csProject.CompileAdd(sourceFilename);
+            }
+        }
+
+        public void RequestCompile(EncryptOptions options = null)
+        {
+            if (Compiling) return;
+            SetCompilingState(true);
+            config.Version.Build++;
+            SaveConfig();
+            var sources = Directory.GetFiles(_Directory, "*.cs").Select(filename =>
+            {
+                var content = File.ReadAllText(filename);
+                return new SourceFile
+                    {filename = Path.GetFileName(filename), content = content, sha256 = content.ToSHA512()};
+            }).ToList();
+            var bRequest = new BuildRequest
+            {
+                buildOptions = new BuildOptions
+                {
+                    name = Name,
+                    plugininfo = new PluginInfo
+                    {
+                        name = config.Name,
+                        author = config.Author,
+                        version = config.Version.ToString(),
+                        description = config.Description
+                    }
+                },
+                encryptOptions = options ?? new EncryptOptions {enabled = false},
+                sources = sources
+            };
+
+            if (ForClient)
+            {
+                bRequest.buildOptions.forClient = true;
+                bRequest.buildOptions.compileDll = true;
+            }
+
+            Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
+        }
+
+        public void OnBuildResponse(BuildResponse bResponse)
+        {
+            var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
+            if (Directory.Exists(outputDir) == false)
+                Directory.CreateDirectory(outputDir);
+
+
+            if (bResponse.compiledAssembly != null)
+            {
+                var outputDllPath = Path.Combine(outputDir, $"{Name}.dll");
+                File.WriteAllBytes(outputDllPath, bResponse.compiledAssembly);
+            }
+            else
+            {
+                var outputPath = Path.Combine(outputDir, $"{Name}.cs");
+                File.WriteAllText(outputPath, bResponse.content);
+            }
+
+            if (bResponse.buildErrors.Count > 0)
+                ThreadUtils.RunInUI(() =>
+                {
+                    var errorModel = new ErrorViewFormModel
+                    {
+                        SourceText = bResponse.content,
+                        Errors = bResponse.buildErrors.Select(p => new ErrorModel
+                        {
+                            Column = p.column, Line = p.line,
+                            ColumnEnd = p.columnEnd, LineEnd = p.lineEnd,
+                            ErrorText = p.errorText
+                        }).ToList()
+                    };
+                    new ErrorViewForm(errorModel).Show();
+                });
+
+            var copyPath = Project.Config.BuildedCopyPath;
+
+            if (string.IsNullOrEmpty(copyPath) == false
+                && Directory.Exists(copyPath))
+            {
+                if (bResponse.compiledAssembly != null)
+                {
+                    var copyOutputDllPath = Path.Combine(copyPath, $"{Name}.dll");
+                    File.WriteAllBytes(copyOutputDllPath, bResponse.compiledAssembly);
+                }
+                else
+                {
+                    var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
+                    File.WriteAllText(copyOutputPath, bResponse.content);
+                }
+            }
+
+            if (string.IsNullOrEmpty(bResponse.encrypted) == false)
+            {
+                var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
+                if (Directory.Exists(encryptedDir) == false)
+                    Directory.CreateDirectory(encryptedDir);
+                var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
+                File.WriteAllText(encryptedPath, bResponse.encrypted);
+
+                if (string.IsNullOrEmpty(copyPath) == false
+                    && Directory.Exists(copyPath))
+                {
+                    var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
+                    File.WriteAllText(copyOutputPath, bResponse.encrypted);
+                }
+            }
+
+            OnBuilded?.Invoke(bResponse);
+            OnChanged?.Invoke(this);
+            SetCompilingState(false);
+        }
+
+        public void OnConfigChanged()
+        {
+            ReloadConfig();
+            OnChanged?.Invoke(this);
+        }
+
+        public class PluginProjectData
+        {
+            public string Author;
+            public string Description;
+
+            public List<string> Modules = new List<string>();
+            public string Name;
+            public VersionNumber Version = new VersionNumber(0, 0, 0);
+
+            public PluginProjectData(string name)
+            {
+                Name = Config.PluginTemplateDefault.Name.Replace("$name$", name);
+                Author = Config.PluginTemplateDefault.Author.Replace("$name$", name);
+                Description = Config.PluginTemplateDefault.Description.Replace("$name$", name);
+                Version = Config.PluginTemplateDefault.Version;
+            }
+        }
+
         #region [Methods] Modules
+
         public void AddModule(string mName)
         {
-            if (config.Modules.Contains(mName))
-            {
-                throw new Exception($"Module {mName} already exists in {Name} plugin!");
-            }
+            if (config.Modules.Contains(mName)) throw new Exception($"Module {mName} already exists in {Name} plugin!");
 
             config.Modules.Add(mName);
             OnModulesChanged?.Invoke(this);
             RequestGeneratedFile();
             SaveConfig();
         }
-        
+
         public void RemoveModule(string mName)
         {
             if (config.Modules.Contains(mName) == false)
-            {
                 throw new Exception($"Missing {mName} module in {Name} plugin!");
-            }
 
             config.Modules.Remove(mName);
             OnModulesChanged?.Invoke(this);
@@ -109,7 +241,7 @@ namespace OxidePack.Client
 
         public void RequestGeneratedFile()
         {
-            using (GeneratedFileRequest gfRequest = new GeneratedFileRequest
+            using (var gfRequest = new GeneratedFileRequest
             {
                 modules = config.Modules.ToList(),
                 @namespace = $"Oxide.Plugins.{Name}",
@@ -119,10 +251,10 @@ namespace OxidePack.Client
                 Net.cl.SendRPC(RPCMessageType.GeneratedFileRequest, gfRequest);
             }
         }
-        
-        private static Boolean Compiling;
 
-        void SetCompilingState(bool compiling)
+        private static bool Compiling;
+
+        private void SetCompilingState(bool compiling)
         {
             Compiling = compiling;
             if (compiling)
@@ -133,7 +265,7 @@ namespace OxidePack.Client
             else
             {
                 MainForm.UpdateStatus($"[{Name}] Compiled..");
-                MainForm.UpdateProgressBar(value: 100, max: 100, ProgressBarStyle.Blocks);
+                MainForm.UpdateProgressBar(100, 100, ProgressBarStyle.Blocks);
             }
         }
 
@@ -142,111 +274,17 @@ namespace OxidePack.Client
             var filename = Path.Combine(_Directory, $"{Name}.generated.cs");
             var exists = File.Exists(filename);
             File.WriteAllText(filename, content);
-            if (exists == false)
-            {
-                csProject.CompileAdd(filename);
-            }
+            if (exists == false) csProject.CompileAdd(filename);
         }
+
         #endregion
 
-
-        public void AddSourceFile(string filename)
-        {
-            var sourceFilename = Path.Combine(_Directory, $"{Name}.{filename}.cs");
-            if (File.Exists(sourceFilename) == false)
-            {
-                var csFile = new StringBuilder(Resources.RustPlugin_SourceFile);
-                csFile.Replace("$name$", Name)
-                    .Replace("$info-name$", config.Name)
-                    .Replace("$author$", config.Author)
-                    .Replace("$version$", config.Version.ToString())
-                    .Replace("$description$", config.Description);
-                File.WriteAllText(sourceFilename, csFile.ToString());
-                csProject.CompileAdd(sourceFilename);
-            }
-        }
-
-        public void RequestCompile(bool encrypt = false)
-        {
-            if (Compiling)
-            {
-                return;
-            }
-            SetCompilingState(true);
-            config.Version.Build++;
-            SaveConfig();
-            var sources = Directory.GetFiles(_Directory, "*.cs").Select(filename =>
-            {
-                var content = File.ReadAllText(filename);
-                return new SourceFile {filename = Path.GetFileName(filename), content = content, sha256 = content.ToSHA512()};
-            }).ToList();
-            BuildRequest bRequest = new BuildRequest
-            {
-                buildOptions = new BuildOptions
-                {
-                    name = Name,
-                    plugininfo = new PluginInfo
-                    {
-                        name = config.Name,
-                        author = config.Author,
-                        version = config.Version.ToString(),
-                        description = config.Description
-                    }
-                },
-                encryptOptions = new EncryptOptions { enabled = encrypt },
-                sources = sources
-            };
-            Net.cl.SendRPC(RPCMessageType.BuildRequest, bRequest);
-        }
-        
-        public void OnBuildResponse(BuildResponse bResponse)
-        {
-            var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
-            if (Directory.Exists(outputDir) == false)
-                Directory.CreateDirectory(outputDir);
-            var outputPath = Path.Combine(outputDir, $"{Name}.cs");
-            File.WriteAllText(outputPath, bResponse.content);
-
-            var copyPath = this.Project.Config.BuildedCopyPath;
-
-            if (string.IsNullOrEmpty(copyPath) == false
-                && Directory.Exists(copyPath))
-            {
-                var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
-                File.WriteAllText(copyOutputPath, bResponse.content);
-            }
-            
-            if (string.IsNullOrEmpty(bResponse.encrypted) == false)
-            {
-                var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
-                if (Directory.Exists(encryptedDir) == false)
-                    Directory.CreateDirectory(encryptedDir);
-                var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
-                File.WriteAllText(encryptedPath, bResponse.encrypted);
-                
-                if (string.IsNullOrEmpty(copyPath) == false
-                    && Directory.Exists(copyPath))
-                {
-                    var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
-                    File.WriteAllText(copyOutputPath, bResponse.encrypted);
-                }
-            }
-            
-            OnChanged?.Invoke(this);
-            SetCompilingState(false);
-        }
-
-        public void OnConfigChanged()
-        {
-            ReloadConfig();
-            OnChanged?.Invoke(this);
-        }
-
         #region [Methods] Config
-        void ReloadConfig()
+
+        private void ReloadConfig()
         {
-            string pluginNameDefault = Path.GetFileName(_Directory);
-            if (File.Exists(this.DataFileName) == false)
+            var pluginNameDefault = Path.GetFileName(_Directory);
+            if (File.Exists(DataFileName) == false)
             {
                 config = new PluginProjectData(pluginNameDefault);
                 SaveConfig();
@@ -254,7 +292,7 @@ namespace OxidePack.Client
 
             try
             {
-                config = JsonConvert.DeserializeObject<PluginProjectData>(File.ReadAllText(this.DataFileName));
+                config = JsonConvert.DeserializeObject<PluginProjectData>(File.ReadAllText(DataFileName));
             }
             catch
             {
@@ -263,15 +301,13 @@ namespace OxidePack.Client
             }
         }
 
-        void SaveConfig()
+        private void SaveConfig()
         {
-            if (config == null)
-            {
-                throw new NullReferenceException("_Config is null!!!");
-            }
-            
-            File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(config, Formatting.Indented));
+            if (config == null) throw new NullReferenceException("_Config is null!!!");
+
+            File.WriteAllText(DataFileName, JsonConvert.SerializeObject(config, Formatting.Indented));
         }
+
         #endregion
     }
 }

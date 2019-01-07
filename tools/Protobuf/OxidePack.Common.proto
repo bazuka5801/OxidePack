@@ -18,22 +18,35 @@ message GeneratedFileResponse {
 message BuildRequest {
 	required   BuildOptions   buildOptions = 1;
 	required EncryptOptions encryptOptions = 2;
-	repeated     SourceFile 	   sources = 3;
+	repeated     SourceFile 	   sources = 3;	
 }
 
 message BuildResponse {
 	required string pluginname = 1;
 	required string content = 2;
 	optional string encrypted = 3;
+	repeated CompilerError buildErrors = 4;
+	repeated CompilerError encryptErrors = 5;
+	optional bytes compiledAssembly = 6;
 }
 
 message BuildOptions {
-	required string name = 1;
+	required     string       name = 1;
 	required PluginInfo plugininfo = 2;
+	required 	   bool compileDll = 3;
+	required       bool  forClient = 4;
 }
 
 message EncryptOptions {
-	required bool enabled = 1;	
+	required bool        enabled = 1;
+	required bool 	   localvars = 2;
+	required bool    	  fields = 3;
+	required bool   	 methods = 4;
+	required bool          types = 5;
+	required bool spacesremoving = 6;
+	required bool  trashremoving = 7;
+	required bool         secret = 8;
+	required bool      forClient = 9;
 }
 
 message PluginInfo {
@@ -57,4 +70,13 @@ message ModuleInfo {
 
 message ModuleListResponse {
 	repeated ModuleInfo modules = 1;
+}
+
+message CompilerError
+{    
+    required  int32         line = 1;
+    required  int32       column = 2;
+    required  int32      lineEnd = 3;
+    required  int32    columnEnd = 4;
+    required string errorText = 5;
 }

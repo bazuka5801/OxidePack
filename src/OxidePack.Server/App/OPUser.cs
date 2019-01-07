@@ -1,9 +1,13 @@
 using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Ether.Network.Packets;
 using OxidePack.CoreLib;
+using OxidePack.CoreLib.Utils;
 using OxidePack.Data;
+using CompilerError = OxidePack.Data.CompilerError;
 
 namespace OxidePack.Server.App
 {
@@ -30,17 +34,54 @@ namespace OxidePack.Server.App
                     {
                         string buildResult = ActivePlugin.Build(bRequest);
                         string encryptResult = null;
+                        CompilerResults compilerResults = null;
+                        
                         if (bRequest.encryptOptions.enabled)
                         {
-                            encryptResult = ActivePlugin.Encrypt(buildResult);
+                            var options = new EncryptorOptions()
+                            {
+                                LocalVarsCompressing = bRequest.encryptOptions.localvars,
+                                FieldsCompressing = bRequest.encryptOptions.fields,
+                                MethodsCompressing = bRequest.encryptOptions.methods,
+                                TypesCompressing = bRequest.encryptOptions.types,
+                                SpacesRemoving = bRequest.encryptOptions.spacesremoving,
+                                TrashRemoving = bRequest.encryptOptions.trashremoving,
+                                Secret = bRequest.encryptOptions.secret
+                            };
+                            (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
                         }
 
+                        
+                        
                         BuildResponse bResponse = new BuildResponse()
                         {
                             pluginname = bRequest.buildOptions.name,
                             content = buildResult,
                             encrypted = encryptResult
                         };
+                        
+                        if (bRequest.buildOptions.compileDll)
+                        {
+                            var (compiledAssembly, compilerErrors) = CompileUtils.CompileAssembly(buildResult, bRequest.buildOptions.name,
+                                bRequest.buildOptions.forClient ? "client" : "server");
+                            bResponse.compiledAssembly = compiledAssembly;
+                            bResponse.buildErrors = compilerErrors;
+                        }
+
+                        if (compilerResults?.Errors.HasErrors ?? false)
+                        {
+                            List<OxidePack.Data.CompilerError> errorList = new List<CompilerError>();
+                            foreach (System.CodeDom.Compiler.CompilerError error in compilerResults.Errors)
+                            {
+                                var errorProto = Pool.Get<OxidePack.Data.CompilerError>();
+                                errorProto.line = error.Line;
+                                errorProto.column = error.Column;
+                                errorProto.errorText = error.ErrorText;
+                                errorList.Add(errorProto);
+                            }
+
+                            bResponse.encryptErrors = errorList;
+                        }
                     
                         SendRPC(RPCMessageType.BuildResponse, bResponse);
                     });

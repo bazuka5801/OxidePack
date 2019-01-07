@@ -36,7 +36,7 @@ namespace OxidePack.Client.Core.MsBuildProject
 
         public bool HasNewVersion()
         {
-            var firstElem = this.Project.BuildProject.doc.FirstChild;
+            var firstElem = this.Project.BuildProject.doc["Project"];
             if (firstElem.Name == "Project" && firstElem.Attributes["Sdk"]?.Value == "Microsoft.NET.Sdk")
             {
                 return true;
@@ -55,7 +55,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         {
             if (IsNewVersion)
             {
-                foreach (XmlElement node in this.Project.BuildProject.doc.FirstChild)
+                foreach (XmlElement node in this.Project.BuildProject.doc["Project"])
                 {
                     if (node.FirstChild?.Name == "Reference" || node.IsEmpty)
                     {
@@ -68,7 +68,7 @@ namespace OxidePack.Client.Core.MsBuildProject
 
                 if (_references == null)
                 {
-                    var node = this.Project.BuildProject.doc.FirstChild.AddElement("ItemGroup");
+                    var node = this.Project.BuildProject.doc["Project"].AddElement("ItemGroup");
                     var msBuildItemGroup = (MSBuildItemGroup)typeof(MSBuildProject).GetMethod("GetItemGroup", BindingFlags.NonPublic | BindingFlags.Instance)
                         .Invoke(this.Project.BuildProject, new object[] {node});
                     _references = msBuildItemGroup;
@@ -173,11 +173,14 @@ namespace OxidePack.Client.Core.MsBuildProject
                 {
                     existingReference.SetMetadata("HintPath", asmRelativePath);
                 }
+
+                existingReference.SetMetadata("Private", "False");
             }
             else
             {
-                _references.AddNewItem("Reference", asmFullName)
-                    .SetMetadata("HintPath", asmRelativePath);
+                var item = _references.AddNewItem("Reference", asmFullName);
+                item.SetMetadata("HintPath", asmRelativePath);
+                item.SetMetadata("Private", "False");
             }
 
             var asmFileName = Path.GetFileName(filepath);

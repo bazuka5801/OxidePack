@@ -1412,6 +1412,41 @@ namespace OxidePack.Data
             // [string] encrypted
             instance.encrypted = default(string);
 
+            // [CompilerError] buildErrors
+            if (instance.buildErrors != null)
+            {
+                for (int i = 0; i < instance.buildErrors.Count; i++)
+                {
+                    if (instance.buildErrors[i] != null)
+                    {
+                        instance.buildErrors[i].ResetToPool();
+                        instance.buildErrors[i] = null;
+                    }
+                }
+                List<OxidePack.Data.CompilerError> insbuildErrors = instance.buildErrors;
+                Pool.FreeList<OxidePack.Data.CompilerError>(ref insbuildErrors);
+                instance.buildErrors = insbuildErrors;
+            }
+
+            // [CompilerError] encryptErrors
+            if (instance.encryptErrors != null)
+            {
+                for (int i = 0; i < instance.encryptErrors.Count; i++)
+                {
+                    if (instance.encryptErrors[i] != null)
+                    {
+                        instance.encryptErrors[i].ResetToPool();
+                        instance.encryptErrors[i] = null;
+                    }
+                }
+                List<OxidePack.Data.CompilerError> insencryptErrors = instance.encryptErrors;
+                Pool.FreeList<OxidePack.Data.CompilerError>(ref insencryptErrors);
+                instance.encryptErrors = insencryptErrors;
+            }
+
+            // [byte[]] compiledAssembly
+            instance.compiledAssembly = default(byte[]);
+
             Pool.Free<OxidePack.Data.BuildResponse>(ref instance);
         }
 
@@ -1482,6 +1517,10 @@ namespace OxidePack.Data
         /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
         public static OxidePack.Data.BuildResponse Deserialize(Stream stream, OxidePack.Data.BuildResponse instance)
         {
+            if (instance.buildErrors == null)
+                instance.buildErrors = Pool.GetList<OxidePack.Data.CompilerError>();
+            if (instance.encryptErrors == null)
+                instance.encryptErrors = Pool.GetList<OxidePack.Data.CompilerError>();
             while (true)
             {
                 int keyByte = stream.ReadByte();
@@ -1501,6 +1540,20 @@ namespace OxidePack.Data
                     // Field 3 LengthDelimited
                     case 26:
                         instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 4 LengthDelimited
+                    case 34:
+                        // repeated
+                        instance.buildErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        // repeated
+                        instance.encryptErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 6 LengthDelimited
+                    case 50:
+                        instance.compiledAssembly = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
                         continue;
                 }
 
@@ -1523,6 +1576,10 @@ namespace OxidePack.Data
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static OxidePack.Data.BuildResponse DeserializeLengthDelimited(Stream stream, OxidePack.Data.BuildResponse instance)
         {
+            if (instance.buildErrors == null)
+                instance.buildErrors = Pool.GetList<OxidePack.Data.CompilerError>();
+            if (instance.encryptErrors == null)
+                instance.encryptErrors = Pool.GetList<OxidePack.Data.CompilerError>();
             long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
@@ -1552,6 +1609,20 @@ namespace OxidePack.Data
                     case 26:
                         instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 4 LengthDelimited
+                    case 34:
+                        // repeated
+                        instance.buildErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        // repeated
+                        instance.encryptErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 6 LengthDelimited
+                    case 50:
+                        instance.compiledAssembly = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1573,6 +1644,10 @@ namespace OxidePack.Data
         /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static OxidePack.Data.BuildResponse DeserializeLength(Stream stream, int length, OxidePack.Data.BuildResponse instance)
         {
+            if (instance.buildErrors == null)
+                instance.buildErrors = Pool.GetList<OxidePack.Data.CompilerError>();
+            if (instance.encryptErrors == null)
+                instance.encryptErrors = Pool.GetList<OxidePack.Data.CompilerError>();
             long limit = stream.Position + length;
             while (true)
             {
@@ -1600,6 +1675,20 @@ namespace OxidePack.Data
                     // Field 3 LengthDelimited
                     case 26:
                         instance.encrypted = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                    // Field 4 LengthDelimited
+                    case 34:
+                        // repeated
+                        instance.buildErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        // repeated
+                        instance.encryptErrors.Add(OxidePack.Data.CompilerError.DeserializeLengthDelimited(stream));
+                        continue;
+                    // Field 6 LengthDelimited
+                    case 50:
+                        instance.compiledAssembly = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
                         continue;
                 }
 
@@ -1640,6 +1729,42 @@ namespace OxidePack.Data
                 // Key for field: 3, LengthDelimited
                 stream.WriteByte(26);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.encrypted));
+            }
+            if (instance.buildErrors != null)
+            {
+                foreach (var i4 in instance.buildErrors)
+                {
+                    // Key for field: 4, LengthDelimited
+                    stream.WriteByte(34);
+                    ﻿msField.SetLength(0);
+                    OxidePack.Data.CompilerError.Serialize(msField, i4);
+                    // Length delimited byte array
+                    uint length4 = (uint)msField.Length;
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
+                    stream.Write(msField.GetBuffer(), 0, (int)length4);
+
+                }
+            }
+            if (instance.encryptErrors != null)
+            {
+                foreach (var i5 in instance.encryptErrors)
+                {
+                    // Key for field: 5, LengthDelimited
+                    stream.WriteByte(42);
+                    ﻿msField.SetLength(0);
+                    OxidePack.Data.CompilerError.Serialize(msField, i5);
+                    // Length delimited byte array
+                    uint length5 = (uint)msField.Length;
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
+                    stream.Write(msField.GetBuffer(), 0, (int)length5);
+
+                }
+            }
+            if (instance.compiledAssembly != null)
+            {
+                // Key for field: 6, LengthDelimited
+                stream.WriteByte(50);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, instance.compiledAssembly);
             }
             Pool.FreeMemoryStream(ref msField);
         }
@@ -1687,6 +1812,51 @@ namespace OxidePack.Data
                     // Key for field: 3, LengthDelimited
                     stream.WriteByte(26);
                     global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.encrypted));
+                }
+            }
+            if (instance.buildErrors != previous.buildErrors)
+            {
+                if (instance.buildErrors != null)
+                {
+                    foreach (var i4 in instance.buildErrors)
+                    {
+                        // Key for field: 4, LengthDelimited
+                        stream.WriteByte(34);
+                        ﻿msField.SetLength(0);
+                        OxidePack.Data.CompilerError.Serialize(msField, i4);
+                        // Length delimited byte array
+                        uint length4 = (uint)msField.Length;
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
+                        stream.Write(msField.GetBuffer(), 0, (int)length4);
+
+                    }
+                }
+            }
+            if (instance.encryptErrors != previous.encryptErrors)
+            {
+                if (instance.encryptErrors != null)
+                {
+                    foreach (var i5 in instance.encryptErrors)
+                    {
+                        // Key for field: 5, LengthDelimited
+                        stream.WriteByte(42);
+                        ﻿msField.SetLength(0);
+                        OxidePack.Data.CompilerError.Serialize(msField, i5);
+                        // Length delimited byte array
+                        uint length5 = (uint)msField.Length;
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
+                        stream.Write(msField.GetBuffer(), 0, (int)length5);
+
+                    }
+                }
+            }
+            if (instance.compiledAssembly != previous.compiledAssembly)
+            {
+                if (instance.compiledAssembly != null)
+                {
+                    // Key for field: 6, LengthDelimited
+                    stream.WriteByte(50);
+                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, instance.compiledAssembly);
                 }
             }
             Pool.FreeMemoryStream(ref msField);
@@ -1741,6 +1911,12 @@ namespace OxidePack.Data
                 instance.plugininfo.ResetToPool();
                 instance.plugininfo = null;
             }
+
+            // [bool] compileDll
+            instance.compileDll = default(bool);
+
+            // [bool] forClient
+            instance.forClient = default(bool);
 
             Pool.Free<OxidePack.Data.BuildOptions>(ref instance);
         }
@@ -1831,6 +2007,14 @@ namespace OxidePack.Data
                         else
                             OxidePack.Data.PluginInfo.DeserializeLengthDelimited(stream, instance.plugininfo);
                         continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.compileDll = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1880,6 +2064,14 @@ namespace OxidePack.Data
                         else
                             OxidePack.Data.PluginInfo.DeserializeLengthDelimited(stream, instance.plugininfo);
                         continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.compileDll = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1928,6 +2120,14 @@ namespace OxidePack.Data
                         else
                             OxidePack.Data.PluginInfo.DeserializeLengthDelimited(stream, instance.plugininfo);
                         continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.compileDll = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -1968,6 +2168,12 @@ namespace OxidePack.Data
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
             stream.Write(msField.GetBuffer(), 0, (int)length2);
 
+            // Key for field: 3, Varint
+            stream.WriteByte(24);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.compileDll);
+            // Key for field: 4, Varint
+            stream.WriteByte(32);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -2012,6 +2218,18 @@ namespace OxidePack.Data
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
                 stream.Write(msField.GetBuffer(), 0, (int)length2);
 
+            }
+            if (instance.compileDll != previous.compileDll)
+            {
+                // Key for field: 3, Varint
+                stream.WriteByte(24);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.compileDll);
+            }
+            if (instance.forClient != previous.forClient)
+            {
+                // Key for field: 4, Varint
+                stream.WriteByte(32);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
             }
             Pool.FreeMemoryStream(ref msField);
         }
@@ -2058,6 +2276,30 @@ namespace OxidePack.Data
                 return;
             // [bool] enabled
             instance.enabled = default(bool);
+
+            // [bool] localvars
+            instance.localvars = default(bool);
+
+            // [bool] fields
+            instance.fields = default(bool);
+
+            // [bool] methods
+            instance.methods = default(bool);
+
+            // [bool] types
+            instance.types = default(bool);
+
+            // [bool] spacesremoving
+            instance.spacesremoving = default(bool);
+
+            // [bool] trashremoving
+            instance.trashremoving = default(bool);
+
+            // [bool] secret
+            instance.secret = default(bool);
+
+            // [bool] forClient
+            instance.forClient = default(bool);
 
             Pool.Free<OxidePack.Data.EncryptOptions>(ref instance);
         }
@@ -2141,6 +2383,38 @@ namespace OxidePack.Data
                     case 8:
                         instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.localvars = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.fields = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.methods = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 5 Varint
+                    case 40:
+                        instance.types = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.spacesremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.trashremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2183,6 +2457,38 @@ namespace OxidePack.Data
                     case 8:
                         instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.localvars = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.fields = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.methods = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 5 Varint
+                    case 40:
+                        instance.types = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.spacesremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.trashremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2224,6 +2530,38 @@ namespace OxidePack.Data
                     case 8:
                         instance.enabled = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.localvars = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.fields = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.methods = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 5 Varint
+                    case 40:
+                        instance.types = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.spacesremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.trashremoving = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2251,6 +2589,30 @@ namespace OxidePack.Data
             // Key for field: 1, Varint
             stream.WriteByte(8);
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.enabled);
+            // Key for field: 2, Varint
+            stream.WriteByte(16);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.localvars);
+            // Key for field: 3, Varint
+            stream.WriteByte(24);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.fields);
+            // Key for field: 4, Varint
+            stream.WriteByte(32);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.methods);
+            // Key for field: 5, Varint
+            stream.WriteByte(40);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.types);
+            // Key for field: 6, Varint
+            stream.WriteByte(48);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spacesremoving);
+            // Key for field: 7, Varint
+            stream.WriteByte(56);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.trashremoving);
+            // Key for field: 8, Varint
+            stream.WriteByte(64);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.secret);
+            // Key for field: 9, Varint
+            stream.WriteByte(72);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -2279,6 +2641,54 @@ namespace OxidePack.Data
                 // Key for field: 1, Varint
                 stream.WriteByte(8);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.enabled);
+            }
+            if (instance.localvars != previous.localvars)
+            {
+                // Key for field: 2, Varint
+                stream.WriteByte(16);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.localvars);
+            }
+            if (instance.fields != previous.fields)
+            {
+                // Key for field: 3, Varint
+                stream.WriteByte(24);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.fields);
+            }
+            if (instance.methods != previous.methods)
+            {
+                // Key for field: 4, Varint
+                stream.WriteByte(32);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.methods);
+            }
+            if (instance.types != previous.types)
+            {
+                // Key for field: 5, Varint
+                stream.WriteByte(40);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.types);
+            }
+            if (instance.spacesremoving != previous.spacesremoving)
+            {
+                // Key for field: 6, Varint
+                stream.WriteByte(48);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spacesremoving);
+            }
+            if (instance.trashremoving != previous.trashremoving)
+            {
+                // Key for field: 7, Varint
+                stream.WriteByte(56);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.trashremoving);
+            }
+            if (instance.secret != previous.secret)
+            {
+                // Key for field: 8, Varint
+                stream.WriteByte(64);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.secret);
+            }
+            if (instance.forClient != previous.forClient)
+            {
+                // Key for field: 9, Varint
+                stream.WriteByte(72);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
             }
             Pool.FreeMemoryStream(ref msField);
         }
@@ -3613,6 +4023,373 @@ namespace OxidePack.Data
             Serialize(stream, this);
         }
         public void WriteToStreamDelta(Stream stream, ModuleListResponse previous)
+        {
+            if (previous != null)
+            {
+                SerializeDelta(stream, this, previous);
+            }
+            else
+            {
+                Serialize(stream, this);
+            }
+        }
+        #endregion
+    }
+
+    public partial class CompilerError
+    {
+        #region [Methods] Pooled
+        private bool _disposed;
+        public bool ShouldPool = true;
+
+        public virtual void Dispose()
+        {
+            if (this._disposed)
+                return;
+            this.ResetToPool();
+            this._disposed = true;
+        }
+
+        public void ResetToPool()
+        {
+            ResetToPool(this);
+        }
+
+        public static void ResetToPool(CompilerError instance)
+        {
+            if (!instance.ShouldPool)
+                return;
+            // [int] line
+            instance.line = default(int);
+
+            // [int] column
+            instance.column = default(int);
+
+            // [int] lineEnd
+            instance.lineEnd = default(int);
+
+            // [int] columnEnd
+            instance.columnEnd = default(int);
+
+            // [string] errorText
+            instance.errorText = default(string);
+
+            Pool.Free<OxidePack.Data.CompilerError>(ref instance);
+        }
+
+        public virtual void EnterPool()
+        {
+            this._disposed = true;
+        }
+
+        public virtual void LeavePool()
+        {
+            this._disposed = false;
+        }
+
+        #endregion
+        #region [Methods] Reader
+        public void ReadFromStream(Stream stream, int size)
+        {
+            DeserializeLength(stream, size, this);
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static CompilerError Deserialize(Stream stream)
+        {
+            CompilerError instance = Pool.Get<CompilerError>();
+            Deserialize(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static CompilerError DeserializeLengthDelimited(Stream stream)
+        {
+            CompilerError instance = Pool.Get<CompilerError>();
+            DeserializeLengthDelimited(stream, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: create a new instance to deserializing into</summary>
+        public static CompilerError DeserializeLength(Stream stream, int length)
+        {
+            CompilerError instance = Pool.Get<CompilerError>();
+            DeserializeLength(stream, length, instance);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream and create a new instance to deserializing into</summary>
+        public static CompilerError Deserialize(byte[] buffer)
+        {
+            CompilerError instance = Pool.Get<CompilerError>();
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Helper: put the buffer into a MemoryStream before deserializing</summary>
+        public static OxidePack.Data.CompilerError Deserialize(byte[] buffer, OxidePack.Data.CompilerError instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            ms.Write(buffer, 0 ,buffer.Length);
+            ms.Position = 0;
+            Deserialize(ms, instance);
+            Pool.FreeMemoryStream(ref ms);
+            return instance;
+        }
+
+        /// <summary>Takes the remaining content of the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.CompilerError Deserialize(Stream stream, OxidePack.Data.CompilerError instance)
+        {
+            while (true)
+            {
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    break;
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.line = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.column = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.lineEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.columnEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.errorText = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.CompilerError DeserializeLengthDelimited(Stream stream, OxidePack.Data.CompilerError instance)
+        {
+            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            limit += stream.Position;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.line = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.column = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.lineEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.columnEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.errorText = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        /// <summary>Read the given number of bytes from the stream and deserialze it into the instance.</summary>
+        public static OxidePack.Data.CompilerError DeserializeLength(Stream stream, int length, OxidePack.Data.CompilerError instance)
+        {
+            long limit = stream.Position + length;
+            while (true)
+            {
+                if (stream.Position >= limit)
+                {
+                    if (stream.Position == limit)
+                        break;
+                    else
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                }
+                int keyByte = stream.ReadByte();
+                if (keyByte == -1)
+                    throw new System.IO.EndOfStreamException();
+                // Optimized reading of known fields with field ID < 16
+                switch (keyByte)
+                {
+                    // Field 1 Varint
+                    case 8:
+                        instance.line = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 2 Varint
+                    case 16:
+                        instance.column = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 3 Varint
+                    case 24:
+                        instance.lineEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 4 Varint
+                    case 32:
+                        instance.columnEnd = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.errorText = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
+                }
+
+                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+
+                // Reading field ID > 16 and unknown field ID/wire type combinations
+                switch (key.Field)
+                {
+                    case 0:
+                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                    default:
+                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        break;
+                }
+            }
+
+            return instance;
+        }
+
+        #endregion
+        #region [Methods] Writer
+        /// <summary>Serialize the instance into the stream</summary>
+        public static void Serialize(Stream stream, CompilerError instance)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            // Key for field: 1, Varint
+            stream.WriteByte(8);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.line);
+            // Key for field: 2, Varint
+            stream.WriteByte(16);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.column);
+            // Key for field: 3, Varint
+            stream.WriteByte(24);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.lineEnd);
+            // Key for field: 4, Varint
+            stream.WriteByte(32);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.columnEnd);
+            if (instance.errorText == null)
+                throw new ArgumentNullException("errorText", "Required by proto specification.");
+            // Key for field: 5, LengthDelimited
+            stream.WriteByte(42);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.errorText));
+            Pool.FreeMemoryStream(ref msField);
+        }
+
+        /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
+        public static byte[] SerializeToBytes(CompilerError instance)
+        {
+            var ms = Pool.Get<MemoryStream>();
+            Serialize(ms, instance);
+            var arr = ms.ToArray();
+            Pool.FreeMemoryStream(ref ms);
+            return arr;
+        }
+        /// <summary>Helper: Serialize with a varint length prefix</summary>
+        public static void SerializeLengthDelimited(Stream stream, CompilerError instance)
+        {
+            var data = SerializeToBytes(instance);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public static void SerializeDelta(Stream stream, CompilerError instance, CompilerError previous)
+        {
+            var msField = Pool.Get<MemoryStream>();
+            if (instance.line != previous.line)
+            {
+                // Key for field: 1, Varint
+                stream.WriteByte(8);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.line);
+            }
+            if (instance.column != previous.column)
+            {
+                // Key for field: 2, Varint
+                stream.WriteByte(16);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.column);
+            }
+            if (instance.lineEnd != previous.lineEnd)
+            {
+                // Key for field: 3, Varint
+                stream.WriteByte(24);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.lineEnd);
+            }
+            if (instance.columnEnd != previous.columnEnd)
+            {
+                // Key for field: 4, Varint
+                stream.WriteByte(32);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.columnEnd);
+            }
+            if (instance.errorText != previous.errorText)
+            {
+                if (instance.errorText == null)
+                    throw new ArgumentNullException("errorText", "Required by proto specification.");
+                // Key for field: 5, LengthDelimited
+                stream.WriteByte(42);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.errorText));
+            }
+            Pool.FreeMemoryStream(ref msField);
+        }
+        public void WriteToStream(Stream stream)
+        {
+            Serialize(stream, this);
+        }
+        public void WriteToStreamDelta(Stream stream, CompilerError previous)
         {
             if (previous != null)
             {

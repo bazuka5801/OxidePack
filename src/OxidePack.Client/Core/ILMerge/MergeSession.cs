@@ -32,6 +32,8 @@ namespace OxidePack.Client.Core.ILMerger
             {
                 InputAssemblies = Files,
                 SearchDirectories = new []{ Directory },
+                TargetPlatformVersion = "v4",
+                TargetKind = ILRepack.Kind.Dll,
                 OutputFile = outputFile
             };
             var r = new ILRepack(repOptions);
