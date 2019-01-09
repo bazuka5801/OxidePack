@@ -33,6 +33,7 @@
     <PackageReference Include="FubuCore" Version="2.0.1.321"/>
     <PackageReference Include="FubuCsProjFile" Version="1.9.0.229"/>
     <PackageReference Include="ILRepack.Lib" Version="2.0.16"/>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.16"/>
     <PackageReference Include="Mono.Cecil" Version="0.10.1"/>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
     <PackageReference Include="Octokit" Version="0.32.0"/>
@@ -144,4 +145,30 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <InputAssemblies Include="$(OutputPath)*.exe"/>
+    <InputAssemblies Include="$(OutputPath)*.dll"/>
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+
+  <Target Name="BeforeBuild">
+
+  </Target>
+  <Target Name="AfterBuild">
+    <ILRepack
+        LogFile="$(OutputPath)ilrepack.log"
+        LibraryPath="$(OutputPath)"
+        InputAssemblies="@(InputAssemblies)"
+        Parallel="true"
+        Internalize="true"
+        TargetKind="Exe"
+        TargetPlatformVersion="v4"
+        ZeroPeKind="true"
+        Union="true"
+        Wildcards="true"
+        OutputFile="E:\\Tools\\OxidePack\\OxidePack.exe"
+    />
+  </Target>
 </Project>
