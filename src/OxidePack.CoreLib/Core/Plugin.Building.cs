@@ -95,14 +95,15 @@ namespace OxidePack.CoreLib
 
         public (CompilerResults cResults, string output) EncryptWithCompiling(string source, EncryptorOptions encryptorOptions, bool forClient = false)
         {
-            var encrypted = Encrypt(source, encryptorOptions);
+            var encrypted = Encrypt(source, encryptorOptions, forClient = forClient);
             var cResults = CompileUtils.Compile(encrypted, forClient ? "client" : "server");
             return (cResults, encrypted);
         }
 
-        public string Encrypt(string source, EncryptorOptions encryptorOptions)
+        public string Encrypt(string source, EncryptorOptions encryptorOptions, bool forClient = false)
         {
-            PluginEncryptor encryptor = new PluginEncryptor(encryptorOptions);
+            PluginEncryptor encryptor =
+                new PluginEncryptor(encryptorOptions, referencesFolder: forClient ? "client" : "server");
             var output = encryptor.MinifyFromString(source);
             return output;
         }

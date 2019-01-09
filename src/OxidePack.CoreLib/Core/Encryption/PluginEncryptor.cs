@@ -17,12 +17,12 @@ namespace OxidePack.CoreLib
         private AdhocWorkspace _workspace = new AdhocWorkspace();
         private List<PortableExecutableReference> _references;
 
-        public PluginEncryptor(EncryptorOptions options = null, string[] ignoredIdentifiers = null, string[] ignoredComments = null)
+        public PluginEncryptor(EncryptorOptions options = null, string referencesFolder = "server", string[] ignoredIdentifiers = null, string[] ignoredComments = null)
         {
             Options = options ?? new EncryptorOptions();
             IgnoredIdentifiers = ignoredIdentifiers?.ToList() ?? new List<string>();
             IgnoredComments = ignoredComments?.ToList() ?? new List<string>();
-            _references = Directory.GetFiles("references")
+            _references = Directory.GetFiles($"references/{referencesFolder}")
                 .Select(path => MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(),path)))
                 .ToList();
             
