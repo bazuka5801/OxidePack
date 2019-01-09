@@ -147,6 +147,18 @@ namespace OxidePack.Client.Core.MsBuildProject
 
         public void AddReference(string filepath)
         {
+            if (filepath.Contains("*"))
+            {
+                var existingMultipleReference = _references.Items.FirstOrDefault(reference => reference.Include == (filepath));
+                if (existingMultipleReference == null)
+                {
+                    var item = _references.AddNewItem("Reference", filepath);
+                    item.SetMetadata("Private", "False");
+                    Project.Save();
+                }
+                return;
+            }
+            
             string asmName, asmFullName;
             using (AssemblyDefinition asmDef = AssemblyDefinition.ReadAssembly(filepath))
             {

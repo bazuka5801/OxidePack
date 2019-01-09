@@ -284,26 +284,41 @@ namespace OxidePack.Client
             {
                 projectConfig.Bundle = form.Bundle;
                 projectConfig.SelectedFiles = form.SelectedFiles;
-                var addedRefs = form.SelectedFiles.Except(project.ReferenceList)
-                    .Select(filename => Path.Combine(refsDir, filename)).ToList();
-                var removedRefs = project.ReferenceList.Except(form.SelectedFiles).ToList();
+//                var addedRefs = form.SelectedFiles.Except(project.ReferenceList)
+//                    .Select(filename => Path.Combine(refsDir, filename)).ToList();
+//                var removedRefs = project.ReferenceList.Except(form.SelectedFiles).ToList();
                 if (form.Bundle == false)
                 {
-                    addedRefs.ForEach(project.AddReference);
-                    removedRefs.ForEach(project.RemoveReferenceByFile);
+//                    addedRefs.ForEach(project.AddReference);
+//                    removedRefs.ForEach(project.RemoveReferenceByFile);
+
+                    var projRefsDir = Path.Combine(Directory.GetCurrentDirectory(), "references", "projects", project.Name);
+                    if (Directory.Exists(projRefsDir))
+                        Directory.Delete(projRefsDir, true);
+
+                    Directory.CreateDirectory(projRefsDir);
+                    foreach (var filename in form.SelectedFiles)
+                    {
+                        var srcFile = Path.Combine(refsDir, filename);
+                        var dstFile = Path.Combine(projRefsDir, filename);
+                        File.Copy(srcFile, dstFile);
+                    }
+                    string referencePath = Path.Combine(projRefsDir, "*.dll");
+                    project.AddReference(referencePath);
                 }
                 else
                 {
                     if (Directory.Exists(".references-bundle") == false)
                         Directory.CreateDirectory(".references-bundle");
-                    string outputFileName = Path.Combine(Directory.GetCurrentDirectory(), ".references-bundle",
-                        "bundle.dll");
+                    string outputDir = Path.Combine(Directory.GetCurrentDirectory(), ".references-bundle");
+                    string outputFileName = Path.Combine(outputDir, "bundle.dll");
+                    string referencePath = Path.Combine(outputDir, "*.dll");
                     List<string> MergeFiles = form.SelectedFiles.Select(filename => Path.Combine(refsDir, filename)).ToList();
                     MergeSession session = new MergeSession(refsDir, MergeFiles);
                     session.Merge(outputFileName);
 
                     project.ReferenceList.ToList().ForEach(project.RemoveReferenceByFile);
-                    project.AddReference(outputFileName);
+                    project.AddReference(referencePath);
                 }
             }
         }
