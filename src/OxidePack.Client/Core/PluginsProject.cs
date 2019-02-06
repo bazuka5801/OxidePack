@@ -19,15 +19,16 @@ namespace OxidePack.Client
 
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
 
+        private Dictionary<string, string> PluginsPaths = new Dictionary<string, string>();
+        
         private FSWatcher _Watcher;
 
         private string _Directory => Path.GetDirectoryName(csProject.FilePath);
-
+        
         public class PluginsProjectData
         {
             public string BuildedCopyPath = "";
             public bool ForClient = false;
-            public List<string> PluginList = new List<string>();
         }
 
         public PluginsProject(CsProject csProject)
@@ -35,6 +36,11 @@ namespace OxidePack.Client
             this.csProject = csProject;
             ReloadConfig();
             OPClientCore.SetPluginsProject(this);
+            PluginsPaths = GetPluginsPaths();
+            foreach (var pluginName in PluginsPaths.Keys)
+            {
+                GetPlugin(pluginName);
+            }
             StartWatching();
         }
 
@@ -43,7 +49,9 @@ namespace OxidePack.Client
             if (_Plugins.TryGetValue(pluginName, out var plugin))
                 return plugin;
 
-            var pluginFolder = Path.Combine(_Directory, pluginName);
+            var pluginFolder = PluginsPaths.ContainsKey(pluginName)
+                ? PluginsPaths[pluginName]
+                : Path.Combine(_Directory, pluginName);
             if (Directory.Exists(pluginFolder) == false)
             {
                 Directory.CreateDirectory(pluginFolder);
@@ -61,9 +69,28 @@ namespace OxidePack.Client
                 csFiles.ForEach(csProject.CompileRemove);
             }
         }
-
-        public List<string> GetPluginList() => Config?.PluginList.ToList() ?? new List<string>();
-
+        
+        /// <summary>
+        ///     Return all plugins in project folder
+        /// </summary>
+        /// <returns>Plugin name</returns>
+        public List<string> GetPluginList()
+        {
+            return Directory.GetFiles(_Directory, "plugin.json", SearchOption.AllDirectories)
+                .Select(Path.GetDirectoryName)
+                .ToList();
+        }
+        
+        /// <summary>
+        ///     Return all plugins in project folder
+        /// </summary>
+        /// <returns>Plugin name, Path</returns>
+        public Dictionary<string, string> GetPluginsPaths()
+        {
+            return Directory.GetFiles(_Directory, "plugin.json", SearchOption.AllDirectories)
+                .ToDictionary(jsonFile =>  Path.GetFileName(Path.GetDirectoryName(jsonFile)), Path.GetDirectoryName);
+        }
+        
         private void StartWatching()
         {
             _Watcher?.Close();
@@ -75,8 +102,8 @@ namespace OxidePack.Client
 
         bool GetPluginName(string filename, out string pluginname)
         {
-            var relPath = FileUtils.GetRelativePath(filename, _Directory);
-            pluginname = relPath.Substring(0, relPath.IndexOf('\\'));
+            var directory = Path.GetDirectoryName(filename);
+            pluginname = _Plugins.OrderByDescending(p => directory.Replace(p.Value.Project._Directory, "").Length).FirstOrDefault().Key;
 
             // Equals root directory
             if (pluginname.Equals(Path.GetFileName(_Directory)))
@@ -130,14 +157,13 @@ namespace OxidePack.Client
         
         public bool AddPlugin(string pName, out PluginProject plugin)
         {
-            if (Config.PluginList.Contains(pName))
+            if (_Plugins.ContainsKey(pName))
             {
                 plugin = null;
                 return false;
             }
 
             plugin = GetPlugin(pName);
-            Config.PluginList.Add(pName);
             SaveConfig();
             return true;
         }

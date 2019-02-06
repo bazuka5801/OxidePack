@@ -78,7 +78,7 @@ namespace OxidePack.Client
             SetCompilingState(true);
             config.Version.Build++;
             SaveConfig();
-            var sources = Directory.GetFiles(_Directory, "*.cs").Select(filename =>
+            var sources = Directory.GetFiles(_Directory, "*.cs", SearchOption.AllDirectories).Select(filename =>
             {
                 var content = File.ReadAllText(filename);
                 return new SourceFile
