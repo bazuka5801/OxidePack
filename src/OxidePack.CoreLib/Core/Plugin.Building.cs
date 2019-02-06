@@ -77,7 +77,7 @@ namespace OxidePack.CoreLib
             var generatedClass = ClassDeclaration(PluginName)
                 .WithModifiers(TokenList(Token(PublicKeyword)))
                 .WithBaseList(
-                    BaseList(SeparatedList<BaseTypeSyntax>(new[] {SimpleBaseType(ParseTypeName("RustPlugin"))})))
+                    BaseList(SeparatedList<BaseTypeSyntax>(new[] {SimpleBaseType(ParseTypeName(plugininfo.baseclass))})))
                 .WithMembers(pluginBody)
                 .WithAttributeLists(List<AttributeListSyntax>(new[]
                 {

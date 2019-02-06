@@ -111,6 +111,8 @@ namespace OxidePack.Data
 
         public string description;
 
+        public string baseclass;
+
     }
 
     public partial class SourceFile : IDisposable, Pool.IPooled, IProto

@@ -2745,6 +2745,9 @@ namespace OxidePack.Data
             // [string] description
             instance.description = default(string);
 
+            // [string] baseclass
+            instance.baseclass = default(string);
+
             Pool.Free<OxidePack.Data.PluginInfo>(ref instance);
         }
 
@@ -2839,6 +2842,10 @@ namespace OxidePack.Data
                     case 34:
                         instance.description = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.baseclass = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2893,6 +2900,10 @@ namespace OxidePack.Data
                     case 34:
                         instance.description = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.baseclass = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2946,6 +2957,10 @@ namespace OxidePack.Data
                     case 34:
                         instance.description = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 5 LengthDelimited
+                    case 42:
+                        instance.baseclass = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -2991,6 +3006,11 @@ namespace OxidePack.Data
                 stream.WriteByte(34);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
             }
+            if (instance.baseclass == null)
+                throw new ArgumentNullException("baseclass", "Required by proto specification.");
+            // Key for field: 5, LengthDelimited
+            stream.WriteByte(42);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.baseclass));
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -3046,6 +3066,14 @@ namespace OxidePack.Data
                     stream.WriteByte(34);
                     global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.description));
                 }
+            }
+            if (instance.baseclass != previous.baseclass)
+            {
+                if (instance.baseclass == null)
+                    throw new ArgumentNullException("baseclass", "Required by proto specification.");
+                // Key for field: 5, LengthDelimited
+                stream.WriteByte(42);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.baseclass));
             }
             Pool.FreeMemoryStream(ref msField);
         }

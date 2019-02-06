@@ -54,6 +54,7 @@ message PluginInfo {
 	required string      author = 2;
 	required string     version = 3;
 	optional string description = 4;
+	required string   baseclass = 5;
 }
 
 message SourceFile {

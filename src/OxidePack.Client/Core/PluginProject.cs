@@ -94,7 +94,8 @@ namespace OxidePack.Client
                         name = config.Name,
                         author = config.Author,
                         version = config.Version.ToString(),
-                        description = config.Description
+                        description = config.Description,
+                        baseclass = config.BaseClass
                     }
                 },
                 encryptOptions = options ?? new EncryptOptions {enabled = false},
@@ -192,6 +193,7 @@ namespace OxidePack.Client
         {
             public string Author;
             public string Description;
+            public string BaseClass = "RustPlugin";
 
             public List<string> Modules = new List<string>();
             public string Name;
