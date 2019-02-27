@@ -1,8 +1,15 @@
+using Newtonsoft.Json;
+
 namespace OxidePack.Data
 {
     public struct VersionNumber
     {
-        public int Major, Minor, Build;
+        [JsonProperty("Major")]
+        public int Major;
+        [JsonProperty("Minor")]
+        public int Minor;
+        [JsonProperty("Build")]
+        public int Build;
 
         public VersionNumber(int major, int minor, int build)
         {
