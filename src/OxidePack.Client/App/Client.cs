@@ -15,6 +15,7 @@ namespace OxidePack.Client.App
     public class Client : NetClient
     {
         private bool _needReconnect;
+        public bool IsAuthed { get; private set; } = false;
         
         public Client(string host, int port, int bufferSize)
         {
@@ -101,6 +102,8 @@ namespace OxidePack.Client.App
                 MainForm.UpdateProgressBar(value: 3, max: 3);
                 return;
             }
+
+            IsAuthed = true;
             MainForm.UpdateStatus($"Authenticated!");
             MainForm.UpdateProgressBar(value: 0);
             Task.Run(MainForm.Instance.CheckForUpdates);

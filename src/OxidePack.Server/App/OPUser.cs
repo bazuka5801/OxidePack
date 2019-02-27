@@ -18,6 +18,10 @@ namespace OxidePack.Server.App
         
         public override void HandleRPCMessage(RPCMessageType type, NetPacket stream)
         {
+            if (IsAuthed == false)
+            {
+                return;
+            }
             switch (type)
             {
                 case RPCMessageType.StatusRequest:

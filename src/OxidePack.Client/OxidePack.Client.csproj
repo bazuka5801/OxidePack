@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Core\Templates\RustPlugin.Template.cs"/>
-    <Compile Remove="Resources\RustPlugin.SourceFile.cs"/>
+    <Compile Remove="Core\Templates\RustPlugin.Template.cs" />
+    <Compile Remove="Resources\RustPlugin.SourceFile.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,25 +25,26 @@
     <Reference Include="SapphireEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\Dependencies\SapphireEngine\SapphireEngine.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression"/>
-    <Reference Include="System.Windows.Forms"/>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\..\Dependencies\System.Windows.Forms\System.Windows.Forms.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FubuCore" Version="2.0.1.321"/>
-    <PackageReference Include="FubuCsProjFile" Version="1.9.0.229"/>
-    <PackageReference Include="ILRepack.Lib" Version="2.0.16"/>
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.16"/>
-    <PackageReference Include="Mono.Cecil" Version="0.10.1"/>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
-    <PackageReference Include="Octokit" Version="0.32.0"/>
-    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0"/>
-    <PackageReference Include="System.Management" Version="4.5.0"/>
-    <PackageReference Include="TreeViewAdv" Version="1.7.0"/>
+    <PackageReference Include="FubuCore" Version="2.0.1.321" />
+    <PackageReference Include="FubuCsProjFile" Version="1.9.0.229" />
+    <PackageReference Include="ILRepack.Lib" Version="2.0.16" />
+    <PackageReference Include="Mono.Cecil" Version="0.10.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Octokit" Version="0.32.0" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+    <PackageReference Include="System.Management" Version="4.5.0" />
+    <PackageReference Include="TreeViewAdv" Version="1.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj"/>
+    <ProjectReference Include="..\OxidePack.Common\OxidePack.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -146,29 +147,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <InputAssemblies Include="$(OutputPath)*.exe"/>
-    <InputAssemblies Include="$(OutputPath)*.dll"/>
-  </ItemGroup>
+  <!--<ItemGroup>-->
+    <!--<InputAssemblies Include="$(OutputPath)*.exe"/>-->
+    <!--<InputAssemblies Include="$(OutputPath)*.dll"/>-->
+  <!--</ItemGroup>-->
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"/>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
-  <Target Name="BeforeBuild">
-
-  </Target>
-  <Target Name="AfterBuild">
-    <ILRepack
-        LogFile="$(OutputPath)ilrepack.log"
-        LibraryPath="$(OutputPath)"
-        InputAssemblies="@(InputAssemblies)"
-        Parallel="true"
-        Internalize="true"
-        TargetKind="Exe"
-        TargetPlatformVersion="v4"
-        ZeroPeKind="true"
-        Union="true"
-        Wildcards="true"
-        OutputFile="E:\\Tools\\OxidePack\\OxidePack.exe"
-    />
-  </Target>
 </Project>

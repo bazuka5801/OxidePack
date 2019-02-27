@@ -19,6 +19,11 @@ namespace OxidePack.Client.Core.OxideDownloader
     {
         static WebClient wClient = new WebClient();
         static GitHubClient ghClient = new GitHubClient(new ProductHeaderValue("OxidePack"));
+
+        public static void FixWeb()
+        {
+            ghClient.Repository.Release.GetLatest("theumod", "uMod.Rust").GetAwaiter().GetResult();
+        }
         
         /// <summary>
         /// Getting version from github repository

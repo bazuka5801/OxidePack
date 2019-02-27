@@ -39,6 +39,8 @@
             this.msFile = new System.Windows.Forms.ToolStripMenuItem();
             this.msAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.msBuySubscription = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnVKGroup = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.tbMain = new System.Windows.Forms.TabControl();
             this.tpMain = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -204,9 +206,26 @@
             // 
             // msBuySubscription
             // 
+            this.msBuySubscription.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnVKGroup,
+            this.btnDiscord});
             this.msBuySubscription.Name = "msBuySubscription";
-            this.msBuySubscription.Size = new System.Drawing.Size(108, 20);
-            this.msBuySubscription.Text = "Buy Subscription";
+            this.msBuySubscription.Size = new System.Drawing.Size(40, 20);
+            this.msBuySubscription.Text = "Info";
+            // 
+            // btnVKGroup
+            // 
+            this.btnVKGroup.Name = "btnVKGroup";
+            this.btnVKGroup.Size = new System.Drawing.Size(180, 22);
+            this.btnVKGroup.Text = "VK Group";
+            this.btnVKGroup.Click += new System.EventHandler(this.btnVKGroup_Click);
+            // 
+            // btnDiscord
+            // 
+            this.btnDiscord.Name = "btnDiscord";
+            this.btnDiscord.Size = new System.Drawing.Size(180, 22);
+            this.btnDiscord.Text = "Discord";
+            this.btnDiscord.Click += new System.EventHandler(this.btnDiscord_Click);
             // 
             // tbMain
             // 
@@ -266,7 +285,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 55F));
             this.tableLayoutPanel1.Controls.Add(this.btnOxideUpdate, 3, 3);
             this.tableLayoutPanel1.Controls.Add(this.lblOxideCurrentVersion, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.label6, 2, 0);
@@ -298,10 +317,10 @@
             this.btnOxideUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnOxideUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnOxideUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOxideUpdate.Location = new System.Drawing.Point(419, 96);
+            this.btnOxideUpdate.Location = new System.Drawing.Point(416, 96);
             this.btnOxideUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnOxideUpdate.Name = "btnOxideUpdate";
-            this.btnOxideUpdate.Size = new System.Drawing.Size(53, 32);
+            this.btnOxideUpdate.Size = new System.Drawing.Size(56, 32);
             this.btnOxideUpdate.TabIndex = 14;
             this.btnOxideUpdate.UseVisualStyleBackColor = true;
             this.btnOxideUpdate.Click += new System.EventHandler(this.btnOxideUpdate_Click);
@@ -310,9 +329,9 @@
             // 
             this.lblOxideCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxideCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxideCurrentVersion.Location = new System.Drawing.Point(142, 96);
+            this.lblOxideCurrentVersion.Location = new System.Drawing.Point(141, 96);
             this.lblOxideCurrentVersion.Name = "lblOxideCurrentVersion";
-            this.lblOxideCurrentVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblOxideCurrentVersion.Size = new System.Drawing.Size(133, 32);
             this.lblOxideCurrentVersion.TabIndex = 8;
             this.lblOxideCurrentVersion.Text = "---";
             this.lblOxideCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -320,9 +339,9 @@
             // label6
             // 
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(282, 0);
+            this.label6.Location = new System.Drawing.Point(280, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(134, 32);
+            this.label6.Size = new System.Drawing.Size(133, 32);
             this.label6.TabIndex = 5;
             this.label6.Text = "Available";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -330,9 +349,9 @@
             // label5
             // 
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(142, 0);
+            this.label5.Location = new System.Drawing.Point(141, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(134, 32);
+            this.label5.Size = new System.Drawing.Size(133, 32);
             this.label5.TabIndex = 4;
             this.label5.Text = "Curent";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -343,7 +362,7 @@
             this.label3.Font = new System.Drawing.Font("Verdana", 12F);
             this.label3.Location = new System.Drawing.Point(3, 96);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(133, 32);
+            this.label3.Size = new System.Drawing.Size(132, 32);
             this.label3.TabIndex = 2;
             this.label3.Text = "Oxide";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -354,7 +373,7 @@
             this.label2.Font = new System.Drawing.Font("Verdana", 12F);
             this.label2.Location = new System.Drawing.Point(3, 64);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(133, 32);
+            this.label2.Size = new System.Drawing.Size(132, 32);
             this.label2.TabIndex = 1;
             this.label2.Text = "Rust";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -365,7 +384,7 @@
             this.label1.Font = new System.Drawing.Font("Verdana", 12F);
             this.label1.Location = new System.Drawing.Point(3, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(133, 32);
+            this.label1.Size = new System.Drawing.Size(132, 32);
             this.label1.TabIndex = 0;
             this.label1.Text = "Oxide Pack";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -375,7 +394,7 @@
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Location = new System.Drawing.Point(3, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(133, 32);
+            this.label4.Size = new System.Drawing.Size(132, 32);
             this.label4.TabIndex = 3;
             this.label4.Text = "Package";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -384,9 +403,9 @@
             // 
             this.lblOxidePackCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxidePackCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxidePackCurrentVersion.Location = new System.Drawing.Point(142, 32);
+            this.lblOxidePackCurrentVersion.Location = new System.Drawing.Point(141, 32);
             this.lblOxidePackCurrentVersion.Name = "lblOxidePackCurrentVersion";
-            this.lblOxidePackCurrentVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblOxidePackCurrentVersion.Size = new System.Drawing.Size(133, 32);
             this.lblOxidePackCurrentVersion.TabIndex = 6;
             this.lblOxidePackCurrentVersion.Text = "---";
             this.lblOxidePackCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -395,9 +414,9 @@
             // 
             this.lblRustCurrentVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblRustCurrentVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblRustCurrentVersion.Location = new System.Drawing.Point(142, 64);
+            this.lblRustCurrentVersion.Location = new System.Drawing.Point(141, 64);
             this.lblRustCurrentVersion.Name = "lblRustCurrentVersion";
-            this.lblRustCurrentVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblRustCurrentVersion.Size = new System.Drawing.Size(133, 32);
             this.lblRustCurrentVersion.TabIndex = 7;
             this.lblRustCurrentVersion.Text = "---";
             this.lblRustCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -406,9 +425,9 @@
             // 
             this.lblOxidePackAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxidePackAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxidePackAvailableVersion.Location = new System.Drawing.Point(282, 32);
+            this.lblOxidePackAvailableVersion.Location = new System.Drawing.Point(280, 32);
             this.lblOxidePackAvailableVersion.Name = "lblOxidePackAvailableVersion";
-            this.lblOxidePackAvailableVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblOxidePackAvailableVersion.Size = new System.Drawing.Size(133, 32);
             this.lblOxidePackAvailableVersion.TabIndex = 9;
             this.lblOxidePackAvailableVersion.Text = "---";
             this.lblOxidePackAvailableVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -417,9 +436,9 @@
             // 
             this.lblRustAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblRustAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblRustAvailableVersion.Location = new System.Drawing.Point(282, 64);
+            this.lblRustAvailableVersion.Location = new System.Drawing.Point(280, 64);
             this.lblRustAvailableVersion.Name = "lblRustAvailableVersion";
-            this.lblRustAvailableVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblRustAvailableVersion.Size = new System.Drawing.Size(133, 32);
             this.lblRustAvailableVersion.TabIndex = 10;
             this.lblRustAvailableVersion.Text = "---";
             this.lblRustAvailableVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -428,9 +447,9 @@
             // 
             this.lblOxideAvailableVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOxideAvailableVersion.Font = new System.Drawing.Font("Verdana", 12F);
-            this.lblOxideAvailableVersion.Location = new System.Drawing.Point(282, 96);
+            this.lblOxideAvailableVersion.Location = new System.Drawing.Point(280, 96);
             this.lblOxideAvailableVersion.Name = "lblOxideAvailableVersion";
-            this.lblOxideAvailableVersion.Size = new System.Drawing.Size(134, 32);
+            this.lblOxideAvailableVersion.Size = new System.Drawing.Size(133, 32);
             this.lblOxideAvailableVersion.TabIndex = 11;
             this.lblOxideAvailableVersion.Text = "---";
             this.lblOxideAvailableVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -440,10 +459,10 @@
             this.btnOxidePackUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnOxidePackUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnOxidePackUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOxidePackUpdate.Location = new System.Drawing.Point(419, 32);
+            this.btnOxidePackUpdate.Location = new System.Drawing.Point(416, 32);
             this.btnOxidePackUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnOxidePackUpdate.Name = "btnOxidePackUpdate";
-            this.btnOxidePackUpdate.Size = new System.Drawing.Size(53, 32);
+            this.btnOxidePackUpdate.Size = new System.Drawing.Size(56, 32);
             this.btnOxidePackUpdate.TabIndex = 12;
             this.btnOxidePackUpdate.UseVisualStyleBackColor = true;
             // 
@@ -452,10 +471,10 @@
             this.btnRustUpdate.BackgroundImage = global::OxidePack.Client.Properties.Resources.download_icon;
             this.btnRustUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnRustUpdate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRustUpdate.Location = new System.Drawing.Point(419, 64);
+            this.btnRustUpdate.Location = new System.Drawing.Point(416, 64);
             this.btnRustUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.btnRustUpdate.Name = "btnRustUpdate";
-            this.btnRustUpdate.Size = new System.Drawing.Size(53, 32);
+            this.btnRustUpdate.Size = new System.Drawing.Size(56, 32);
             this.btnRustUpdate.TabIndex = 13;
             this.btnRustUpdate.UseVisualStyleBackColor = true;
             this.btnRustUpdate.Click += new System.EventHandler(this.btnRustUpdate_ClickAsync);
@@ -805,5 +824,7 @@
         private System.Windows.Forms.Button btnCheckForUpdates;
         private System.Windows.Forms.Button btnOpenPluginManager;
         private System.Windows.Forms.Label Settings_lblSolutionFile;
+        private System.Windows.Forms.ToolStripMenuItem btnVKGroup;
+        private System.Windows.Forms.ToolStripMenuItem btnDiscord;
     }
 }

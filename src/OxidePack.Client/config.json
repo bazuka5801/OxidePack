@@ -1,0 +1,16 @@
+{
+  "SolutionFile": "...",
+  "RustVersion": "...",
+  "OxideVersion": "...",
+  "PluginTemplateDefault": {
+    "Name": "$name$",
+    "Author": "Username",
+    "Description": "",
+    "Version": {
+      "Major": 0,
+      "Minor": 0,
+      "Build": 0
+    }
+  },
+  "ProjectsConfig": {}
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -104,6 +105,8 @@ namespace OxidePack.Client
         #region [Method] CheckForUpdates
         public async Task CheckForUpdates()
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             var statusBefore = currentStatus;
             UpdateStatus("Checking rust update...");
             UpdateProgressBar(33);
@@ -141,6 +144,8 @@ namespace OxidePack.Client
         #region [Method] DownloadOxide
         public async Task DownloadOxide()
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             var statusBefore = currentStatus;
             await OPClientCore.DownloadOxideDLLs((text, percent) =>
             {
@@ -167,6 +172,7 @@ namespace OxidePack.Client
         #region [Method] Settings_btnSolutionOpen_Click
         private void Settings_btnSolutionOpen_Click( object sender, EventArgs e )
         {
+            if (Net.cl.IsAuthed == false) return;
             using (var openFileDialog = new OpenFileDialog()
             {
                 CheckFileExists = true,
@@ -190,6 +196,8 @@ namespace OxidePack.Client
         #region btnSendPluginRequest_Click
         private void btnSendPluginRequest_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             var pluginContent = File.ReadAllText("plugin.cs");
             var bRequest = new BuildRequest()
             {
@@ -210,6 +218,8 @@ namespace OxidePack.Client
         #region btnCreateNewSolution_Click
         private void btnCreateNewSolution_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             using (SaveFileDialog sFileDialog = new SaveFileDialog()
             {
                 AddExtension = true,
@@ -235,6 +245,8 @@ namespace OxidePack.Client
         #region btnAddProject_Click
         private void btnAddProject_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             using (var openFileDialog = new SaveFileDialog()
             {
                 DefaultExt = ".csproj",
@@ -256,6 +268,8 @@ namespace OxidePack.Client
         #region btnEditReference_Click
         private void btnEditReference_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             ProjectSelectModel projectSelectModel = new ProjectSelectModel()
             {
                 Projects = OPClientCore.Solution.CsProjects.Select(p=>p.Name).ToList()
@@ -327,6 +341,7 @@ namespace OxidePack.Client
         #region btnRustUpdate_Click
         private async void btnRustUpdate_ClickAsync(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
             await OPClientCore.DownloadRustDLLs(null, null);
         }
         #endregion
@@ -334,6 +349,7 @@ namespace OxidePack.Client
         #region btnOxideUpdate_Click
         private async void btnOxideUpdate_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
             await DownloadOxide();
         }
         #endregion
@@ -341,6 +357,7 @@ namespace OxidePack.Client
         #region btnCheckForUpdates_Click
         private async void btnCheckForUpdates_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
             await CheckForUpdates();
         }
         #endregion
@@ -348,6 +365,8 @@ namespace OxidePack.Client
         #region btnOpenPluginManager_Click
         private void btnOpenPluginManager_Click(object sender, System.EventArgs e)
         {
+            if (Net.cl.IsAuthed == false) return;
+            
             var projects = OPClientCore.Solution.CsProjects;
             ProjectSelectModel psModel = new ProjectSelectModel()
             {
@@ -374,5 +393,15 @@ namespace OxidePack.Client
         #endregion
 
         #endregion
+
+        private void btnVKGroup_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://vk.com/public176204769");
+        }
+
+        private void btnDiscord_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.gg/rFKw9Dz");
+        }
     }
 }

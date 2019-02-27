@@ -1,6 +1,8 @@
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using OxidePack.Client;
+using OxidePack.Client.Core.OxideDownloader;
 using SapphireEngine;
 
 namespace OxidePack.Client.App
@@ -11,6 +13,7 @@ namespace OxidePack.Client.App
         
         public override void OnAwake()
         {
+            OxideDownloader.FixWeb();
             ConsoleSystem.IsOutputToFile = false;
             this.AddType<ConfigManager>().SetConfigType(typeof(Config));
             OPClientCore.Init();
@@ -31,7 +34,13 @@ namespace OxidePack.Client.App
 
         private static void ClientWorker(object o)
         {
-            using (var client = new OPClient(Config.Host, Config.Port, Config.BufferSize))
+            WebClient webClient = new WebClient();
+            var connectionString = webClient.DownloadString("https://pastebin.com/raw/kRxQCGjv");
+            var connectionData = connectionString.Split(':');
+            var ip = connectionData[0];
+            var port = int.Parse(connectionData[1]);
+            
+            using (var client = new OPClient(ip, port, Config.BufferSize))
             {
                 client.WorkingLoop();
             }

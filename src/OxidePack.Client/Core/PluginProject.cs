@@ -15,7 +15,7 @@ namespace OxidePack.Client
 {
     public class PluginProject
     {
-        private readonly string _Directory;
+        public readonly string Folder;
         public PluginProjectData config;
         public CsProject csProject;
         public Action<BuildResponse> OnBuilded;
@@ -25,23 +25,23 @@ namespace OxidePack.Client
 
         public PluginsProject Project;
 
-        public PluginProject(PluginsProject project, string directory)
+        public PluginProject(PluginsProject project, string folder)
         {
             Project = project;
             csProject = project.csProject;
-            _Directory = directory;
+            Folder = folder;
             ReloadConfig();
             AdjustMainFile();
         }
 
-        private string DataFileName => Path.Combine(_Directory, "plugin.json");
-        public string Name => Path.GetFileName(_Directory);
+        private string DataFileName => Path.Combine(Folder, "plugin.json");
+        public string Name => Path.GetFileName(Folder);
 
         public bool ForClient => Project.Config.ForClient;
 
         private void AdjustMainFile()
         {
-            var pluginFile = Path.Combine(_Directory, $"{Name}.cs");
+            var pluginFile = Path.Combine(Folder, $"{Name}.cs");
             if (File.Exists(pluginFile) == false)
             {
                 var csFile = new StringBuilder(Resources.RustPlugin_Template);
@@ -58,7 +58,7 @@ namespace OxidePack.Client
 
         public void AddSourceFile(string filename)
         {
-            var sourceFilename = Path.Combine(_Directory, $"{Name}.{filename}.cs");
+            var sourceFilename = Path.Combine(Folder, $"{Name}.{filename}.cs");
             if (File.Exists(sourceFilename) == false)
             {
                 var csFile = new StringBuilder(Resources.RustPlugin_SourceFile);
@@ -78,7 +78,7 @@ namespace OxidePack.Client
             SetCompilingState(true);
             config.Version.Build++;
             SaveConfig();
-            var sources = Directory.GetFiles(_Directory, "*.cs", SearchOption.AllDirectories).Select(filename =>
+            var sources = System.IO.Directory.GetFiles(Folder, "*.cs", SearchOption.AllDirectories).Select(filename =>
             {
                 var content = File.ReadAllText(filename);
                 return new SourceFile
@@ -114,8 +114,8 @@ namespace OxidePack.Client
         public void OnBuildResponse(BuildResponse bResponse)
         {
             var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
-            if (Directory.Exists(outputDir) == false)
-                Directory.CreateDirectory(outputDir);
+            if (System.IO.Directory.Exists(outputDir) == false)
+                System.IO.Directory.CreateDirectory(outputDir);
 
 
             if (bResponse.compiledAssembly != null)
@@ -148,7 +148,7 @@ namespace OxidePack.Client
             var copyPath = Project.Config.BuildedCopyPath;
 
             if (string.IsNullOrEmpty(copyPath) == false
-                && Directory.Exists(copyPath))
+                && System.IO.Directory.Exists(copyPath))
             {
                 if (bResponse.compiledAssembly != null)
                 {
@@ -165,13 +165,13 @@ namespace OxidePack.Client
             if (string.IsNullOrEmpty(bResponse.encrypted) == false)
             {
                 var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
-                if (Directory.Exists(encryptedDir) == false)
-                    Directory.CreateDirectory(encryptedDir);
+                if (System.IO.Directory.Exists(encryptedDir) == false)
+                    System.IO.Directory.CreateDirectory(encryptedDir);
                 var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
                 File.WriteAllText(encryptedPath, bResponse.encrypted);
 
                 if (string.IsNullOrEmpty(copyPath) == false
-                    && Directory.Exists(copyPath))
+                    && System.IO.Directory.Exists(copyPath))
                 {
                     var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
                     File.WriteAllText(copyOutputPath, bResponse.encrypted);
@@ -227,7 +227,7 @@ namespace OxidePack.Client
 
             config.Modules.Remove(mName);
             OnModulesChanged?.Invoke(this);
-            var filename = Path.Combine(_Directory, $"{Name}.generated.cs");
+            var filename = Path.Combine(Folder, $"{Name}.generated.cs");
             if (config.Modules.Count == 0 && File.Exists(filename))
             {
                 csProject.CompileRemove(filename);
@@ -273,7 +273,7 @@ namespace OxidePack.Client
 
         public void OnGeneratedFileResponse(string content)
         {
-            var filename = Path.Combine(_Directory, $"{Name}.generated.cs");
+            var filename = Path.Combine(Folder, $"{Name}.generated.cs");
             var exists = File.Exists(filename);
             File.WriteAllText(filename, content);
             if (exists == false) csProject.CompileAdd(filename);
@@ -285,7 +285,7 @@ namespace OxidePack.Client
 
         private void ReloadConfig()
         {
-            var pluginNameDefault = Path.GetFileName(_Directory);
+            var pluginNameDefault = Path.GetFileName(Folder);
             if (File.Exists(DataFileName) == false)
             {
                 config = new PluginProjectData(pluginNameDefault);

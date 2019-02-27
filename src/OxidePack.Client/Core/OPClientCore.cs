@@ -138,6 +138,19 @@ namespace OxidePack.Client
                 FilesToDownloadRegex = new List<Regex>() { _asmCSharpRegex },
                 SavePathProcessor = (path) => Path.Combine(refPath, Path.GetFileName(path))
             };
+
+            void OnMessage(string type, object message)
+            {
+                ConsoleSystem.Log($"[{type}] "+message.ToString().Replace("{", "").Replace("}", ""));
+            }
+
+            void OnProgress(string message)
+            {
+                ConsoleSystem.Log($"[progress] {message}");
+            }
+
+            downloadConfig.OnMessageEvent += OnMessage;
+            downloadConfig.OnReportProgressEvent += OnProgress;
             var downloader = new global::DepotDownloader.DepotDownloader(downloadConfig);
             downloader.Download(true);
             var version = GetRustVersion(".temp/Assembly-CSharp.dll");

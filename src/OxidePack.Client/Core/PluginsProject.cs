@@ -103,8 +103,8 @@ namespace OxidePack.Client
         bool GetPluginName(string filename, out string pluginname)
         {
             var directory = Path.GetDirectoryName(filename);
-            pluginname = _Plugins.OrderByDescending(p => directory.Replace(p.Value.Project._Directory, "").Length).FirstOrDefault().Key;
-
+            pluginname = _Plugins.OrderBy(p => directory.Replace(p.Value.Folder, "").Length).FirstOrDefault().Key;
+ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
             // Equals root directory
             if (pluginname.Equals(Path.GetFileName(_Directory)))
             {
