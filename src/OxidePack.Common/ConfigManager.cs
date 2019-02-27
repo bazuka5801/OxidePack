@@ -88,13 +88,14 @@ namespace OxidePack
             foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f=>f.IsLiteral == false))
             {
-                if (config.ContainsKey(field.Name))
+                var name = field.GetCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>()?.PropertyName ?? field.Name;
+                if (config.ContainsKey(name))
                 {
-                    field.SetValue(null, config[field.Name].ToObject(field.FieldType));
+                    field.SetValue(null, config[name].ToObject(field.FieldType));
                 }
                 else
                 {
-                    newFiels.Add($"{field.FieldType.Name} {field.Name}");
+                    newFiels.Add($"{name}");
                 }
             }
             
@@ -121,7 +122,9 @@ namespace OxidePack
             foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f=>f.IsLiteral == false))
             {
-                config[field.Name] = JToken.FromObject(field.GetValue(null));
+                var name = field.GetCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>()?.PropertyName ??
+                           field.Name;
+                config[name] = JToken.FromObject(field.GetValue(null));
             }
 
             if (m_ConfigWatcher != null)
