@@ -27,7 +27,9 @@ namespace OxidePack.Client
         
         public class PluginsProjectData
         {
+            [JsonProperty("BuildedCopyPath")]
             public string BuildedCopyPath = "";
+            [JsonProperty("ForClient")]
             public bool ForClient = false;
         }
 

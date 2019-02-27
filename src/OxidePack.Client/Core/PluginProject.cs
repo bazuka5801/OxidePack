@@ -191,12 +191,18 @@ namespace OxidePack.Client
 
         public class PluginProjectData
         {
+            [JsonProperty("Author")]
             public string Author;
+            [JsonProperty("Description")]
             public string Description;
+            [JsonProperty("BaseClass")]
             public string BaseClass = "RustPlugin";
 
+            [JsonProperty("Modules")]
             public List<string> Modules = new List<string>();
+            [JsonProperty("Name")]
             public string Name;
+            [JsonProperty("Version")]
             public VersionNumber Version = new VersionNumber(0, 0, 0);
 
             public PluginProjectData(string name)

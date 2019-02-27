@@ -36,6 +36,7 @@ namespace OxidePack.Client.App
         }
         
         // TODO: Extract it to class
+        [JsonProperty("ProjectsConfig")]
         public static Dictionary<string, DependenciesConfig> ProjectsConfig = new Dictionary<string, DependenciesConfig>();
         
         public class DependenciesConfig
