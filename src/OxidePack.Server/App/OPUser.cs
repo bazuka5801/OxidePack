@@ -7,6 +7,7 @@ using Ether.Network.Packets;
 using OxidePack.CoreLib;
 using OxidePack.CoreLib.Utils;
 using OxidePack.Data;
+using SapphireEngine;
 using CompilerError = OxidePack.Data.CompilerError;
 
 namespace OxidePack.Server.App
@@ -36,7 +37,15 @@ namespace OxidePack.Server.App
 
                     ThreadPool.QueueUserWorkItem((s) =>
                     {
-                        string buildResult = ActivePlugin.Build(bRequest);
+                        string buildResult = "";
+                        try
+                        {
+                            buildResult = ActivePlugin.Build(bRequest);
+                        }
+                        catch (Exception e)
+                        {
+                            LogUtils.PutsException(e, "BuildTask");
+                        }
                         string encryptResult = null;
                         CompilerResults compilerResults = null;
                         
@@ -52,7 +61,14 @@ namespace OxidePack.Server.App
                                 TrashRemoving = bRequest.encryptOptions.trashremoving,
                                 Secret = bRequest.encryptOptions.secret
                             };
-                            (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
+                            try
+                            {
+                                (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
+                            }
+                            catch (Exception e)
+                            {
+                                LogUtils.PutsException(e, "EncryptionTask");
+                            }
                         }
 
                         
