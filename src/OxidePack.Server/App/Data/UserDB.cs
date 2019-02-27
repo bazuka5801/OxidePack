@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OxidePack.Data;
+using SapphireEngine;
 
 namespace OxidePack.Server.App.Data
 {
@@ -10,25 +11,33 @@ namespace OxidePack.Server.App.Data
         static Dictionary<string, uint> KeyToUID;
         static List<UserData> Users;
 
-        public static UserData Get(string key, string username)
+        public static IEnumerable<UserData> All => Users;
+        
+        public static bool Get(string key, string username, out UserData uData)
         {
-            UserData uData;
             if (KeyToUID.TryGetValue(key, out var index) == false)
             {
-                uData = Pool.Get<UserData>();
-                uData.key = key;
-                uData.index = (uint)Users.Count;
-                uData.username = username;
-                uData.registred = Epoch.Current;
-                uData.permissions = new List<Permission>();
-                
-                KeyToUID[key] = (uint)Users.Count;
-                Users.Add(uData);
+                uData = null;
+                return false;
             }
 
             uData = Users[(int) index];
+            return true;
+        }
+
+        public static void AddUser(string key, string username)
+        {
+            var uData = Pool.Get<UserData>();
+            uData.key = key;
+            uData.index = (uint)Users.Count;
             uData.username = username;
-            return uData;
+            uData.registred = Epoch.Current;
+            uData.permissions = new List<Permission>();
+                
+            KeyToUID[key] = (uint)Users.Count;
+            Users.Add(uData);
+            ConsoleSystem.Log($"User '{username}' added");
+            Save();
         }
         
         public static void Load()

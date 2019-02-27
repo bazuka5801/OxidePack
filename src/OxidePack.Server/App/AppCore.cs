@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OxidePack.CoreLib;
@@ -49,6 +50,26 @@ namespace OxidePack.Server.App
             {
                 ConsoleSystem.Log("Quiting...");
                 Framework.Quit();
+            }
+
+            if (line.StartsWith("adduser"))
+            {
+                var data = line.Split(' ');
+                string key = data[1];
+                string username = data[2];
+                UserDB.AddUser(key, username);
+            }
+
+            if (line.StartsWith("userlist"))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine();
+                foreach (var uData in UserDB.All)
+                {
+                    sb.AppendLine($"[{uData.index}] {uData.username}");
+                }
+                ConsoleSystem.Log(sb.ToString());
+                sb.Clear();
             }
         }
         
