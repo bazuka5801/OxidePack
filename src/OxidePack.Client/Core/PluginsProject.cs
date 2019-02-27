@@ -15,7 +15,7 @@ namespace OxidePack.Client
         public CsProject csProject;
         public PluginsProjectData Config;
 
-        private string DataFileName => Path.Combine(Path.GetDirectoryName(csProject.FilePath), "plugins-project.json");
+        private string DataFileName => Path.Combine(Path.GetDirectoryName(csProject.Project.FileName), "plugins-project.json");
 
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
 
