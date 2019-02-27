@@ -85,6 +85,7 @@ namespace OxidePack.Client.App
                 var uInfo = Pool.Get<UserInformation>();
                 uInfo.key = MachineIdentificator.Value();
                 uInfo.username = "Test User";
+                uInfo.version = Protocol.Version;
                 uInfo.WriteToStream(packet);
                 Send(packet);
             }

@@ -95,7 +95,7 @@ namespace OxidePack.Client
                 return;
             }
 
-            Instance.lblOxidePackCurrentVersion.Text = Config.Version;
+            Instance.lblOxidePackCurrentVersion.Text = Protocol.Version;
             Instance.lblRustCurrentVersion.Text      = Config.RustVersion;
             Instance.lblOxideCurrentVersion.Text     = Config.OxideVersion;
         }

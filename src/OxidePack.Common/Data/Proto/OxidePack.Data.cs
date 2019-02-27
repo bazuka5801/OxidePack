@@ -21,6 +21,8 @@ namespace OxidePack.Data
 
         public string username;
 
+        public string version;
+
     }
 
     public partial class GeneratedFileRequest : IDisposable, Pool.IPooled, IProto

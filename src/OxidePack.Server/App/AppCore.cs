@@ -70,7 +70,7 @@ namespace OxidePack.Server.App
         {
             // TODO: Set real counter
             int online = 10;
-            Console.Title = Config.Title.Replace("{online}", online.ToString());
+            Console.Title = $"[{Protocol.Version}] " + Config.Title.Replace("{online}", online.ToString());
         }
     }
 }

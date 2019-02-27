@@ -86,6 +86,20 @@ namespace OxidePack.Server.App
         #region [Method] OnGiveUserInformation
         public void OnGiveUserInformation(UserInformation uInfo)
         {
+            if (string.IsNullOrEmpty(uInfo.version))
+            {
+                SendGiveUserInformationResult("Invalid version");
+                return;
+            }
+
+            if (Protocol.Version != uInfo.version)
+            {
+                SendGiveUserInformationResult($"Mismatch versions!\n" +
+                                              $"Server Version: {Protocol.Version}\n" +
+                                              $"Your Version: {uInfo.version}");
+                return;
+            }
+            
             if (string.IsNullOrEmpty(uInfo.key))
             {
                 SendGiveUserInformationResult("Invalid key");
@@ -102,8 +116,12 @@ namespace OxidePack.Server.App
                 SendGiveUserInformationResult("Double connection!");
                 return;
             }
-            
-            Data = UserDB.Get(uInfo.key, uInfo.username);
+
+            if (UserDB.Get(uInfo.key, uInfo.username, out Data) == false)
+            {
+                SendGiveUserInformationResult("Access denied! Contact us.");
+                return;
+            }
             IsAuthed = true;
             ActiveUsers.Add(uInfo.key);
             SendGiveUserInformationResult("");

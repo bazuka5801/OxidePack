@@ -43,6 +43,9 @@ namespace OxidePack.Data
             // [string] username
             instance.username = default(string);
 
+            // [string] version
+            instance.version = default(string);
+
             Pool.Free<OxidePack.Data.UserInformation>(ref instance);
         }
 
@@ -129,6 +132,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.version = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -175,6 +182,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.version = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -220,6 +231,10 @@ namespace OxidePack.Data
                     case 18:
                         instance.username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
+                    // Field 3 LengthDelimited
+                    case 26:
+                        instance.version = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -254,6 +269,11 @@ namespace OxidePack.Data
             // Key for field: 2, LengthDelimited
             stream.WriteByte(18);
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.username));
+            if (instance.version == null)
+                throw new ArgumentNullException("version", "Required by proto specification.");
+            // Key for field: 3, LengthDelimited
+            stream.WriteByte(26);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.version));
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -292,6 +312,14 @@ namespace OxidePack.Data
                 // Key for field: 2, LengthDelimited
                 stream.WriteByte(18);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.username));
+            }
+            if (instance.version != previous.version)
+            {
+                if (instance.version == null)
+                    throw new ArgumentNullException("version", "Required by proto specification.");
+                // Key for field: 3, LengthDelimited
+                stream.WriteByte(26);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.version));
             }
             Pool.FreeMemoryStream(ref msField);
         }
