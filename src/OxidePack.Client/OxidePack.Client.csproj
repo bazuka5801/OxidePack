@@ -26,9 +26,7 @@
       <HintPath>..\..\Dependencies\SapphireEngine\SapphireEngine.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\Dependencies\System.Windows.Forms\System.Windows.Forms.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <ItemGroup>
