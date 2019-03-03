@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,6 +68,18 @@ namespace OxidePack.Server.App
                 foreach (var uData in UserDB.All)
                 {
                     sb.AppendLine($"[{uData.index}] {uData.username}");
+                }
+                ConsoleSystem.Log(sb.ToString());
+                sb.Clear();
+            }
+
+            if (line.StartsWith("userstats"))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine();
+                foreach (var uData in UserDB.All.OrderByDescending(p=>p.millisecondsused))
+                {
+                    sb.AppendLine($"[{uData.index}] {uData.username} usedseconds: {TimeSpan.FromMilliseconds(uData.millisecondsused).TotalSeconds.ToString("F3")}");
                 }
                 ConsoleSystem.Log(sb.ToString());
                 sb.Clear();
