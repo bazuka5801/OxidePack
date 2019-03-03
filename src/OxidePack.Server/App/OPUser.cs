@@ -1,6 +1,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Ether.Network.Packets;
@@ -38,19 +39,27 @@ namespace OxidePack.Server.App
                     ThreadPool.QueueUserWorkItem((s) =>
                     {
                         string buildResult = "";
+                        Stopwatch sw = Stopwatch.StartNew();
                         try
                         {
                             buildResult = ActivePlugin.Build(bRequest);
+                            
+                            sw.Stop();
+                            Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
+                            ConsoleSystem.Log($"User '{Data.username}' build '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
                         }
                         catch (Exception e)
                         {
                             LogUtils.PutsException(e, "BuildTask");
                         }
+                        sw.Reset();
+                        
                         string encryptResult = null;
                         CompilerResults compilerResults = null;
                         
                         if (bRequest.encryptOptions.enabled)
                         {
+                            
                             var options = new EncryptorOptions()
                             {
                                 LocalVarsCompressing = bRequest.encryptOptions.localvars,
@@ -63,7 +72,13 @@ namespace OxidePack.Server.App
                             };
                             try
                             {
+                                sw.Start();
+                                
                                 (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
+                                
+                                sw.Stop();
+                                Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
+                                ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
                             }
                             catch (Exception e)
                             {

@@ -65,6 +65,9 @@ namespace OxidePack.Data
                 instance.permissions = inspermissions;
             }
 
+            // [ulong] millisecondsused
+            instance.millisecondsused = default(ulong);
+
             Pool.Free<OxidePack.Data.UserData>(ref instance);
         }
 
@@ -166,6 +169,10 @@ namespace OxidePack.Data
                         // repeated
                         instance.permissions.Add(OxidePack.Data.Permission.DeserializeLengthDelimited(stream));
                         continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -227,6 +234,10 @@ namespace OxidePack.Data
                         // repeated
                         instance.permissions.Add(OxidePack.Data.Permission.DeserializeLengthDelimited(stream));
                         continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -287,6 +298,10 @@ namespace OxidePack.Data
                         // repeated
                         instance.permissions.Add(OxidePack.Data.Permission.DeserializeLengthDelimited(stream));
                         continue;
+                    // Field 6 Varint
+                    case 48:
+                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
                 }
 
                 var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
@@ -342,6 +357,9 @@ namespace OxidePack.Data
 
                 }
             }
+            // Key for field: 6, Varint
+            stream.WriteByte(48);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.millisecondsused);
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -410,6 +428,12 @@ namespace OxidePack.Data
 
                     }
                 }
+            }
+            if (instance.millisecondsused != previous.millisecondsused)
+            {
+                // Key for field: 6, Varint
+                stream.WriteByte(48);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.millisecondsused);
             }
             Pool.FreeMemoryStream(ref msField);
         }

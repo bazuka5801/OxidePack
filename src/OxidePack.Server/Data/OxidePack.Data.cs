@@ -27,6 +27,8 @@ namespace OxidePack.Data
 
         public List<OxidePack.Data.Permission> permissions;
 
+        public ulong millisecondsused;
+
     }
 
     public partial class Permission : IDisposable, Pool.IPooled, IProto

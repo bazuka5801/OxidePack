@@ -1,11 +1,12 @@
 package OxidePack.Data;
 
 message UserData {
-	required 	 string     key 	= 1;
-	required 	 uint32    index    = 2;
-	required 	 string   username  = 3;
-	required 	 uint64  registred  = 4;
-	repeated Permission permissions = 5;
+	required 	 string     	      key = 1;
+	required 	 uint32		        index = 2;
+	required 	 string   		 username = 3;
+	required 	 uint64         registred = 4;
+	repeated Permission 	  permissions = 5;
+	optional 	 uint64  millisecondsused = 6;	
 }
 
 message Permission {
