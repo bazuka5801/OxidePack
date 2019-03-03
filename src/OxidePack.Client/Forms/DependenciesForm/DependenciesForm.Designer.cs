@@ -156,6 +156,7 @@
             this.cbBundle.Size = new System.Drawing.Size(83, 22);
             this.cbBundle.TabIndex = 4;
             this.cbBundle.Text = "Bundle";
+            this.cbBundle.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Bottom;
             this.cbBundle.UseVisualStyleBackColor = true;
             // 
             // DependenciesForm
