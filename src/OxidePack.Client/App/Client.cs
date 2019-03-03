@@ -125,6 +125,20 @@ namespace OxidePack.Client.App
             _needReconnect = true;
         }
         #endregion
+
+        #region [Method] KeepConnection
+
+        public void KeepConnectionAlive()
+        {
+            using (NetPacket packet = new NetPacket())
+            {
+                packet.WritePackketID(PacketType.ConnectionAlive);
+                Send(packet);
+            }
+        }
+        
+
+        #endregion
         
         #region [Method] OnSocketError
         protected override void OnSocketError(SocketError socketError)
@@ -145,7 +159,10 @@ namespace OxidePack.Client.App
                 Thread.Sleep(1000);
                 
                 if (IsConnected)
+                {
+                    KeepConnectionAlive();
                     continue;
+                }
                 
                 if (_needReconnect)
                 {

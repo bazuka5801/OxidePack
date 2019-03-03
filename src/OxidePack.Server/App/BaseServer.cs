@@ -2,6 +2,7 @@ using System;
 using Ether.Network.Common;
 using Ether.Network.Server;
 using SapphireEngine;
+using SapphireEngine.Functions;
 
 namespace OxidePack.Server.App
 {
@@ -21,6 +22,7 @@ namespace OxidePack.Server.App
         protected override void Initialize()
         {
             ConsoleSystem.Log("Server is Ready");
+            Timer.SetInterval(ConnectionAliveTimerTick, 1f);
         }
 
         protected override void OnClientConnected(T baseUser)
@@ -36,6 +38,14 @@ namespace OxidePack.Server.App
         protected override void OnError(Exception e)
         {
             ConsoleSystem.LogError($"[Server] [Exception] {e.Message}\n{e.StackTrace}");
+        }
+
+        public void ConnectionAliveTimerTick()
+        {
+            foreach (var client in this.Clients)
+            {
+                client.ConnectionAliveTimerTick();
+            }
         }
     }
 }

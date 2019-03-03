@@ -16,7 +16,8 @@ namespace OxidePack.Server.App
         
         public bool     IsAuthed;
         public UserData Data;
-        
+        public int TimeoutSeconds = Config.Timeout;
+
         public override void HandleMessage(INetPacketStream stream)
         {
             try
@@ -32,6 +33,12 @@ namespace OxidePack.Server.App
                     case PacketType.RPCMessage:
                         var rpcmessagetype = (RPCMessageType)stream.Read<UInt32>();
                         HandleRPCMessage(rpcmessagetype, packet);
+                        break;
+                    case PacketType.ConnectionAlive:
+                        if (IsAuthed)
+                        {
+                            TimeoutSeconds = Config.Timeout;
+                        }
                         break;
                     default:
                         ConsoleSystem.LogError($"{this} sent invalid message");
@@ -125,6 +132,7 @@ namespace OxidePack.Server.App
             IsAuthed = true;
             ActiveUsers.Add(uInfo.key);
             SendGiveUserInformationResult("");
+            ConsoleSystem.Log($"'{Data.username}' connected.");
         }
         #endregion
 
@@ -161,10 +169,19 @@ namespace OxidePack.Server.App
             if (IsAuthed)
             {
                 ActiveUsers.Remove(Data.key);
+                ConsoleSystem.Log($"'{Data.username}' disconnected.");
             }
         }
         #endregion
         
+        public void ConnectionAliveTimerTick()
+        {
+            if (--TimeoutSeconds <= 0)
+            {
+                Server.DisconnectClient(base.Id);
+            }
+        }
+
         public string GetConsoleStatus()
         {
             if (IsAuthed == false)
