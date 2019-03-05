@@ -30,7 +30,7 @@ namespace OxidePack.CoreLib
         private int LastKeywordIndex => _IdentifierKeywords.Length - 1;
         private List<int> currentKey = new List<int>();
         private int pointer = 0; 
-        private string GetNewIdentifier()
+        public string GetNewIdentifier()
         {
             if (currentKey.Count <= 0)
             {
@@ -68,10 +68,9 @@ namespace OxidePack.CoreLib
 
         private static readonly string[] _IdentifierKeywords = new string[]
         {
-            "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII","llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
             "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
             "WulfNeHochetDelatDLLplugini", "WulfDelayDLLplugini", "GraimSolieshHanaTebe", "VsePidorasi",
-//"A", "B","C","D","E",
+            "HouganTutProsto"
         };
 
         StringBuilder sb = new StringBuilder(512);
