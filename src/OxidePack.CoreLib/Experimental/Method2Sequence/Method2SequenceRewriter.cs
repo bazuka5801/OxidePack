@@ -18,8 +18,8 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
     {
         private Dictionary<string, Dictionary<string, TypeSyntax>> _methodsLocals;
         private SemanticModel _semanticModel;
-        private Method2SequenceVisitor.Results _info;
-        public SyntaxNode Rewrite(SyntaxNode root, Method2SequenceVisitor.Results info)
+        private Method2SequenceSyntaxVisitor.Results _info;
+        public SyntaxNode Rewrite(SyntaxNode root, Method2SequenceSyntaxVisitor.Results info)
         {
             _info = info;
             return Visit(root);
@@ -33,20 +33,49 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax method)
         {
-            if (_info.Methods.TryGetValue(method.Identifier.Text, out var srcMethod) &&
-                srcMethod.parentClass == ((ClassDeclarationSyntax) method.Parent).Identifier.Text)
+            var parentClassName = method.GetParent<ClassDeclarationSyntax>().Identifier.Text;
+            if (_info.Methods.TryGetValue(parentClassName+"."+method.Identifier.Text, out var methodData) &&
+                methodData.parentClass == ((ClassDeclarationSyntax) method.Parent).Identifier.Text)
             {
-                var className = $"{srcMethod.parentClass}_{method.Identifier.Text}_sequence";
-                return method.WithBody(
-                    Block(
-                        GenerateVariable(className, "fuck", $"new {className}()"),
-                        ExpressionStatement(InvocationExpression(
-                            MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName("fuck"),
-                                IdentifierName($"{method.Identifier.Text}_execute")),
-                            ArgumentList(
-                                SeparatedList(method.ParameterList.Parameters.Select(p =>
-                                    Argument(IdentifierName(p.Identifier)))))
-                        ))));
+                var parameters= method.ParameterList.Parameters.Select(p =>
+                    Argument(IdentifierName(p.GetFullParameter()))).ToList();
+                if (method.Modifiers.Any(p=>p.IsKind(StaticKeyword)) == false)
+                    parameters.Insert(0, Argument(IdentifierName("this")));
+                if (method.ParameterList.Parameters.Any(p => p.Modifiers.Any(z=>z.IsKind(RefKeyword))))
+                {
+                    
+                }
+                var parametersString =
+                    string.Join(", ", parameters.Select(p => p.ToString()));
+                var tempVarName = IdentifierGenerator.GetSimpleName();
+
+                if (method.ReturnType.ToString() != "void")
+                {
+                    var catchException = CatchDeclaration(ParseTypeName("System.Exception"))
+                        .WithIdentifier(ParseToken("_exception"));
+                    var catchBlock = Block(ThrowStatement(IdentifierName("_exception")));
+                    return method.WithBody(
+                        Block(
+                            GenerateVariable(methodData.methodClassName, tempVarName, $"{methodData.getName}({parametersString})"),
+                            TryStatement(Block(
+                            ReturnStatement(InvocationExpression(
+                                MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName(tempVarName),
+                                    IdentifierName($"{method.Identifier.Text}_execute"))))
+                            ), List(new []{ CatchClause(catchException,default, catchBlock) }), FinallyClause(Block(
+                            ParseStatement($"{methodData.pushName}({tempVarName});")
+                            )))
+                        ));
+                }
+                else
+                {
+                    return method.WithBody(
+                        Block(GenerateVariable(methodData.methodClassName, tempVarName, $"{methodData.getName}({parametersString})"),
+                            ExpressionStatement(InvocationExpression(
+                                MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName(tempVarName),
+                                    IdentifierName($"{method.Identifier.Text}_execute")))),
+                            ParseStatement($"{methodData.pushName}({tempVarName});")
+                        ));
+                }
             }
             return base.VisitMethodDeclaration(method);
         }
