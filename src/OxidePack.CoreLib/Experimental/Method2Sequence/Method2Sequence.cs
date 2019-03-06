@@ -225,10 +225,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             for (var i = statements.Count - 1; i >= 0; i--)
             {
                 var statement = statements[i];
-                if (returnType.ToString() == "void")
-                {
-                    statement = (StatementSyntax)new Method2SequenceReturnRewriter().Rewrite(statement);
-                }
+                statement = (StatementSyntax) new Method2SequenceReturnRewriter().Rewrite(statement, returnType);
                 var methodName = IdentifierGenerator.GetSimpleName();
                 
                 var retFinder = new Method2SequenceReturnFinder();
@@ -242,12 +239,12 @@ Console.WriteLine(retType);
                 {
                     statement
                 };
+                
                 if (statement.IsKind(SyntaxKind.ReturnStatement) == false)
                 {
                     methodStatements.Add(ReturnStatement(IdentifierName("null")));
-                    continue;
                 }
-
+                
                 members.Add(MethodDeclaration(ParseTypeName("object"), methodName)
                     .WithModifiers(TokenList(Token(PublicKeyword)))
                     .WithBody(Block(methodStatements)));

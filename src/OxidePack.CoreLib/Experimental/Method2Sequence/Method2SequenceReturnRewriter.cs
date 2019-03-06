@@ -6,17 +6,31 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 {
     public class Method2SequenceReturnRewriter : CSharpSyntaxRewriter
     {
-        public SyntaxNode Rewrite(SyntaxNode node)
+        private TypeSyntax _returnType;
+        
+        public SyntaxNode Rewrite(SyntaxNode node, TypeSyntax returnType)
         {
+            _returnType = returnType;
             return Visit(node);
         }
 
         public override SyntaxNode VisitReturnStatement(ReturnStatementSyntax node)
         {
-            if (node.GetParent<MethodDeclarationSyntax>().ReturnType.IsKind(SyntaxKind.VoidKeyword))
+            if (_returnType.ToString() != "void")
             {
-                return ReturnStatement(IdentifierName("true"));
+                if (node.GetParent<MethodDeclarationSyntax>().ReturnType.IsKind(SyntaxKind.VoidKeyword))
+                {
+                    return ReturnStatement(IdentifierName("true"));
+                }
             }
+            else
+            {
+                if (node.Expression == null)
+                {
+                    return ReturnStatement(IdentifierName("null"));
+                }
+            }
+
             return base.VisitReturnStatement(node);
         }
     }
