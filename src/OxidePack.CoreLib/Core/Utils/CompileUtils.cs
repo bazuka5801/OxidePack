@@ -22,7 +22,7 @@ namespace OxidePack.CoreLib.Utils
             using (CSharpCodeProvider provider = new CSharpCodeProvider())
             {
                 var references = Directory.Exists(referencesFolder) ?
-                    Directory.GetFiles(referencesFolder, "*.dll") : new string[0];
+                    Directory.GetFiles(referencesFolder, "*.dll").Select(p=>Path.Combine(Directory.GetCurrentDirectory(), p)).ToArray() : new string[0];
                 compilerResults = provider.CompileAssemblyFromSource(
                     new CompilerParameters(references),
                     new string[] { program });
