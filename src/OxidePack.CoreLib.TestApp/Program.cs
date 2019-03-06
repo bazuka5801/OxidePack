@@ -1,6 +1,9 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Diagnostics;
+using System.IO;
 using OxidePack.CoreLib.Experimental.Method2Sequence;
+using OxidePack.CoreLib.Utils;
 
 namespace OxidePack.CoreLib.TestApp
 {
@@ -9,36 +12,51 @@ namespace OxidePack.CoreLib.TestApp
         static void Main(string[] args)
         {
 //            var result = new Method2Sequence().ProcessSource(ex1);
+           
+//            foreach (CompilerError s in  CompileUtils.Compile(ex1).Errors)
+//            {
+//                if (s.IsWarning == false)
+//                    Console.WriteLine(s.ToString());
+//            }
             Stopwatch sw = Stopwatch.StartNew();
-            var result = ex1;
-            for (int i = 0; i < 1; i++)
+            
+            var result = File.ReadAllText("1.cs");
+            for (int i = 0; i < 2; i++)
             {
                 result = new Method2Sequence().ProcessSource(result); 
+                Console.WriteLine(i);
             }
-
+File.WriteAllText("Obfuscated.cs", result);
             sw.Stop();
-            Console.WriteLine(result);
+//            Console.WriteLine(result);
             Console.WriteLine(TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).ToString("g"));
+            Console.WriteLine($"Saved "+result.Length+" symbols");
+//            var resC = CompileUtils.Compile(result);
+//            var errors = resC.Errors;
+//            foreach (CompilerError s in errors)
+//            {
+//                if (s.IsWarning == false)
+//                    Console.WriteLine(s.ToString());
+//            }
+
+//            if (resC.Errors.Count == 0)
+//            {
+//                Console.WriteLine("Compiled Successfully");
+//            }
             Console.ReadKey();
         }
 const string ex1 = @"
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
+    using System;
 class MainClass {
     int maz = 0;
 
-    void f1Method() {
-        int b = 0;
-        maz = 1;
-        b = 1;
+    int f1Method(int a) {
+        var b = 1;
+        b++;
+        this.maz = 1;
+        b += 34;
+        return b;
     }
-
-    void f2Method(int a) {
-        
-    }
-
 }";
         private const string ex2 = @"
 namespace Oxide.Plugins
