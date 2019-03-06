@@ -30,6 +30,7 @@ namespace OxidePack.CoreLib
         private int LastKeywordIndex => _IdentifierKeywords.Length - 1;
         private List<int> currentKey = new List<int>();
         private int pointer = 0; 
+        
         public string GetNewIdentifier()
         {
             if (currentKey.Count <= 0)
@@ -68,9 +69,10 @@ namespace OxidePack.CoreLib
 
         private static readonly string[] _IdentifierKeywords = new string[]
         {
-            "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
-            "WulfNeHochetDelatDLLplugini", "WulfDelayDLLplugini", "GraimSolieshHanaTebe", "VsePidorasi",
-            "HouganTutProsto"
+//            "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
+//            "WulfNeHochetDelatDLLplugini", "WulfDelayDLLplugini", "GraimSolieshHanaTebe", "VsePidorasi",
+//            "HouganTutProsto"
+"a", "b", "c"
         };
 
         StringBuilder sb = new StringBuilder(512);
@@ -150,5 +152,12 @@ namespace OxidePack.CoreLib
         }
 
         private string LastName => _existingNames.LastOrDefault();
+
+
+        private static ulong _simpleNameCounter = 0;
+        public static string GetSimpleName()
+        {
+            return $"generated_{_simpleNameCounter++}";
+        } 
     }
 }
