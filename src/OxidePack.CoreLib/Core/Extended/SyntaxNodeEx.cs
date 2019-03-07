@@ -28,7 +28,6 @@ namespace OxidePack.CoreLib
             StringBuilder sb = new StringBuilder();
             try
             {
-                sb.Append(node.ToString());
                 while (node.Parent != null)
                 {
                     switch (node)
