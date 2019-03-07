@@ -1,17 +1,14 @@
-using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace OxidePack.CoreLib.Experimental.Method2Sequence
 {
     public class Method2SequenceThisRewriter : CSharpSyntaxRewriter
     {
-        
         private Method2SequenceThisVisitor.Results _thisInfo;
-        
+
         public SyntaxNode Rewrite(SyntaxNode root, Method2SequenceThisVisitor.Results thisInfo)
         {
             _thisInfo = thisInfo;
@@ -32,9 +29,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         {
             if (_thisInfo.IdentifiersNeedsThis.Contains(node))
             {
-                return node.WithIdentifier(Identifier($"{_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]}." + node.Identifier.Text));
+                return node.WithIdentifier(Identifier(
+                    $"{_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]}." +
+                    node.Identifier.Text));
             }
-            
+
             return base.VisitIdentifierName(node);
         }
 
@@ -42,11 +41,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         {
             if (node.ExpressionBody != null)
             {
-                node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node);
+                node = (MethodDeclarationSyntax) base.VisitMethodDeclaration(node);
                 var body = ExpressionStatement(node.ExpressionBody.Expression);
-                return MethodDeclaration(node.AttributeLists, 
-                    node.Modifiers, 
-                    node.ReturnType, 
+                return MethodDeclaration(node.AttributeLists,
+                    node.Modifiers,
+                    node.ReturnType,
                     node.ExplicitInterfaceSpecifier,
                     node.Identifier,
                     node.TypeParameterList,
@@ -54,6 +53,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                     node.ConstraintClauses,
                     Block(body), ParseToken(""));
             }
+
             return base.VisitMethodDeclaration(node);
         }
     }

@@ -86,14 +86,13 @@ namespace OxidePack.CoreLib.Experimental.ControlFlowObfuscation
         public static (int result, string caseText) GetNextCase()
         {
             int num = rand.Next();
-//            bool left = rand.Next(0, 2) == 1;
-//            int num2 = rand.Next(1, 5);
-//            num = (num >> 5);
-//            num = num << 10;
-//            num = num >> 5;
-//            int asd = left ? num >> num2 : num << num2;
-//            return (num, left ? $"{asd} << {num2}" : $"{asd} >> {num2}"); // num
-            return (num, num.ToString());
+            bool left = rand.Next(0, 2) == 1;
+            int num2 = rand.Next(1, 5);
+            num = (num >> 5);
+            num = num << 10;
+            num = num >> 5;
+            int asd = left ? num >> num2 : num << num2;
+            return (num, left ? $"{asd} << {num2}" : $"{asd} >> {num2}");
         }
 
         public static string Encrypt(int res)

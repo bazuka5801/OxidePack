@@ -8,10 +8,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
     {
         private bool _hasReturnKeyword;
+
         public bool HasReturn(SyntaxNode node)
         {
             Visit(node);
-            
+
             return _hasReturnKeyword;
         }
 

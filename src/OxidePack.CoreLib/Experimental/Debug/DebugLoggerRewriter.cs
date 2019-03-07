@@ -14,7 +14,6 @@ namespace OxidePack.CoreLib.Experimental.Debug
         private static AdhocWorkspace _workspace = new AdhocWorkspace();
         
         private int i = 0;
-        private string indedt = "";
         
         public static string Process(string source)
         {
@@ -41,14 +40,8 @@ namespace OxidePack.CoreLib.Experimental.Debug
         {
             node = (MethodDeclarationSyntax) base.VisitMethodDeclaration(node);
             var statements = node.Body.Statements.ToList();
-            statements.Insert(0,SyntaxFactory.ParseStatement($"global::Oxide.Core.Interface.Oxide.LogInfo(\"{indedt}{node.Identifier.Text}\");"));
+            statements.Insert(0,SyntaxFactory.ParseStatement($"global::Oxide.Core.Interface.Oxide.LogInfo(\"{node.Identifier.Text}\");"));
             return (node).WithBody(node.Body.WithStatements(SyntaxFactory.List(statements)));
-        }
-
-        public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
-        {
-            indedt += " ";
-            return base.VisitClassDeclaration(node);
         }
     }
 }

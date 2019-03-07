@@ -7,51 +7,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 {
     public class Method2SequenceThisVisitor : CSharpSyntaxWalker
     {
-        public class Results
-        {
-            /// <summary>
-            ///   Identifiers where need puts _this 
-            /// </summary>
-            public List<IdentifierNameSyntax> IdentifiersNeedsThis;
-            
-            /// <summary>
-            ///   This expressions to replace with _this 
-            /// </summary>
-            public List<ThisExpressionSyntax> ThisExpressions;
-            
-            /// <summary>
-            ///   The Dictionary of method path and 'this'
-            /// </summary>
-            public Dictionary<string, string> ThisNames;
-
-            public Results()
-            {
-                IdentifiersNeedsThis = new List<IdentifierNameSyntax>();
-                ThisExpressions = new List<ThisExpressionSyntax>();
-                ThisNames = new Dictionary<string, string>();
-            }
-
-            public void Merge(Results results)
-            {
-                IdentifiersNeedsThis.AddRange(results.IdentifiersNeedsThis);
-                results.IdentifiersNeedsThis.Clear();
-                ThisExpressions.AddRange(results.ThisExpressions);
-                results.ThisExpressions.Clear();
-                
-                foreach (var name in results.ThisNames)
-                {
-                    ThisNames.Add(name.Key, name.Value);
-                }
-                results.ThisNames.Clear();
-            }
-        }
-        
-        
         private ClassDeclarationSyntax _baseClass;
-        private SemanticModel _semanticModel;
         private string _baseContainer;
         private Results _results;
-        
+        private SemanticModel _semanticModel;
+
         public Results Walk(ClassDeclarationSyntax baseClass, string baseContainer, SemanticModel semanticModel)
         {
             _baseClass = baseClass;
@@ -60,10 +20,10 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             _results = new Results();
 
             Visit(baseClass);
-            
+
             return _results;
         }
-        
+
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             if (node.GetParent<ConstructorDeclarationSyntax>() != null)
@@ -88,6 +48,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 base.VisitIdentifierName(node);
                 return;
             }
+
             var symbol = _semanticModel.GetSymbolInfo(node).Symbol;
             if (symbol != null)
             {
@@ -107,19 +68,15 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                         var method = node.GetParent<InvocationExpressionSyntax>();
                         if (node.Identifier.ToString() == "System")
                         {
-                            
                         }
+
                         if (node.GetParent<MemberAccessExpressionSyntax>()?.Expression == node ||
-                            (method != null  && (symbol.Kind == SymbolKind.Method || symbol.Kind == SymbolKind.Field)))
+                            method != null && (symbol.Kind == SymbolKind.Method || symbol.Kind == SymbolKind.Field))
                         {
                             _results.IdentifiersNeedsThis.Add(node);
                         }
                     }
                 }
-            }
-            else
-            {
-                
             }
 
             base.VisitIdentifierName(node);
@@ -145,7 +102,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 base.VisitClassDeclaration(mClass);
                 return;
             }
-            
+
             var visitor = new Method2SequenceThisVisitor();
             _results.Merge(visitor.Walk(mClass, _baseContainer, _semanticModel));
         }
@@ -156,6 +113,46 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             var identifier = IdentifierGenerator.GetSimpleName();
             _results.ThisNames.Add(method, identifier);
             base.VisitMethodDeclaration(node);
+        }
+
+        public class Results
+        {
+            /// <summary>
+            ///     Identifiers where need puts _this
+            /// </summary>
+            public List<IdentifierNameSyntax> IdentifiersNeedsThis;
+
+            /// <summary>
+            ///     This expressions to replace with _this
+            /// </summary>
+            public List<ThisExpressionSyntax> ThisExpressions;
+
+            /// <summary>
+            ///     The Dictionary of method path and 'this'
+            /// </summary>
+            public Dictionary<string, string> ThisNames;
+
+            public Results()
+            {
+                IdentifiersNeedsThis = new List<IdentifierNameSyntax>();
+                ThisExpressions = new List<ThisExpressionSyntax>();
+                ThisNames = new Dictionary<string, string>();
+            }
+
+            public void Merge(Results results)
+            {
+                IdentifiersNeedsThis.AddRange(results.IdentifiersNeedsThis);
+                results.IdentifiersNeedsThis.Clear();
+                ThisExpressions.AddRange(results.ThisExpressions);
+                results.ThisExpressions.Clear();
+
+                foreach (var name in results.ThisNames)
+                {
+                    ThisNames.Add(name.Key, name.Value);
+                }
+
+                results.ThisNames.Clear();
+            }
         }
     }
 }
