@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
+using OxidePack.CoreLib.Experimental.ControlFlowObfuscation;
 using SapphireEngine.Functions;
 
 namespace OxidePack.CoreLib.Experimental.Method2Sequence
@@ -88,6 +89,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 localsResult.GetLocals(method.Value.declaration, method.Value.parentClass, out var locals);
 
                 var mClass = CreateClassForMethod(method.Value.parentClass, _thisInfo.ThisNames[method.Value.declaration.FullPath()],method.Value, locals);
+//                mClass = (ClassDeclarationSyntax) new ControlFlowRewriter().Rewrite(mClass);
                 addedClasses.Add(mClass);
             }
             addedClasses.Add(nullStruct);
