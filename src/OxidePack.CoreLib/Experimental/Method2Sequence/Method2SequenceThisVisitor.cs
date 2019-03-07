@@ -18,11 +18,17 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             ///   This expressions to replace with _this 
             /// </summary>
             public List<ThisExpressionSyntax> ThisExpressions;
+            
+            /// <summary>
+            ///   The Dictionary of method path and 'this'
+            /// </summary>
+            public Dictionary<string, string> ThisNames;
 
             public Results()
             {
                 IdentifiersNeedsThis = new List<IdentifierNameSyntax>();
                 ThisExpressions = new List<ThisExpressionSyntax>();
+                ThisNames = new Dictionary<string, string>();
             }
 
             public void Merge(Results results)
@@ -31,6 +37,12 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 results.IdentifiersNeedsThis.Clear();
                 ThisExpressions.AddRange(results.ThisExpressions);
                 results.ThisExpressions.Clear();
+                
+                foreach (var name in results.ThisNames)
+                {
+                    ThisNames.Add(name.Key, name.Value);
+                }
+                results.ThisNames.Clear();
             }
         }
         
@@ -79,25 +91,26 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             var symbol = _semanticModel.GetSymbolInfo(node).Symbol;
             if (symbol != null)
             {
-                if (symbol.OriginalDefinition?.Kind != SymbolKind.NamedType)
+                if (symbol.OriginalDefinition?.Kind != SymbolKind.NamedType && symbol.IsStatic == false)
                 {
-                    if (node.GetParent<MethodDeclarationSyntax>()?.Identifier.ToString().StartsWith("Unload_execute") == true)
-                    {
-                        
-                    }
                     if (symbol.ContainingType?.ToString().StartsWith(_baseContainer) == true)
                     {
                         if ((symbol.Kind == SymbolKind.Local || symbol.Kind == SymbolKind.Field ||
                              symbol.Kind == SymbolKind.Method) &&
-                            symbol.ContainingSymbol?.Name == symbol.ContainingType?.Name && symbol.IsStatic == false)
+                            symbol.ContainingSymbol?.Name == symbol.ContainingType?.Name)
                         {
                             _results.IdentifiersNeedsThis.Add(node);
                         }
                     }
                     else
                     {
+                        var method = node.GetParent<InvocationExpressionSyntax>();
+                        if (node.Identifier.ToString() == "System")
+                        {
+                            
+                        }
                         if (node.GetParent<MemberAccessExpressionSyntax>()?.Expression == node ||
-                            (node.GetParent<InvocationExpressionSyntax>() != null && (symbol.Kind == SymbolKind.Method || symbol.Kind == SymbolKind.Field)))
+                            (method != null  && (symbol.Kind == SymbolKind.Method || symbol.Kind == SymbolKind.Field)))
                         {
                             _results.IdentifiersNeedsThis.Add(node);
                         }
@@ -122,7 +135,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 {
                     _results.ThisExpressions.Add(node);
                 }
-                    
             }
         }
 
@@ -136,6 +148,14 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             
             var visitor = new Method2SequenceThisVisitor();
             _results.Merge(visitor.Walk(mClass, _baseContainer, _semanticModel));
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            var method = node.FullPath();
+            var identifier = IdentifierGenerator.GetSimpleName();
+            _results.ThisNames.Add(method, identifier);
+            base.VisitMethodDeclaration(node);
         }
     }
 }

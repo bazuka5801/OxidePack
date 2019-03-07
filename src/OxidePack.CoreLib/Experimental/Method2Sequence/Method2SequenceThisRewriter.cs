@@ -15,8 +15,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         public SyntaxNode Rewrite(SyntaxNode root, Method2SequenceThisVisitor.Results thisInfo)
         {
             _thisInfo = thisInfo;
-            _thisInfo.IdentifiersNeedsThis.ForEach(Console.WriteLine);
-            Console.WriteLine();
             return Visit(root);
         }
 
@@ -24,20 +22,10 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         {
             if (_thisInfo.ThisExpressions.Contains(node))
             {
-                return IdentifierName("_this");
+                return IdentifierName(_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]);
             }
 
             return base.VisitThisExpression(node);
-        }
-
-        public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
-        {
-            if (node.Expression.IsKind(SyntaxKind.ThisExpression) && node.GetParent<ConstructorDeclarationSyntax>() == null)
-            {
-                //return node.Name.WithIdentifier(Identifier("_this." + node.Name.Identifier.Text));
-            }
-
-            return base.VisitMemberAccessExpression(node);
         }
 
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
@@ -48,12 +36,9 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             }
             if (_thisInfo.IdentifiersNeedsThis.Contains(node))
             {
-                return node.WithIdentifier(Identifier("_this." + node.Identifier.Text));
+                return node.WithIdentifier(Identifier($"{_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]}." + node.Identifier.Text));
             }
-//            else if (node.Parent is MemberAccessExpressionSyntax ms && ms.Expression.IsKind(SyntaxKind.ThisExpression))
-//            {
-//                
-//            }
+            
             return base.VisitIdentifierName(node);
         }
 
@@ -72,9 +57,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                     node.ParameterList,
                     node.ConstraintClauses,
                     Block(body), ParseToken(""));
-//                    .WithExpressionBody(default)
-//                    .WithBody(Block(body))
-//                    .WithTrailingTrivia(null);
             }
             return base.VisitMethodDeclaration(node);
         }

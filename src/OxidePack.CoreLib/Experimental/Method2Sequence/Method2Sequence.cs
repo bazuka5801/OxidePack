@@ -22,10 +22,9 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         private SemanticModel _semanticModel;
         private ClassDeclarationSyntax _mainClass;
         private ISymbol _mainClassSymbol;
-        
+        private string _nullStructName;
+        private Method2SequenceThisVisitor.Results _thisInfo;
         public List<MemberDeclarationSyntax> Members { get; private set; }
-
-        public static IdentifierGenerator IdentifierGenerator = new IdentifierGenerator();
 
 
         public string ProcessSource(string source)
@@ -60,10 +59,13 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
             
             var thisVisitor = new Method2SequenceThisVisitor();
-            var thisInfo = thisVisitor.Walk(_mainClass, baseContainer, _semanticModel);
+            _thisInfo = thisVisitor.Walk(_mainClass, baseContainer, _semanticModel);
             
             var thisRewriter = new Method2SequenceThisRewriter();
-            root = (CompilationUnitSyntax)thisRewriter.Rewrite(root, thisInfo);
+            root = (CompilationUnitSyntax)thisRewriter.Rewrite(root, _thisInfo);
+            
+            var nullStruct = CreateNullReturnValue();
+            _nullStructName = nullStruct.Identifier.Text;
             
             
             compilation = compilation.RemoveSyntaxTrees(tree).AddSyntaxTrees(tree = tree.WithRootAndOptions(root, CSharpParseOptions.Default));
@@ -84,8 +86,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 // Key - Method
                 // Value - Parent class
                 localsResult.GetLocals(method.Value.declaration, method.Value.parentClass, out var locals);
-                addedClasses.Add(CreateClassForMethod(method.Value.parentClass, method.Value, locals));
+
+                var mClass = CreateClassForMethod(method.Value.parentClass, _thisInfo.ThisNames[method.Value.declaration.FullPath()],method.Value, locals);
+                addedClasses.Add(mClass);
             }
+            addedClasses.Add(nullStruct);
 
             root = root.ReplaceNode(_mainClass, _mainClass.AddMembers(items: addedClasses.ToArray()));
             
@@ -126,6 +131,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             
 
             root = root.ReplaceNode(_mainClass, _mainClass.WithMembers(List(this.Members)));
+            
             root = root.NormalizeWhitespace();
             _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
             var formattedCode = Formatter.Format (root, _workspace);
@@ -136,14 +142,21 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             .DescendantNodes(node => node.IsKind(SyntaxKind.ClassDeclaration) == false)
             .OfType<ClassDeclarationSyntax>().FirstOrDefault();
 
+        private StructDeclarationSyntax CreateNullReturnValue()
+        {
+            return StructDeclaration(IdentifierGenerator.GetSimpleName())
+                .WithModifiers(TokenList(Token(PublicKeyword)));
+        }
+        
         private void CreatePoolMembers(List<MemberDeclarationSyntax> members, Method2SequenceSyntaxVisitor.Results.ClassData data)
         {
-            var listName = IdentifierGenerator.GetNewIdentifier();
+            var listName = IdentifierGenerator.GetSimpleName();
             
             members.Add(CreateField(ParseTypeName($"System.Collections.Generic.List<{data.methodClassName}>"), listName, $" new System.Collections.Generic.List<{data.methodClassName}>()")
                 .WithModifiers(TokenList(Token(StaticKeyword))));
+            var pName = IdentifierGenerator.GetSimpleName();
             members.Add(MethodDeclaration(ParseTypeName("void"), data.pushName)
-                .WithParameterList(ParameterList(SeparatedList(new [] {Parameter(ParseToken("p1")).WithType(ParseTypeName(data.methodClassName))})))
+                .WithParameterList(ParameterList(SeparatedList(new [] {Parameter(ParseToken(pName)).WithType(ParseTypeName(data.methodClassName))})))
                 .WithModifiers(TokenList(Token(StaticKeyword)))
                 .WithBody(Block(
                     ExpressionStatement(
@@ -152,37 +165,54 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                                 IdentifierName(listName), IdentifierName("Add")),
                             ArgumentList(SeparatedList(new []
                             {
-                                Argument(IdentifierName("p1"))
+                                Argument(IdentifierName(pName))
                             })))))));
             var parametersZ = data.declaration.ParameterList.Parameters;
-            if (parametersZ.All(p=>p.Identifier.ToString() != "_this")&& !data.declaration.Modifiers.Any(p=>p.IsKind(StaticKeyword)))
-            parametersZ = parametersZ.Insert(0, Parameter(Identifier("_this")).WithType(ParseTypeName(data.parentClass)));
+            if (!data.declaration.Modifiers.Any(p => p.IsKind(StaticKeyword)))
+            {
+                var thisName = _thisInfo.ThisNames[data.declaration.FullPath()];
+                parametersZ = parametersZ.Insert(0,
+                    Parameter(Identifier(thisName)).WithType(ParseTypeName(data.parentClass)));
+            }
+
             var parameters = string.Join(", ",parametersZ
                 .Select(p => p.GetFullParameter()).Distinct().ToArray());
-            
+            var tempName = IdentifierGenerator.GetSimpleName();
             members.Add(MethodDeclaration(ParseTypeName(data.methodClassName), data.getName)
                 .WithModifiers(TokenList(Token(StaticKeyword)))
                 .WithParameterList(ParameterList(parametersZ))
                 .WithBody(Block(
-
-                    ParseStatement($"if ({listName}.Count > 0) {{ var temp = {listName}[0];{listName}.RemoveAt(0);return temp;}}"),
-                    ReturnStatement(ParseExpression(
-                        $"new {data.methodClassName}({parameters})"))
+                    ExpressionStatement(ParseExpression($"{data.methodClassName} {tempName}")),
+                    IfStatement(ParseExpression($"{listName}.Count > 0"), Block(
+                        ExpressionStatement(AssignmentExpression(SimpleAssignmentExpression,
+                            IdentifierName($"{tempName}"), ParseExpression($"{listName}[0]"))),
+                        ParseStatement($"{listName}.RemoveAt(0);"),
+                        ParseStatement($"{tempName}.{data.methodClassInitializeMethodName}({parameters});"),
+                        ReturnStatement(IdentifierName($"{tempName}"))
+                    )),
+                    ExpressionStatement(AssignmentExpression( SimpleAssignmentExpression, 
+                        IdentifierName($"{tempName}"), ParseExpression($"new {data.methodClassName}()"))),
+                    ParseStatement($"{tempName}.{data.methodClassInitializeMethodName}({parameters});"),
+                    ReturnStatement(IdentifierName($"{tempName}"))
                 )));
         }
 
-        private ClassDeclarationSyntax CreateClassForMethod(string parentClass, Method2SequenceSyntaxVisitor.Results.ClassData data, List<(string locName, TypeSyntax locType)> locals)
+        private ClassDeclarationSyntax CreateClassForMethod(string parentClass, string thisKeyword, Method2SequenceSyntaxVisitor.Results.ClassData data, List<(string locName, TypeSyntax locType)> locals)
         {
             var method = data.declaration;
-            var constructorParameters =
+            var initializingParameters =
                 SeparatedList(method.ParameterList.Parameters);
-            if (constructorParameters.All(p => p.Identifier.ToString() != "_this") && !data.declaration.Modifiers.Any(p=>p.IsKind(StaticKeyword)))
-                constructorParameters = constructorParameters.Insert(0,
-                    Parameter(Identifier("_this")).WithType(ParseTypeName(parentClass)));
-            
+            if (!data.declaration.Modifiers.Any(p=>p.IsKind(StaticKeyword)))
+                initializingParameters = initializingParameters.Insert(0,
+                    Parameter(Identifier(thisKeyword)).WithType(ParseTypeName(parentClass)));
+
+            if (data.methodClassMethodName == "generated_3187")
+            {
+                
+            }
             var className = data.methodClassName;
             List<MemberDeclarationSyntax> members = new List<MemberDeclarationSyntax>();
-            foreach (var param in constructorParameters)
+            foreach (var param in initializingParameters)
             {
                  members.Add(CreateField(param.Type, param.Identifier.Text).WithModifiers(TokenList(Token(PublicKeyword))));
             }
@@ -196,11 +226,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             }
 
 
-            members.Add(ConstructorDeclaration(className)
+            members.Add(MethodDeclaration(ParseTypeName("void"), data.methodClassInitializeMethodName)
                 .WithModifiers(TokenList(Token(PublicKeyword)))
-                .WithParameterList(ParameterList(SeparatedList(constructorParameters)))
+                .WithParameterList(ParameterList(SeparatedList(initializingParameters)))
                 .WithBody(Block(
-                    constructorParameters.Select(p =>
+                    initializingParameters.Select(p =>
                         ExpressionStatement(AssignmentExpression(
                         SimpleAssignmentExpression,
                         MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression(),
@@ -208,12 +238,16 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                         IdentifierName(p.Identifier))))
                 )));
 
-
+            if (data.methodClassMethodName == "generated_57")
+            {
+                    
+            }
             var methodBody = method.Body?.Statements.ToList() ?? new List<StatementSyntax>()
                                  {ExpressionStatement(method.ExpressionBody.Expression)};
             SeparateStatements(method.ReturnType, methodBody, members);
+            
 //            methodBody.Insert(0, );
-            members.Add(MethodDeclaration(method.ReturnType, method.Identifier.Text+"_execute")
+            members.Add(MethodDeclaration(method.ReturnType, data.methodClassMethodName)
                 .WithModifiers(TokenList(Token(PublicKeyword)))
                 .WithBody(Block(methodBody)));
             return ClassDeclaration(className).WithMembers(List(members));
@@ -225,16 +259,15 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             for (var i = statements.Count - 1; i >= 0; i--)
             {
                 var statement = statements[i];
-                statement = (StatementSyntax) new Method2SequenceReturnRewriter().Rewrite(statement, returnType);
+                statement = (StatementSyntax) new Method2SequenceReturnRewriter().Rewrite(statement, returnType, _nullStructName);
                 var methodName = IdentifierGenerator.GetSimpleName();
                 
                 var retFinder = new Method2SequenceReturnFinder();
                 bool hasReturn = retFinder.HasReturn(statement);
                 
                 var retType = hasReturn ? returnType : ParseTypeName("void");
-Console.WriteLine(retType);
-
-
+                
+                
                 var methodStatements = new List<StatementSyntax>()
                 {
                     statement
@@ -253,13 +286,8 @@ Console.WriteLine(retType);
                 {
                     if (returnType.ToString() == "void")
                     {
-                        statements[i] = IfStatement(ParseExpression($"{methodName}() != null"),
+                        statements[i] = IfStatement(ParseExpression($"{methodName}() is {_nullStructName}"),
                             ReturnStatement());
-                        continue;
-                    }
-                    if (i == statements.Count - 1)
-                    {
-                        statements[i] = ( ReturnStatement(CastExpression(returnType,InvocationExpression(IdentifierName(methodName)))));
                         continue;
                     }
                     
@@ -269,6 +297,22 @@ Console.WriteLine(retType);
                         members.Add(CreateField(ParseTypeName("object"), returnTemp.Identifier.Text)
                             .WithModifiers(TokenList(Token(PublicKeyword))));
                     }
+                    
+                    if (i == statements.Count - 1)
+                    {
+                        statements.RemoveAt(i);
+                        statements.InsertRange(i, new StatementSyntax[]
+                        {
+                            ExpressionStatement(AssignmentExpression(SimpleAssignmentExpression,
+                                returnTemp,
+                                InvocationExpression(IdentifierName(methodName)))),
+                            IfStatement(ParseExpression($"{returnTemp} is {_nullStructName}"), ReturnStatement(IdentifierName("null"))),
+                            returnType.ToString() == "object"
+                                ? ReturnStatement(returnTemp)
+                                : ReturnStatement(CastExpression(returnType, returnTemp))
+                        });
+                        continue;
+                    }
 
                     statements.RemoveAt(i);
                     statements.InsertRange(i,new StatementSyntax[]
@@ -276,7 +320,8 @@ Console.WriteLine(retType);
                             ExpressionStatement(AssignmentExpression(SimpleAssignmentExpression,
                                 returnTemp,
                                 InvocationExpression(IdentifierName(methodName)))),
-                            IfStatement(ParseExpression($"{returnTemp} != null"), ReturnStatement(CastExpression(returnType,returnTemp)))
+                            IfStatement(ParseExpression($"{returnTemp} is {_nullStructName}"), ReturnStatement(IdentifierName("null"))),
+                            IfStatement(ParseExpression($"{returnTemp} != null"), ReturnStatement(returnType.ToString() == "object" ?(ExpressionSyntax)returnTemp : CastExpression(returnType,returnTemp)))
                         });
                 }
                 else

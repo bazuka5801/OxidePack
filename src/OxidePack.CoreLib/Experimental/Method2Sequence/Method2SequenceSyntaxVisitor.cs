@@ -30,6 +30,8 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 public string getName = IdentifierGenerator.GetSimpleName();
                 public string pushName = IdentifierGenerator.GetSimpleName();
                 public string methodClassName = IdentifierGenerator.GetSimpleName();
+                public string methodClassMethodName = IdentifierGenerator.GetSimpleName();
+                public string methodClassInitializeMethodName = IdentifierGenerator.GetSimpleName();
             }
             
             public Results()
@@ -63,10 +65,10 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         public override void VisitMethodDeclaration(MethodDeclarationSyntax method)
         {
             var parentClassName = method.GetParent<ClassDeclarationSyntax>().Identifier.Text;
-            _results.Methods[parentClassName+"."+method.Identifier.Text] = new Results.ClassData()
+            _results.Methods[method.FullPath()] = new Results.ClassData()
             {
                 declaration = method,
-                parentClass = ((ClassDeclarationSyntax)method.Parent).Identifier.Text,
+                parentClass = ((ClassDeclarationSyntax)method.Parent).Identifier.Text
             };
             base.VisitMethodDeclaration(method);
         }

@@ -7,10 +7,12 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
     public class Method2SequenceReturnRewriter : CSharpSyntaxRewriter
     {
         private TypeSyntax _returnType;
+        private string _nullStructName;
         
-        public SyntaxNode Rewrite(SyntaxNode node, TypeSyntax returnType)
+        public SyntaxNode Rewrite(SyntaxNode node, TypeSyntax returnType, string nullStructName)
         {
             _returnType = returnType;
+            _nullStructName = nullStructName;
             return Visit(node);
         }
 
@@ -18,16 +20,21 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         {
             if (_returnType.ToString() != "void")
             {
-                if (node.GetParent<MethodDeclarationSyntax>().ReturnType.IsKind(SyntaxKind.VoidKeyword))
+                var method = node.GetParent<MethodDeclarationSyntax>();
+                if (method.ReturnType.IsKind(SyntaxKind.VoidKeyword))
                 {
                     return ReturnStatement(IdentifierName("true"));
+                }
+                if (node.Expression?.ToString() == "null")
+                {
+                    return ReturnStatement(ParseExpression($"new {_nullStructName}()"));
                 }
             }
             else
             {
                 if (node.Expression == null)
                 {
-                    return ReturnStatement(IdentifierName("null"));
+                    return ReturnStatement(IdentifierName("true"));
                 }
             }
 

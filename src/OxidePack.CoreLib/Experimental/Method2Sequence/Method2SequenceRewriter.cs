@@ -27,14 +27,19 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         
         public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
         {
-            return node.WithDeclaration(node.Declaration.WithType(ParseName("")));
+//            node = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node);
+            node = node.WithDeclaration(node.Declaration.WithType(ParseName("")).WithVariables(SeparatedList(node.Declaration.Variables.Where(p=>p.Initializer != null))));
+            if (node.Declaration.Variables.Count == 0)
+            {
+                return EmptyStatement();
+            }
+            return node;
         }
         
 
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax method)
         {
-            var parentClassName = method.GetParent<ClassDeclarationSyntax>().Identifier.Text;
-            if (_info.Methods.TryGetValue(parentClassName+"."+method.Identifier.Text, out var methodData) &&
+            if (_info.Methods.TryGetValue(method.FullPath(), out var methodData) &&
                 methodData.parentClass == ((ClassDeclarationSyntax) method.Parent).Identifier.Text)
             {
                 var parameters= method.ParameterList.Parameters.Select(p =>
@@ -53,14 +58,16 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 {
                     var catchException = CatchDeclaration(ParseTypeName("System.Exception"))
                         .WithIdentifier(ParseToken("_exception"));
-                    var catchBlock = Block(ThrowStatement(IdentifierName("_exception")));
+                    var catchBlock = Block(
+                        ParseStatement("global::Oxide.Core.Interface.Oxide.LogError(_exception.Message+\"\\n\"+_exception.StackTrace);"),
+                        ThrowStatement());
                     return method.WithBody(
                         Block(
                             GenerateVariable(methodData.methodClassName, tempVarName, $"{methodData.getName}({parametersString})"),
                             TryStatement(Block(
                             ReturnStatement(InvocationExpression(
                                 MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName(tempVarName),
-                                    IdentifierName($"{method.Identifier.Text}_execute"))))
+                                    IdentifierName($"{methodData.methodClassMethodName}"))))
                             ), List(new []{ CatchClause(catchException,default, catchBlock) }), FinallyClause(Block(
                             ParseStatement($"{methodData.pushName}({tempVarName});")
                             )))
@@ -72,7 +79,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                         Block(GenerateVariable(methodData.methodClassName, tempVarName, $"{methodData.getName}({parametersString})"),
                             ExpressionStatement(InvocationExpression(
                                 MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName(tempVarName),
-                                    IdentifierName($"{method.Identifier.Text}_execute")))),
+                                    IdentifierName($"{methodData.methodClassMethodName}")))),
                             ParseStatement($"{methodData.pushName}({tempVarName});")
                         ));
                 }
