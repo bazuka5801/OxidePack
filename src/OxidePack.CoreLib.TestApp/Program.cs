@@ -2,6 +2,9 @@
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.CodeAnalysis.CSharp;
+using OxidePack.CoreLib.Experimental.ControlFlowObfuscation;
+using OxidePack.CoreLib.Experimental.Debug;
 using OxidePack.CoreLib.Experimental.Method2Sequence;
 using OxidePack.CoreLib.Utils;
 
@@ -9,40 +12,26 @@ namespace OxidePack.CoreLib.TestApp
 {
     class Program
     {
+        static Random rand = new Random();
+        
         static void Main(string[] args)
         {
-//            var result = new Method2Sequence().ProcessSource(ex1);
-           
-//            foreach (CompilerError s in  CompileUtils.Compile(ex1).Errors)
-//            {
-//                if (s.IsWarning == false)
-//                    Console.WriteLine(s.ToString());
-//            }
+            
             Stopwatch sw = Stopwatch.StartNew();
             
             var result = File.ReadAllText("1.cs");
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
-                result = new Method2Sequence().ProcessSource(result); 
+                result =  new Method2Sequence().ProcessSource(result); 
                 Console.WriteLine(i);
             }
-File.WriteAllText("Obfuscated.cs", result);
+
+//            result = DebugLoggerRewriter.Process(result);
+            File.WriteAllText("FurnaceSorter.cs", result);
             sw.Stop();
 //            Console.WriteLine(result);
             Console.WriteLine(TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).ToString("g"));
             Console.WriteLine($"Saved "+result.Length+" symbols");
-//            var resC = CompileUtils.Compile(result);
-//            var errors = resC.Errors;
-//            foreach (CompilerError s in errors)
-//            {
-//                if (s.IsWarning == false)
-//                    Console.WriteLine(s.ToString());
-//            }
-
-//            if (resC.Errors.Count == 0)
-//            {
-//                Console.WriteLine("Compiled Successfully");
-//            }
             Console.ReadKey();
         }
 const string ex1 = @"
