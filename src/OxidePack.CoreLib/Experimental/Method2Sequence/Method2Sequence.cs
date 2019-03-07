@@ -42,11 +42,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             var db = new TimeDebugger("Parse", 0.0001f);
                 
             _mainClass = FindMainClass(root);
-            if (_mainClass == null)
-            {
-                throw new Exception($"Plugin Class not found in test file");
-            }
-            
 
             
             
@@ -208,10 +203,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 initializingParameters = initializingParameters.Insert(0,
                     Parameter(Identifier(thisKeyword)).WithType(ParseTypeName(parentClass)));
 
-            if (data.methodClassMethodName == "generated_3187")
-            {
-                
-            }
             var className = data.methodClassName;
             List<MemberDeclarationSyntax> members = new List<MemberDeclarationSyntax>();
             foreach (var param in initializingParameters)
@@ -239,16 +230,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                             IdentifierName(p.Identifier)),
                         IdentifierName(p.Identifier))))
                 )));
-
-            if (data.methodClassMethodName == "generated_57")
-            {
-                    
-            }
+            
             var methodBody = method.Body?.Statements.ToList() ?? new List<StatementSyntax>()
                                  {ExpressionStatement(method.ExpressionBody.Expression)};
             SeparateStatements(method.ReturnType, methodBody, members);
             
-//            methodBody.Insert(0, );
             members.Add(MethodDeclaration(method.ReturnType, data.methodClassMethodName)
                 .WithModifiers(TokenList(Token(PublicKeyword)))
                 .WithBody(Block(methodBody)));
@@ -266,9 +252,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 
                 var retFinder = new Method2SequenceReturnFinder();
                 bool hasReturn = retFinder.HasReturn(statement);
-                
-                var retType = hasReturn ? returnType : ParseTypeName("void");
-                
                 
                 var methodStatements = new List<StatementSyntax>()
                 {

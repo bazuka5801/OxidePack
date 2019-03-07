@@ -30,10 +30,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
         {
-            if (node.GetParent<MethodDeclarationSyntax>()?.Identifier.Text == "Unload_execute")
-            {
-                
-            }
             if (_thisInfo.IdentifiersNeedsThis.Contains(node))
             {
                 return node.WithIdentifier(Identifier($"{_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]}." + node.Identifier.Text));

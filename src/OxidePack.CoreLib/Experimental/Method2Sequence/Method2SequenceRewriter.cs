@@ -27,7 +27,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         
         public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
         {
-//            node = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node);
             node = node.WithDeclaration(node.Declaration.WithType(ParseName("")).WithVariables(SeparatedList(node.Declaration.Variables.Where(p=>p.Initializer != null))));
             if (node.Declaration.Variables.Count == 0)
             {
