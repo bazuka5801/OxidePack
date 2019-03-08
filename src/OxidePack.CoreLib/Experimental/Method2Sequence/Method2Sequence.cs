@@ -286,7 +286,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                                 returnTemp,
                                 InvocationExpression(IdentifierName(methodName)))),
                             IfStatement(ParseExpression($"{returnTemp} is {_nullStructName}"),
-                                ReturnStatement(IdentifierName("null"))),
+                                ReturnStatement(IdentifierName($"default({returnType.ToString()})"))),
                             returnType.ToString() == "object"
                                 ? ReturnStatement(returnTemp)
                                 : ReturnStatement(CastExpression(returnType, returnTemp))
@@ -301,7 +301,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                             returnTemp,
                             InvocationExpression(IdentifierName(methodName)))),
                         IfStatement(ParseExpression($"{returnTemp} is {_nullStructName}"),
-                            ReturnStatement(IdentifierName("null"))),
+                            ReturnStatement(IdentifierName($"default({returnType.ToString()})"))),
                         IfStatement(ParseExpression($"{returnTemp} != null"),
                             ReturnStatement(returnType.ToString() == "object"
                                 ? (ExpressionSyntax) returnTemp
