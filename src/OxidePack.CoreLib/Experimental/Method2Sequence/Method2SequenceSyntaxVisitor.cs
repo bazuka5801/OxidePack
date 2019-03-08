@@ -22,6 +22,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax method)
         {
+            // Abstart and Extern methods
+            if (method.Body == null && method.ExpressionBody == null) return;
+            // <T> Classes
+            if (method.GetParent<ClassDeclarationSyntax>().ConstraintClauses.Count > 0) return;
+            
             var parentClassName = method.GetParent<ClassDeclarationSyntax>().Identifier.Text;
             _results.Methods[method.FullPath()] = new Results.ClassData
             {
