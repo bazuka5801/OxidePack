@@ -37,7 +37,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 var type = node.Declaration.Type;
                 if (type.IsVar)
                 {
-                    type = ParseTypeName(_semanticModel.GetSymbolInfo(node.Declaration.Type).Symbol.Name);
+                    type = ParseTypeName(_semanticModel.GetSymbolInfo(node.Declaration.Type).Symbol.ToString());
                 }
 
                 dict.Add((variable.Identifier.Text, type));
