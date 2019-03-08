@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -32,7 +33,7 @@ namespace OxidePack.CoreLib
                     switch (node)
                     {
                         case MethodDeclarationSyntax m:
-                            sb.Insert(0, $"{m.Identifier.Text}.");
+                            sb.Insert(0, $"{m.Identifier.Text}({string.Join(", ",m.ParameterList.Parameters.Select(p=>p.Type.ToString()+p.Identifier.Text))}).");
                             break;
                         case ClassDeclarationSyntax c:
                             sb.Insert(0, $"{c.Identifier.Text}.");
