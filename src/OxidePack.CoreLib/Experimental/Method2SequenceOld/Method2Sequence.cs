@@ -6,9 +6,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
+using OxidePack.CoreLib.Experimental.ControlFlowObfuscation;
 using SapphireEngine.Functions;
 
-namespace OxidePack.CoreLib.Experimental.Method2Sequence
+namespace OxidePack.CoreLib.Experimental.Method2Sequence.Old
 {
     using static SyntaxKind;
     using static SyntaxFactory;
