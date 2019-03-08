@@ -49,13 +49,13 @@ namespace OxidePack.Client
         }
 
         #region [Type] ModuleListViewItem
-        
-        class ModuleListViewItem
+
+        private class ModuleListViewItem
         {
-            public string Name;
+            public readonly string Name;
             public string ViewName;
-            public PluginProject Plugin;
-            public ListBox lbPlugin;
+            public readonly PluginProject Plugin;
+            public readonly ListBox lbPlugin;
 
             public ModuleListViewItem()
             {
@@ -105,7 +105,8 @@ namespace OxidePack.Client
         #endregion
 
         #region [Method] LoadProject
-        void LoadProject(PluginsProject pluginsProject)
+
+        private void LoadProject(PluginsProject pluginsProject)
         {
             this._PluginsProject = pluginsProject;
             lbPlugins.Items.Clear();
@@ -128,13 +129,15 @@ namespace OxidePack.Client
         #endregion
 
         #region [Type] ModuleView
-        class ModuleView
+
+        private class ModuleView
         {
             private const int HEIGHT = 52;
 
-            private Panel pnlModule;
-            private Label lblName;
-            private Button btnInfo, btnAddRemove;
+            private readonly Panel pnlModule;
+            private readonly Label lblName;
+            private readonly Button _btnInfo;
+            private readonly Button btnAddRemove;
 
             public Boolean Enabled = false;
 
@@ -152,10 +155,10 @@ namespace OxidePack.Client
             {
                 this.pnlModule = pnlModule;
                 this.lblName = lblName;
-                this.btnInfo = btnInfo;
+                this._btnInfo = btnInfo;
                 this.btnAddRemove = btnAddRemove;
                 
-                this.btnInfo.Click += BtnInfo_OnClick;
+                this._btnInfo.Click += BtnInfo_OnClick;
                 this.btnAddRemove.Click += BtnAddRemove_OnClick;
             }
 
@@ -320,7 +323,7 @@ namespace OxidePack.Client
         #region [Method] UI Handlers
 
         #region btnDeletePlugin_Click
-        private void btnDeletePlugin_Click(object sender, System.EventArgs e)
+        private void btnDeletePlugin_Click(object sender, EventArgs e)
         {
             var selected = (ModuleListViewItem)lbPlugins.SelectedItem;
             var name = selected.Name;
@@ -336,7 +339,7 @@ namespace OxidePack.Client
         #endregion
 
         #region lbPlugins_SelectedValueChanged
-        private void lbPlugins_SelectedValueChanged(object sender, System.EventArgs e)
+        private void lbPlugins_SelectedValueChanged(object sender, EventArgs e)
         {
             if (!(lbPlugins.SelectedItem is ModuleListViewItem selected))
             {

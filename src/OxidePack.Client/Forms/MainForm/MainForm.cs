@@ -24,8 +24,8 @@ namespace OxidePack.Client
             Instance = this;
             InitializeComponent();
             
-            Config.OnConfigLoaded += LoadConfig;
-            if (Config.IsLoaded)
+            BaseConfig.OnConfigLoaded += LoadConfig;
+            if (BaseConfig.IsLoaded)
             {
                 ConsoleSystem.Log("Config.IsLoaded!");
                 LoadConfig();
@@ -51,7 +51,7 @@ namespace OxidePack.Client
             });
         }
 
-        static string currentStatus = "";
+        private static string currentStatus = "";
         public static void UpdateStatus(string text)
         {
             ThreadUtils.RunInUI(() =>
@@ -194,7 +194,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnSendPluginRequest_Click
-        private void btnSendPluginRequest_Click(object sender, System.EventArgs e)
+        private void btnSendPluginRequest_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             
@@ -216,7 +216,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnCreateNewSolution_Click
-        private void btnCreateNewSolution_Click(object sender, System.EventArgs e)
+        private void btnCreateNewSolution_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             
@@ -243,7 +243,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnAddProject_Click
-        private void btnAddProject_Click(object sender, System.EventArgs e)
+        private void btnAddProject_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             
@@ -266,7 +266,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnEditReference_Click
-        private void btnEditReference_Click(object sender, System.EventArgs e)
+        private void btnEditReference_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             
@@ -339,7 +339,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnRustUpdate_Click
-        private async void btnRustUpdate_ClickAsync(object sender, System.EventArgs e)
+        private async void btnRustUpdate_ClickAsync(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             await OPClientCore.DownloadRustDLLs(null, null);
@@ -347,7 +347,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnOxideUpdate_Click
-        private async void btnOxideUpdate_Click(object sender, System.EventArgs e)
+        private async void btnOxideUpdate_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             await DownloadOxide();
@@ -355,7 +355,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnCheckForUpdates_Click
-        private async void btnCheckForUpdates_Click(object sender, System.EventArgs e)
+        private async void btnCheckForUpdates_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             await CheckForUpdates();
@@ -363,7 +363,7 @@ namespace OxidePack.Client
         #endregion
 
         #region btnOpenPluginManager_Click
-        private void btnOpenPluginManager_Click(object sender, System.EventArgs e)
+        private void btnOpenPluginManager_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
             

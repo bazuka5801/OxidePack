@@ -8,7 +8,7 @@ namespace OxidePack
     {
         public static Dictionary<Type, object> directory = new Dictionary<Type, object>();
 
-        private static int MaxPoolSize = 131072;
+        private static readonly int MaxPoolSize = 131072;
         
         #region [Method] Clear
         public static void Clear()

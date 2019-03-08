@@ -15,7 +15,7 @@ namespace OxidePack.CoreLib
         public List<string> IgnoredComments { get; private set; }
 
         private AdhocWorkspace _workspace = new AdhocWorkspace();
-        private List<PortableExecutableReference> _references;
+        private readonly List<PortableExecutableReference> _references;
 
         public PluginEncryptor(EncryptorOptions options = null, string referencesFolder = "server", string[] ignoredIdentifiers = null, string[] ignoredComments = null)
         {

@@ -1,8 +1,3 @@
-using System.IO;
-using System.Reflection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
 namespace OxidePack.Server.App
 {
     public class Config : BaseConfig

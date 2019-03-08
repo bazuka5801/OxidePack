@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using OxidePack.Client;
 using OxidePack.Client.Core.OxideDownloader;
 using SapphireEngine;
 

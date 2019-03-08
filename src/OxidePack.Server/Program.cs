@@ -1,5 +1,4 @@
-﻿using System;
-using OxidePack.Server.App;
+﻿using OxidePack.Server.App;
 using SapphireEngine;
 
 namespace OxidePack.Server

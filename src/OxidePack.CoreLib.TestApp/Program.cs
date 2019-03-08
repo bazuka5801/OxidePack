@@ -1,20 +1,15 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.CodeAnalysis.CSharp;
-using OxidePack.CoreLib.Experimental.ControlFlowObfuscation;
-using OxidePack.CoreLib.Experimental.Debug;
 using OxidePack.CoreLib.Experimental.Method2Sequence;
-using OxidePack.CoreLib.Utils;
 
 namespace OxidePack.CoreLib.TestApp
 {
-    class Program
+    internal class Program
     {
-        static Random rand = new Random();
-        
-        static void Main(string[] args)
+        private static Random rand = new Random();
+
+        private static void Main(string[] args)
         {
             
             Stopwatch sw = Stopwatch.StartNew();
@@ -34,7 +29,8 @@ namespace OxidePack.CoreLib.TestApp
             Console.WriteLine($"Saved "+result.Length+" symbols");
             Console.ReadKey();
         }
-const string ex1 = @"
+
+        private const string ex1 = @"
     using System;
 class MainClass {
     int maz = 0;

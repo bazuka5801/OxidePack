@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
@@ -13,7 +11,7 @@ namespace OxidePack.CoreLib
 {
     public partial class Plugin
     {
-        private (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings) GeneratedCache; 
+        private (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings) _generatedCache; 
         
 
         public string GetGeneratedFile(List<string> modulesNames, string @namespace)
@@ -21,7 +19,7 @@ namespace OxidePack.CoreLib
             var modules = modulesNames.Select(mName => ModuleMgr.GetModule(mName, out var module) ? module : null)
                 .Where(p => p != null);
 
-            var (classBody, usings) = GeneratedCache = ModuleMgr.CombineModules(modules);
+            var (classBody, usings) = _generatedCache = ModuleMgr.CombineModules(modules);
 
             var generatedClass = ClassDeclaration(PluginName)
                 .WithModifiers(
@@ -34,8 +32,8 @@ namespace OxidePack.CoreLib
                 .WithUsings(usings)
                 .AddMembers(generatedClass);
 
-            _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (@namespaceDeclaration, _workspace);
+            Workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format (@namespaceDeclaration, Workspace);
             return formattedCode.ToFullString();
         }
     }

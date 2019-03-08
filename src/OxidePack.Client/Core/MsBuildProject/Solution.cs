@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using FubuCsProjFile;
 using Mono.Cecil;
 using SapphireEngine;
@@ -15,7 +13,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         public string Filename;
         public List<CsProject> CsProjects = new List<CsProject>();
         
-        private FubuCsProjFile.Solution _solution;
+        private readonly FubuCsProjFile.Solution _solution;
 
         private Solution(string file)
         {

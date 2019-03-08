@@ -5,10 +5,10 @@ namespace OxidePack.Collections
 {
     public class ListHashSet<T> : IEnumerable<T>, IEnumerable
     {
-        private Dictionary<T, int> val2idx;
-        private Dictionary<int, T> idx2val;
+        private readonly Dictionary<T, int> val2idx;
+        private readonly Dictionary<int, T> idx2val;
 
-        private BufferList<T> vals;
+        private readonly BufferList<T> vals;
 
         public int Count => vals.Count;
 

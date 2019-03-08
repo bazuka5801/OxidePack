@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OxidePack.CoreLib.Utils;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -11,7 +10,7 @@ namespace OxidePack.CoreLib
 {
     public partial class Plugin
     {
-        private static Regex _HookIdentifierRegex = new Regex( @"^[a-zA-Z0-9_]+__" );
+        private static readonly Regex HookIdentifierRegex = new Regex( @"^[a-zA-Z0-9_]+__" );
         
         public (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings)
             MergeSources(List<SourceFile> sources, bool prepareEncrypt)
@@ -20,12 +19,12 @@ namespace OxidePack.CoreLib
             var usings = new List<UsingDirectiveSyntax>();
             
             // [(method name), (hook)]
-            var Hooks = new Dictionary<string, List<MethodDeclarationSyntax>>();
+            var hooks = new Dictionary<string, List<MethodDeclarationSyntax>>();
 
             void AddHook(string hookname, MethodDeclarationSyntax method)
             {
-                if (!Hooks.TryGetValue(hookname, out var list))
-                    Hooks[hookname] = list = new List<MethodDeclarationSyntax>();
+                if (!hooks.TryGetValue(hookname, out var list))
+                    hooks[hookname] = list = new List<MethodDeclarationSyntax>();
                 list.Add(method);
             }
 
@@ -61,10 +60,10 @@ namespace OxidePack.CoreLib
                 {
                     if (sourceMember is MethodDeclarationSyntax method)
                     {
-                        var parameterList = method.ParameterList?.Parameters ?? SyntaxFactory.SeparatedList<ParameterSyntax>();
+                        var parameterList = method.ParameterList?.Parameters ?? SeparatedList<ParameterSyntax>();
                         var methodParams = string.Join(", ", (parameterList.Select(p => p.Type.ToString()).ToArray()));
                         var name = method.Identifier.ToString();
-                        if (_HookIdentifierRegex.IsMatch(name))
+                        if (HookIdentifierRegex.IsMatch(name))
                         {
                             var methodname = UniqueIdentifier(name);
                             if (methodname != name)
@@ -72,7 +71,7 @@ namespace OxidePack.CoreLib
                             
                             
 
-                            var hookname = _HookIdentifierRegex.Replace(name, "");
+                            var hookname = HookIdentifierRegex.Replace(name, "");
                             AddHook(hookname, method);
                             pluginBody.Add(method);
                             
@@ -96,7 +95,7 @@ namespace OxidePack.CoreLib
                 pluginBody[pluginBody.Count - 1] = EditUtils.AddTrailingNewLine(pluginBody[pluginBody.Count - 1]);
             }
 
-            var hookMethods = Hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value, prepareEncrypt)).ToList();
+            var hookMethods = hooks.Select(p => CodeGenerator.AddHookMethod(p.Key, p.Value, prepareEncrypt)).ToList();
             EditUtils.InRegion(hookMethods, "[Generated] [Hook Methods]");
             pluginBody.AddRange(hookMethods);
             return (List(pluginBody), List(usings));

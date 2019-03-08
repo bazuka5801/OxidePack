@@ -2,8 +2,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 // 
 //  Read/Write string and byte arrays 
@@ -19,7 +17,7 @@ namespace SilentOrbit.ProtocolBuffers
     
     public static partial class ProtocolParser
     {
-        private static byte[] staticBuffer = new byte[131072];
+        private static readonly byte[] staticBuffer = new byte[131072];
 
         public static string ReadString(Stream stream)
         {
@@ -123,7 +121,7 @@ namespace SilentOrbit.ProtocolBuffers
     /// </summary>
     public class PositionStream : Stream
     {
-        Stream stream;
+        private readonly Stream stream;
 
         /// <summary>
         /// Bytes left to read

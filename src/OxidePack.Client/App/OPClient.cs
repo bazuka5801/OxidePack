@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Ether.Network.Packets;
 using OxidePack.Data;
 using SapphireEngine;

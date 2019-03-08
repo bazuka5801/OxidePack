@@ -1,23 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.Rename;
-using SapphireEngine;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace OxidePack.CoreLib
 {
-    class TokensEncryptor : CSharpSyntaxRewriter
+    internal class TokensEncryptor : CSharpSyntaxRewriter
     {
         private SemanticModel _semanticModel;
-        private AdhocWorkspace _workspace;
-        private EncryptorOptions _options;
-        private IdentifierGenerator _identifierGenerator; 
+        private readonly AdhocWorkspace _workspace;
+        private readonly EncryptorOptions _options;
+        private readonly IdentifierGenerator _identifierGenerator; 
 
         public TokensEncryptor(AdhocWorkspace workspace, EncryptorOptions options = null, bool visitIntoStructuredTrivia = true) : base(visitIntoStructuredTrivia)
         {

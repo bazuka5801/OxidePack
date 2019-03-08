@@ -12,7 +12,7 @@ namespace OxidePack.CoreLib.Experimental.ControlFlowObfuscation
 {
     public static class ControlFlowGenerator
     {
-        private static AdhocWorkspace _workspace = new AdhocWorkspace();
+        private static readonly AdhocWorkspace Workspace = new AdhocWorkspace();
         public static Random rand = new Random();
 
 
@@ -27,17 +27,17 @@ namespace OxidePack.CoreLib.Experimental.ControlFlowObfuscation
                         MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(), path)))
                     .ToList())
                 .AddSyntaxTrees(tree);
-            var _mainClass = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
-            var method = _mainClass.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
+            var mainClass = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
+            var method = mainClass.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
 
             var statements = method.Body.Statements.ToList();
             var members = new List<MemberDeclarationSyntax>();
             Generate(statements, members, null);
-            root = root.ReplaceNode(_mainClass,  _mainClass.ReplaceNode(method, method.WithBody(Block(statements))).AddMembers(members.ToArray()));
+            root = root.ReplaceNode(mainClass,  mainClass.ReplaceNode(method, method.WithBody(Block(statements))).AddMembers(members.ToArray()));
             
             root = root.NormalizeWhitespace();
-            _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (root, _workspace);
+            Workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format (root, Workspace);
             return formattedCode.ToFullString();
             
         }

@@ -6,9 +6,9 @@ namespace OxidePack.CoreLib.Utils
 {
     public class StringUtils
     {
-        private static StringBuilder sb = new StringBuilder();
+        private static readonly StringBuilder Sb = new StringBuilder();
         
-        private static HashSet<char> ExcludedItems = new HashSet<char>()
+        private static readonly HashSet<char> ExcludedItems = new HashSet<char>()
         {
             ' ',
             '\r',
@@ -17,33 +17,33 @@ namespace OxidePack.CoreLib.Utils
         };
         public static string ConvertToCodePoints(string item)
         {
-            sb.Clear();
+            Sb.Clear();
             for(int i = 0 ; i < item.Length ; i += Char.IsSurrogatePair(item,i) ? 2 : 1)
             {
                 if (ExcludedItems.Contains(item[i]))
                 {
-                    sb.Append(item[i]);
+                    Sb.Append(item[i]);
                     continue;
                 }
 
                 if (item[i] == '\\' && char.ToLower(item[i + 1]) == 'u')
                 {
-                    sb.Append(item[i]);
-                    sb.Append(item[i+1]);
-                    sb.Append(item[i+2]);
-                    sb.Append(item[i+3]);
-                    sb.Append(item[i+4]);
-                    sb.Append(item[i+5]);
+                    Sb.Append(item[i]);
+                    Sb.Append(item[i+1]);
+                    Sb.Append(item[i+2]);
+                    Sb.Append(item[i+3]);
+                    Sb.Append(item[i+4]);
+                    Sb.Append(item[i+5]);
                     i += 5;
                     continue;
                 }
                 int x = Char.ConvertToUtf32(item, i);
-                sb.Append(string.Format("\\u{0:X4}", x));
+                Sb.Append(string.Format("\\u{0:X4}", x));
             }
 
-            if (sb[sb.Length - 1] != ' ')
-                sb.Append(' ');
-            return sb.ToString();
+            if (Sb[Sb.Length - 1] != ' ')
+                Sb.Append(' ');
+            return Sb.ToString();
         }
 
         public static string ConvertStringLiteralText(string item)
@@ -52,93 +52,93 @@ namespace OxidePack.CoreLib.Utils
             var lastIndex = item.LastIndexOf('\"');
 
             if (firstIndex > -1)
-                sb.Append(item.Substring(0, firstIndex + 1));
+                Sb.Append(item.Substring(0, firstIndex + 1));
             
             for(int i = firstIndex + 1 ; i < lastIndex ; i += Char.IsSurrogatePair(item,i) ? 2 : 1)
             {
                 if (item[i] == ' ')
                 {
-                    sb.Append(item[i]);
+                    Sb.Append(item[i]);
                     continue;
                 }
                 switch (item[i])
                 {
-                    case '\'': sb.Append(@"\'"); continue;
-                    case '\"': sb.Append("\\\""); continue;
-                    case '\\': sb.Append(@"\\"); continue;
-                    case '\0': sb.Append(@"\0"); continue;
-                    case '\a': sb.Append(@"\a"); continue;
-                    case '\b': sb.Append(@"\b"); continue;
-                    case '\f': sb.Append(@"\f"); continue;
-                    case '\n': sb.Append(@"\n"); continue;
-                    case '\r': sb.Append(@"\r"); continue;
-                    case '\t': sb.Append(@"\t"); continue;
-                    case '\v': sb.Append(@"\v"); continue;
+                    case '\'': Sb.Append(@"\'"); continue;
+                    case '\"': Sb.Append("\\\""); continue;
+                    case '\\': Sb.Append(@"\\"); continue;
+                    case '\0': Sb.Append(@"\0"); continue;
+                    case '\a': Sb.Append(@"\a"); continue;
+                    case '\b': Sb.Append(@"\b"); continue;
+                    case '\f': Sb.Append(@"\f"); continue;
+                    case '\n': Sb.Append(@"\n"); continue;
+                    case '\r': Sb.Append(@"\r"); continue;
+                    case '\t': Sb.Append(@"\t"); continue;
+                    case '\v': Sb.Append(@"\v"); continue;
                 }
                 int x = Char.ConvertToUtf32(item, i);
-                sb.Append(string.Format("\\u{0:X4}", x));
+                Sb.Append(string.Format("\\u{0:X4}", x));
             }
 
             if (lastIndex > -1)
-                sb.Append(item.Substring(lastIndex, item.Length - lastIndex));
-            return sb.ToString();
+                Sb.Append(item.Substring(lastIndex, item.Length - lastIndex));
+            return Sb.ToString();
         }
         public static string ConvertStringLiteral2(string item)
         {
             var firstIndex = item.IndexOf('\"');
             var lastIndex = item.LastIndexOf('\"');
             
-            sb.Append(item.Substring(0, firstIndex + 1));
+            Sb.Append(item.Substring(0, firstIndex + 1));
             for(int i = firstIndex + 1 ; i < lastIndex ; i += Char.IsSurrogatePair(item,i) ? 2 : 1)
             {
                 if (item[i] == ' ')
                 {
-                    sb.Append(item[i]);
+                    Sb.Append(item[i]);
                     continue;
                 }
                 
                 switch (item[i])
                 {
-                    case '\'': sb.Append(@"\'"); continue;
-                    case '\"': sb.Append("\\\""); continue;
-                    case '\\': sb.Append(@"\\"); continue;
-                    case '\0': sb.Append(@"\0"); continue;
-                    case '\a': sb.Append(@"\a"); continue;
-                    case '\b': sb.Append(@"\b"); continue;
-                    case '\f': sb.Append(@"\f"); continue;
-                    case '\n': sb.Append(@"\n"); continue;
-                    case '\r': sb.Append(@"\r"); continue;
-                    case '\t': sb.Append(@"\t"); continue;
-                    case '\v': sb.Append(@"\v"); continue;
+                    case '\'': Sb.Append(@"\'"); continue;
+                    case '\"': Sb.Append("\\\""); continue;
+                    case '\\': Sb.Append(@"\\"); continue;
+                    case '\0': Sb.Append(@"\0"); continue;
+                    case '\a': Sb.Append(@"\a"); continue;
+                    case '\b': Sb.Append(@"\b"); continue;
+                    case '\f': Sb.Append(@"\f"); continue;
+                    case '\n': Sb.Append(@"\n"); continue;
+                    case '\r': Sb.Append(@"\r"); continue;
+                    case '\t': Sb.Append(@"\t"); continue;
+                    case '\v': Sb.Append(@"\v"); continue;
                 }
                 
                 int x = Char.ConvertToUtf32(item, i);
-                sb.Append(string.Format("\\u{0:X4}", x));
+                Sb.Append(string.Format("\\u{0:X4}", x));
             }
 
             if (lastIndex > -1)
-                sb.Append(item.Substring(lastIndex, item.Length - lastIndex));
-            return sb.ToString();
+                Sb.Append(item.Substring(lastIndex, item.Length - lastIndex));
+            return Sb.ToString();
         }
-        
-        static string ToLiteral(string input) {
+
+        private static string ToLiteral(string input) {
             StringBuilder literal = new StringBuilder(input.Length + 2);
             literal.Append("\"");
             for (var i = 0; i < input.Length; i++)
             {
                 switch (input[i])
                 {
-                    case '\'': sb.Append(@"\'"); continue;
-                    case '\"': sb.Append("\\\""); continue;
-                    case '\\': sb.Append(@"\\"); continue;
-                    case '\0': sb.Append(@"\0"); continue;
-                    case '\a': sb.Append(@"\a"); continue;
-                    case '\b': sb.Append(@"\b"); continue;
-                    case '\f': sb.Append(@"\f"); continue;
-                    case '\n': sb.Append(@"\n"); continue;
-                    case '\r': sb.Append(@"\r"); continue;
-                    case '\t': sb.Append(@"\t"); continue;
-                    case '\v': sb.Append(@"\v"); continue;
+                    case '\'': Sb.Append(@"\'"); continue;
+                    case '\"': Sb.Append("\\\""); continue;
+                    case '\\': Sb.Append(@"\\"); continue;
+                    case '\0': Sb.Append(@"\0"); continue;
+                    case '\a': Sb.Append(@"\a"); continue;
+                    case '\b': Sb.Append(@"\b"); continue;
+                    case '\f': Sb.Append(@"\f"); continue;
+                    case '\n': Sb.Append(@"\n"); continue;
+                    case '\r': Sb.Append(@"\r"); continue;
+                    case '\t': Sb.Append(@"\t"); continue;
+                    case '\v': Sb.Append(@"\v"); continue;
                 }
             }
 

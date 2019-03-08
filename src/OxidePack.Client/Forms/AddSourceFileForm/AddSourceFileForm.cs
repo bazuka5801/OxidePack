@@ -11,7 +11,7 @@ namespace OxidePack.Client
 
     public partial class AddSourceFileForm : Form
     {
-        AddSourceFileModel _Model;
+        private readonly AddSourceFileModel _Model;
 
         public AddSourceFileForm(AddSourceFileModel model)
         {

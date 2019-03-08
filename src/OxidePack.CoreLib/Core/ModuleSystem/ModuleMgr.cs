@@ -15,7 +15,7 @@ namespace OxidePack.CoreLib
             LoadModules();
         }
 
-        static void LoadModules()
+        private static void LoadModules()
         {
             _modules = Directory.GetDirectories(Path.Combine(Directory.GetCurrentDirectory(), "modules"))
                 .Select(directory => new Module(directory))

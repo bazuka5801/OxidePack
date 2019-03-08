@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using OxidePack.Data;
@@ -14,7 +8,7 @@ namespace OxidePack.Client
 {
     public partial class EncryptionForm : Form
     {
-        private EncryptionModel model;
+        private readonly EncryptionModel model;
 
         public EncryptionForm(EncryptionModel model)
         {
@@ -49,7 +43,7 @@ namespace OxidePack.Client
 
         private void btnEncrypt_Click(object sender, EventArgs e)
         {
-            model.Plugin.RequestCompile(new Data.EncryptOptions()
+            model.Plugin.RequestCompile(new EncryptOptions()
             {
                 enabled = true,
                 localvars = cbLocalVars.Checked,

@@ -13,7 +13,7 @@ namespace OxidePack.Client.Components
 {
     public class DependencyTreeModel : TreeModel
     {
-        private string _directory;
+        private readonly string _directory;
         private string[] _files;
         
         public DependencyTreeModel(string directory)

@@ -13,12 +13,12 @@ using CompilerError = OxidePack.Data.CompilerError;
 
 namespace OxidePack.Server.App
 {
-    public class OPUser : BaseUser
+    public class OpUser : BaseUser
     {
         public Plugin ActivePlugin;
         
         
-        public override void HandleRPCMessage(RPCMessageType type, NetPacket stream)
+        public override void HandleRpcMessage(RPCMessageType type, NetPacket stream)
         {
             if (IsAuthed == false)
             {
@@ -118,7 +118,7 @@ namespace OxidePack.Server.App
                             bResponse.encryptErrors = errorList;
                         }
                     
-                        SendRPC(RPCMessageType.BuildResponse, bResponse);
+                        SendRpc(RPCMessageType.BuildResponse, bResponse);
                     });
                     break;
                 case RPCMessageType.EncryptionRequest:
@@ -146,7 +146,7 @@ namespace OxidePack.Server.App
                 content = generatedFile
             };
             
-            SendRPC(RPCMessageType.GeneratedFileResponse, response);
+            SendRpc(RPCMessageType.GeneratedFileResponse, response);
         }
 
         public void SendModuleList()
@@ -163,7 +163,7 @@ namespace OxidePack.Server.App
                 modules = moduleList
             };
             
-            SendRPC(RPCMessageType.ModuleListResponse, moduleListResponse);
+            SendRpc(RPCMessageType.ModuleListResponse, moduleListResponse);
         }
     }
 }

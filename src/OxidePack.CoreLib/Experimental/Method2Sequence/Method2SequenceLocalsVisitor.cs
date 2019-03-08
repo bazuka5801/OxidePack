@@ -21,7 +21,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             return _results;
         }
 
-
         public override void VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
         {
             var method = node.GetParent<MethodDeclarationSyntax>();

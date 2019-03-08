@@ -1,17 +1,12 @@
 ﻿using OxidePack.Client;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
 using OxidePack.Client.App;
 using SapphireEngine;
-using SapphireEngine.Functions;
-class Bootstrap
+
+internal class Bootstrap
 {
-    static int Initialization(string arg)
+    private static int Initialization(string arg)
     {
         try
         {
@@ -39,7 +34,7 @@ namespace OxidePack.Client
             Framework.Initialization<AppCore>();
         }
 
-        static bool KillIfStarted()
+        private static bool KillIfStarted()
         {
 //            if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location))
 //                    .Count() > 1)

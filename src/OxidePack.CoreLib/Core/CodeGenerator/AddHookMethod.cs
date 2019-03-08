@@ -2,9 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using OxidePack.CoreLib.Utils;
 using MemberList = Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax>;
 // </Minified names>
 
@@ -13,7 +11,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace OxidePack.CoreLib
 {
-    public partial class CodeGenerator
+    public class CodeGenerator
     {
         public static MemberDeclarationSyntax AddHookMethod(string hookname, List<MethodDeclarationSyntax> methods, bool prepareEncrypt)
         {
@@ -28,8 +26,8 @@ namespace OxidePack.CoreLib
                 .WithBody(GenerateBody());
             if (prepareEncrypt)
             {
-                var name = SyntaxFactory.ParseName("Oxide.Core.Plugins.HookMethod");
-                var arguments = SyntaxFactory.ParseAttributeArgumentList($"(\"{hookname}\")");
+                var name = ParseName("Oxide.Core.Plugins.HookMethod");
+                var arguments = ParseAttributeArgumentList($"(\"{hookname}\")");
                 methodResult = methodResult.WithAttributeLists(List(new[]
                 {
                     AttributeList(SingletonSeparatedList(Attribute(name, arguments)))
@@ -51,9 +49,9 @@ namespace OxidePack.CoreLib
                     //  return ret;
                     // } 
 
-                    List<StatementSyntax> Statements = new List<StatementSyntax>();
-                    Statements.Add(GenerateVariable("object", "ret", "null"));
-                    Statements.Add(GenerateVariable("object", "temp", "null"));
+                    List<StatementSyntax> statements = new List<StatementSyntax>();
+                    statements.Add(GenerateVariable("object", "ret", "null"));
+                    statements.Add(GenerateVariable("object", "temp", "null"));
 
                     var temp = IdentifierName("temp");
                     var ret = IdentifierName("ret");
@@ -61,9 +59,9 @@ namespace OxidePack.CoreLib
                     {
                         if (method.ReturnType.ToString() != "void")
                         {
-                            Statements.Add(ExpressionStatement(AssignmentExpression(SimpleAssignmentExpression,
+                            statements.Add(ExpressionStatement(AssignmentExpression(SimpleAssignmentExpression,
                                 IdentifierName("temp"), GenerateCallHook(method))));
-                            Statements.Add(IfStatement(
+                            statements.Add(IfStatement(
                                 BinaryExpression(NotEqualsExpression,
                                     temp,
                                     LiteralExpression(NullLiteralExpression)),
@@ -77,12 +75,12 @@ namespace OxidePack.CoreLib
                         }
                         else
                         {
-                            Statements.Add(ExpressionStatement(GenerateCallHook(method)));
+                            statements.Add(ExpressionStatement(GenerateCallHook(method)));
                         }
                     }
-                    Statements.Add(ReturnStatement(ret));
+                    statements.Add(ReturnStatement(ret));
 
-                    return Block(Statements);
+                    return Block(statements);
                 }
                 else
                 {

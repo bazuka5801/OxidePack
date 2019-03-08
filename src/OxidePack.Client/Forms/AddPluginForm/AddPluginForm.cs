@@ -11,7 +11,7 @@ namespace OxidePack.Client
 
     public partial class AddPluginForm : Form
     {
-        AddPluginModel _Model;
+        private readonly AddPluginModel _Model;
 
         public AddPluginForm(AddPluginModel model)
         {

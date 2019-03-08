@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -10,7 +9,7 @@ namespace OxidePack.CoreLib
 {
     public class EncodingChanger : CSharpSyntaxRewriter
     {
-        private AdhocWorkspace _workspace;
+        private readonly AdhocWorkspace _workspace;
         private EncryptorOptions _options;
         
         public EncodingChanger(AdhocWorkspace workspace, EncryptorOptions options = null, bool visitIntoStructuredTrivia = true) : base(visitIntoStructuredTrivia)

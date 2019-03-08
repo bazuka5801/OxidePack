@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,8 +10,6 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
     public class Method2SequenceRewriter : CSharpSyntaxRewriter
     {
         private Method2SequenceSyntaxVisitor.Results _info;
-        private Dictionary<string, Dictionary<string, TypeSyntax>> _methodsLocals;
-        private SemanticModel _semanticModel;
 
         public SyntaxNode Rewrite(SyntaxNode root, Method2SequenceSyntaxVisitor.Results info)
         {
@@ -63,7 +60,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                         ThrowStatement());
                     return method.WithBody(
                         Block(
-                            GenerateVariable(methodData.methodClassName, tempVarName,
+                            Variable(methodData.methodClassName, tempVarName,
                                 $"{methodData.getName}({parametersString})"),
                             TryStatement(Block(
                                 ReturnStatement(InvocationExpression(
@@ -77,7 +74,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
                 return method.WithBody(
                     Block(
-                        GenerateVariable(methodData.methodClassName, tempVarName,
+                        Variable(methodData.methodClassName, tempVarName,
                             $"{methodData.getName}({parametersString})"),
                         ExpressionStatement(InvocationExpression(
                             MemberAccessExpression(SimpleMemberAccessExpression, IdentifierName(tempVarName),
@@ -89,7 +86,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             return base.VisitMethodDeclaration(method);
         }
 
-        private LocalDeclarationStatementSyntax GenerateVariable(string type, string name, string defaultValue) =>
+        private LocalDeclarationStatementSyntax Variable(string type, string name, string defaultValue) =>
             LocalDeclarationStatement(
                 VariableDeclaration(
                     ParseTypeName(type),

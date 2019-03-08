@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -11,9 +10,9 @@ namespace OxidePack.CoreLib.Experimental.Debug
 {
     public class DebugLoggerRewriter : CSharpSyntaxRewriter
     {
-        private static AdhocWorkspace _workspace = new AdhocWorkspace();
+        private static readonly AdhocWorkspace Workspace = new AdhocWorkspace();
         
-        private int i = 0;
+        private int _i = 0;
         
         public static string Process(string source)
         {
@@ -30,8 +29,8 @@ namespace OxidePack.CoreLib.Experimental.Debug
             root = (CompilationUnitSyntax)new DebugLoggerRewriter().Visit(root);
             
             root = root.NormalizeWhitespace();
-            _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (root, _workspace);
+            Workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format (root, Workspace);
             return formattedCode.ToFullString();
             
         }
@@ -40,8 +39,8 @@ namespace OxidePack.CoreLib.Experimental.Debug
         {
             node = (MethodDeclarationSyntax) base.VisitMethodDeclaration(node);
             var statements = node.Body.Statements.ToList();
-            statements.Insert(0,SyntaxFactory.ParseStatement($"global::Oxide.Core.Interface.Oxide.LogInfo(\"{node.Identifier.Text}\");"));
-            return (node).WithBody(node.Body.WithStatements(SyntaxFactory.List(statements)));
+            statements.Insert(0,ParseStatement($"global::Oxide.Core.Interface.Oxide.LogInfo(\"{node.Identifier.Text}\");"));
+            return (node).WithBody(node.Body.WithStatements(List(statements)));
         }
     }
 }

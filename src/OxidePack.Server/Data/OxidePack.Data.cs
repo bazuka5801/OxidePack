@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using SilentOrbit.ProtocolBuffers;
-using OxidePack;
 
 namespace OxidePack.Data
 {

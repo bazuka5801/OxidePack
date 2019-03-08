@@ -46,7 +46,7 @@ namespace OxidePack.Client
             tvDependencies.Model = _model;
         }
 
-        private void btnApply_Click(object sender, System.EventArgs e)
+        private void btnApply_Click(object sender, EventArgs e)
         {
             this._formModel.Bundle = cbBundle.Checked;
             this._formModel.SelectedFiles = _model.GetSelectedFiles();
@@ -56,7 +56,7 @@ namespace OxidePack.Client
 
 
 
-        private void btnCancel_Click(object sender, System.EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }

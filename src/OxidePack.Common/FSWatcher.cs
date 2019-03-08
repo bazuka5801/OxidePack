@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Permissions;
 using SapphireEngine;
 using SapphireEngine.Functions;
 
@@ -13,7 +12,7 @@ namespace OxidePack
         private FileSystemWatcher watcher;
 
         // Changes are buffered briefly to avoid duplicate events
-        private Dictionary<string, ChangeQueued> changeQueue;
+        private readonly Dictionary<string, ChangeQueued> changeQueue;
         
         private class ChangeQueued
         {
@@ -24,7 +23,7 @@ namespace OxidePack
 
         private Action<string> callback;
         
-        private object lockObject = new object();
+        private readonly object lockObject = new object();
 
         public void Subscribe(Action<string> action) => callback += action;
 

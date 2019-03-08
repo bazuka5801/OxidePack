@@ -15,7 +15,7 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
     public class Method2Sequence : CSharpSyntaxRewriter
     {
-        private static readonly AdhocWorkspace _workspace = new AdhocWorkspace();
+        private static readonly AdhocWorkspace Workspace = new AdhocWorkspace();
         private ClassDeclarationSyntax _mainClass;
         private ISymbol _mainClassSymbol;
         private string _nullStructName;
@@ -117,8 +117,8 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             root = root.ReplaceNode(_mainClass, _mainClass.WithMembers(List(members)));
 
             root = root.NormalizeWhitespace();
-            _workspace.Options.WithChangedOption(CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format(root, _workspace);
+            Workspace.Options.WithChangedOption(CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format(root, Workspace);
             return formattedCode.ToFullString();
         }
 

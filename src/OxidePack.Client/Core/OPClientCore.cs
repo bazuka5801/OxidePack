@@ -4,11 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using FubuCsProjFile;
 using Mono.Cecil;
 using OxidePack.Client.App;
 using OxidePack.Client.Core.OxideDownloader;
-using OxidePack.Client;
 using SapphireEngine;
 using Solution = OxidePack.Client.Core.MsBuildProject.Solution;
 
@@ -22,7 +20,7 @@ namespace OxidePack.Client
 
         public static void Init()
         {
-            Config.OnConfigLoaded += OnConfigLoaded;
+            BaseConfig.OnConfigLoaded += OnConfigLoaded;
         }
 
         private static void OnConfigLoaded()
@@ -73,7 +71,7 @@ namespace OxidePack.Client
             {
             Regex _rustFilesRegex = new Regex("RustDedicated_Data\\\\Managed\\\\.*.dll");
             var refPath = ".references-cache";
-            var downloadConfig = new global::DepotDownloader.DownloadConfig()
+            var downloadConfig = new DepotDownloader.DownloadConfig()
             {
                 AppID = 258550,
                 DownloadAllPlatforms = false,
@@ -129,7 +127,7 @@ namespace OxidePack.Client
         {
             Regex _asmCSharpRegex = new Regex("RustDedicated_Data\\\\Managed\\\\Assembly-CSharp.dll");
             var refPath = ".temp";
-            var downloadConfig = new global::DepotDownloader.DownloadConfig()
+            var downloadConfig = new DepotDownloader.DownloadConfig()
             {
                 AppID = 258550,
                 DownloadAllPlatforms = false,

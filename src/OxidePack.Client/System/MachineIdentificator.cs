@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 using System.Management;
-using System.Security.Cryptography;
-using System.Text;
-using SapphireEngine;
-using SapphireEngine.Functions;
 
 namespace OxidePack.Client
 {
@@ -28,9 +24,10 @@ namespace OxidePack.Client
         }
         
         #region Original Device ID Getting Code
-        static Dictionary<string, ManagementObjectCollection> mCollections = new Dictionary<string, ManagementObjectCollection>();
 
-        static ManagementObjectCollection GetMOCollection(string wmiClass)
+        private static readonly Dictionary<string, ManagementObjectCollection> mCollections = new Dictionary<string, ManagementObjectCollection>();
+
+        private static ManagementObjectCollection GetMOCollection(string wmiClass)
         {
             if (mCollections.TryGetValue(wmiClass, out var moc) == false)
             {

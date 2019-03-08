@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 using OxidePack.Client.Core.MsBuildProject;
-using OxidePack.Client.Properties;
 using SapphireEngine;
 
 namespace OxidePack.Client
@@ -21,9 +19,9 @@ namespace OxidePack.Client
 
         private Dictionary<string, string> PluginsPaths = new Dictionary<string, string>();
         
-        private FSWatcher _Watcher;
+        private FSWatcher _watcher;
 
-        private string _Directory => Path.GetDirectoryName(csProject.FilePath);
+        private string _directory => Path.GetDirectoryName(csProject.FilePath);
         
         public class PluginsProjectData
         {
@@ -53,7 +51,7 @@ namespace OxidePack.Client
 
             var pluginFolder = PluginsPaths.ContainsKey(pluginName)
                 ? PluginsPaths[pluginName]
-                : Path.Combine(_Directory, pluginName);
+                : Path.Combine(_directory, pluginName);
             if (Directory.Exists(pluginFolder) == false)
             {
                 Directory.CreateDirectory(pluginFolder);
@@ -64,7 +62,7 @@ namespace OxidePack.Client
 
         public void RemovePlugin(string name)
         {
-            var pluginFolder = Path.Combine(_Directory, name);
+            var pluginFolder = Path.Combine(_directory, name);
             if (Directory.Exists(pluginFolder))
             {
                 var csFiles = Directory.GetFiles(pluginFolder, "*.cs", SearchOption.AllDirectories).ToList();
@@ -78,7 +76,7 @@ namespace OxidePack.Client
         /// <returns>Plugin name</returns>
         public List<string> GetPluginList()
         {
-            return Directory.GetFiles(_Directory, "plugin.json", SearchOption.AllDirectories)
+            return Directory.GetFiles(_directory, "plugin.json", SearchOption.AllDirectories)
                 .Select(Path.GetDirectoryName)
                 .ToList();
         }
@@ -89,26 +87,26 @@ namespace OxidePack.Client
         /// <returns>Plugin name, Path</returns>
         public Dictionary<string, string> GetPluginsPaths()
         {
-            return Directory.GetFiles(_Directory, "plugin.json", SearchOption.AllDirectories)
+            return Directory.GetFiles(_directory, "plugin.json", SearchOption.AllDirectories)
                 .ToDictionary(jsonFile =>  Path.GetFileName(Path.GetDirectoryName(jsonFile)), Path.GetDirectoryName);
         }
         
         private void StartWatching()
         {
-            _Watcher?.Close();
-            _Watcher = new FSWatcher(_Directory, "*.*");
-            _Watcher.AcceptExtensions.AddRange(new[] {".cs", ".json"});
-            _Watcher.ExcludeDirectories.AddRange(new[] {".encrypted", ".builded"});
-            _Watcher.Subscribe(OnSourceFileChanged);
+            _watcher?.Close();
+            _watcher = new FSWatcher(_directory, "*.*");
+            _watcher.AcceptExtensions.AddRange(new[] {".cs", ".json"});
+            _watcher.ExcludeDirectories.AddRange(new[] {".encrypted", ".builded"});
+            _watcher.Subscribe(OnSourceFileChanged);
         }
 
-        bool GetPluginName(string filename, out string pluginname)
+        private bool GetPluginName(string filename, out string pluginname)
         {
             var directory = Path.GetDirectoryName(filename);
             pluginname = _Plugins.OrderBy(p => directory.Replace(p.Value.Folder, "").Length).FirstOrDefault().Key;
 ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
             // Equals root directory
-            if (pluginname.Equals(Path.GetFileName(_Directory)))
+            if (pluginname.Equals(Path.GetFileName(_directory)))
             {
                 return false;
             }
@@ -171,7 +169,8 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
         }
 
         #region [Methods] Config
-        void ReloadConfig()
+
+        private void ReloadConfig()
         {
             if (File.Exists(this.DataFileName) == false)
             {
@@ -190,7 +189,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
             }
         }
 
-        void SaveConfig()
+        private void SaveConfig()
         {
             if (Config == null)
             {

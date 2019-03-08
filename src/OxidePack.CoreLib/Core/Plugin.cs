@@ -1,12 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Formatting;
-using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Options;
 
 namespace OxidePack.CoreLib
 {
@@ -28,7 +20,7 @@ namespace OxidePack.CoreLib
 
         public void Dispose()
         {
-            _workspace?.Dispose();
+            Workspace?.Dispose();
         }
     }
 }

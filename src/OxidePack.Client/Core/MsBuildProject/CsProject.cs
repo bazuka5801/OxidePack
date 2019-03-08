@@ -4,12 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
-using System.Xml.XPath;
 using FubuCore.Configuration;
 using FubuCsProjFile;
 using FubuCsProjFile.MSBuild;
 using Mono.Cecil;
-using OxidePack.Client;
 using SapphireEngine;
 
 namespace OxidePack.Client.Core.MsBuildProject

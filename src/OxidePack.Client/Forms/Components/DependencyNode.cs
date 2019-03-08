@@ -76,7 +76,7 @@ namespace OxidePack.Client.Components
                             parent = parent.Parent;
                         }
                     }
-                    foreach (var node in base.Nodes)
+                    foreach (var node in Nodes)
                         node.CheckState = CheckState.Checked;
                 }
                 else if (_state == CheckState.Unchecked)
@@ -97,16 +97,16 @@ namespace OxidePack.Client.Components
                             parent = parent.Parent;
                         }
                     }
-                    foreach (var node in base.Nodes)
+                    foreach (var node in Nodes)
                         node.CheckState = CheckState.Unchecked;
                 }
                 else if (_state == CheckState.Indeterminate)
                 {
-                    if (base.Nodes == null || base.Nodes.Count == 0)
+                    if (Nodes == null || Nodes.Count == 0)
                         CheckState = CheckState.Unchecked;
-                    else if (base.Nodes.All(p => p.CheckState == CheckState.Unchecked))
+                    else if (Nodes.All(p => p.CheckState == CheckState.Unchecked))
                         _state = CheckState.Unchecked;
-                    else if (base.Nodes.All(p => p.CheckState == CheckState.Checked))
+                    else if (Nodes.All(p => p.CheckState == CheckState.Checked))
                         CheckState = CheckState.Unchecked;
                 }
             }

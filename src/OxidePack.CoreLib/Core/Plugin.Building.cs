@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using OxidePack.Data;
-using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
@@ -30,7 +24,7 @@ namespace OxidePack.CoreLib
             _mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             ReloadReferences();
             
-            var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
+            var _ = typeof(CSharpFormattingOptions);
         }
         #endregion
 
@@ -45,11 +39,11 @@ namespace OxidePack.CoreLib
         }
         #endregion
         
-        private static AdhocWorkspace _workspace = new AdhocWorkspace();
+        private static readonly AdhocWorkspace Workspace = new AdhocWorkspace();
 
         public string Build(BuildRequest request)
         {
-            var generated = GeneratedCache;
+            var generated = _generatedCache;
 
             var prepareEncrypt = request.encryptOptions?.enabled ?? false;
             
@@ -88,8 +82,8 @@ namespace OxidePack.CoreLib
                 .WithUsings(pluginUsings)
                 .AddMembers(generatedClass);
             
-            _workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (@namespace, _workspace);
+            Workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format (@namespace, Workspace);
             return formattedCode.ToFullString();
         }
 

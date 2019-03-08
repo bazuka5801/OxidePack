@@ -13,7 +13,6 @@ using SapphireEngine;
 using MemberList = Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax>;
 
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace OxidePack.CoreLib
 {
@@ -28,9 +27,9 @@ namespace OxidePack.CoreLib
     
     public class Module
     {
-        private DirectoryInfo _directory;
+        private readonly DirectoryInfo _directory;
         private ModuleManifest _manifest;
-        private String FullText;
+        private String _fullText;
 
         
         public List<UsingDirectiveSyntax> Usings = new List<UsingDirectiveSyntax>();

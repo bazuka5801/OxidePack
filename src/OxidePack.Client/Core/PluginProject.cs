@@ -78,7 +78,7 @@ namespace OxidePack.Client
             SetCompilingState(true);
             config.Version.Build++;
             SaveConfig();
-            var sources = System.IO.Directory.GetFiles(Folder, "*.cs", SearchOption.AllDirectories).Select(filename =>
+            var sources = Directory.GetFiles(Folder, "*.cs", SearchOption.AllDirectories).Select(filename =>
             {
                 var content = File.ReadAllText(filename);
                 return new SourceFile
@@ -114,8 +114,8 @@ namespace OxidePack.Client
         public void OnBuildResponse(BuildResponse bResponse)
         {
             var outputDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".builded");
-            if (System.IO.Directory.Exists(outputDir) == false)
-                System.IO.Directory.CreateDirectory(outputDir);
+            if (Directory.Exists(outputDir) == false)
+                Directory.CreateDirectory(outputDir);
 
 
             if (bResponse.compiledAssembly != null)
@@ -148,7 +148,7 @@ namespace OxidePack.Client
             var copyPath = Project.Config.BuildedCopyPath;
 
             if (string.IsNullOrEmpty(copyPath) == false
-                && System.IO.Directory.Exists(copyPath))
+                && Directory.Exists(copyPath))
             {
                 if (bResponse.compiledAssembly != null)
                 {
@@ -165,13 +165,13 @@ namespace OxidePack.Client
             if (string.IsNullOrEmpty(bResponse.encrypted) == false)
             {
                 var encryptedDir = Path.Combine(Path.GetDirectoryName(csProject.FilePath), ".encrypted");
-                if (System.IO.Directory.Exists(encryptedDir) == false)
-                    System.IO.Directory.CreateDirectory(encryptedDir);
+                if (Directory.Exists(encryptedDir) == false)
+                    Directory.CreateDirectory(encryptedDir);
                 var encryptedPath = Path.Combine(encryptedDir, $"{Name}.cs");
                 File.WriteAllText(encryptedPath, bResponse.encrypted);
 
                 if (string.IsNullOrEmpty(copyPath) == false
-                    && System.IO.Directory.Exists(copyPath))
+                    && Directory.Exists(copyPath))
                 {
                     var copyOutputPath = Path.Combine(copyPath, $"{Name}.cs");
                     File.WriteAllText(copyOutputPath, bResponse.encrypted);
@@ -203,7 +203,7 @@ namespace OxidePack.Client
             [JsonProperty("Name")]
             public string Name;
             [JsonProperty("Version")]
-            public VersionNumber Version = new VersionNumber(0, 0, 0);
+            public VersionNumber Version;
 
             public PluginProjectData(string name)
             {

@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -77,7 +76,7 @@ namespace OxidePack.CoreLib
                     name += "out ";
             }
 
-            return name += param.Identifier.ToString();
+            return name + param.Identifier;
         }
     }
 }

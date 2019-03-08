@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Ether.Network.Common;
 using Ether.Network.Packets;
-using OxidePack.CoreLib;
 using OxidePack.Data;
 using OxidePack.Server.App.Data;
 using SapphireEngine;
@@ -12,7 +11,7 @@ namespace OxidePack.Server.App
 {
     public class BaseUser : NetUser
     {
-        static HashSet<string> ActiveUsers = new HashSet<string>();
+        private static readonly HashSet<string> ActiveUsers = new HashSet<string>();
         
         public bool     IsAuthed;
         public UserData Data;
@@ -32,7 +31,7 @@ namespace OxidePack.Server.App
                         break;
                     case PacketType.RPCMessage:
                         var rpcmessagetype = (RPCMessageType)stream.Read<UInt32>();
-                        HandleRPCMessage(rpcmessagetype, packet);
+                        HandleRpcMessage(rpcmessagetype, packet);
                         break;
                     case PacketType.ConnectionAlive:
                         if (IsAuthed)
@@ -53,11 +52,11 @@ namespace OxidePack.Server.App
             }
         }
 
-        public virtual void HandleRPCMessage(RPCMessageType type, NetPacket stream)
+        public virtual void HandleRpcMessage(RPCMessageType type, NetPacket stream)
         {
         }
 
-        public void SendRPC(RPCMessageType type, params IProto[] args)
+        public void SendRpc(RPCMessageType type, params IProto[] args)
         {
             using (NetPacket packet = new NetPacket())
             {
@@ -124,7 +123,7 @@ namespace OxidePack.Server.App
                 return;
             }
 
-            if (UserDB.Get(uInfo.key, uInfo.username, out Data) == false)
+            if (UserDb.Get(uInfo.key, uInfo.username, out Data) == false)
             {
                 SendGiveUserInformationResult("Access denied! Contact us.");
                 return;

@@ -13,7 +13,7 @@ namespace OxidePack.Client
 
     public partial class ProjectSelectForm : Form
     {
-        private ProjectSelectModel model;
+        private readonly ProjectSelectModel model;
 
         public ProjectSelectForm(ProjectSelectModel model)
         {

@@ -6,22 +6,22 @@ using SapphireEngine;
 
 namespace OxidePack.Server.App.Data
 {
-    public static class UserDB
+    public static class UserDb
     {
-        static Dictionary<string, uint> KeyToUID;
-        static List<UserData> Users;
+        private static Dictionary<string, uint> _keyToUid;
+        private static List<UserData> _users;
 
-        public static IEnumerable<UserData> All => Users;
+        public static IEnumerable<UserData> All => _users;
         
         public static bool Get(string key, string username, out UserData uData)
         {
-            if (KeyToUID.TryGetValue(key, out var index) == false)
+            if (_keyToUid.TryGetValue(key, out var index) == false)
             {
                 uData = null;
                 return false;
             }
 
-            uData = Users[(int) index];
+            uData = _users[(int) index];
             return true;
         }
 
@@ -29,13 +29,13 @@ namespace OxidePack.Server.App.Data
         {
             var uData = Pool.Get<UserData>();
             uData.key = key;
-            uData.index = (uint)Users.Count;
+            uData.index = (uint)_users.Count;
             uData.username = username;
             uData.registred = Epoch.Current;
             uData.permissions = new List<Permission>();
                 
-            KeyToUID[key] = (uint)Users.Count;
-            Users.Add(uData);
+            _keyToUid[key] = (uint)_users.Count;
+            _users.Add(uData);
             ConsoleSystem.Log($"User '{username}' added");
             Save();
         }
@@ -48,15 +48,15 @@ namespace OxidePack.Server.App.Data
             
             if (File.Exists("Database/UserData.bin") == false)
             {
-                KeyToUID = new Dictionary<string, uint>();
-                Users = new List<UserData>();
+                _keyToUid = new Dictionary<string, uint>();
+                _users = new List<UserData>();
             }
             else
             {
-                var userDC = UserDataCollection.Deserialize(File.ReadAllBytes("Database/UserData.bin"));
-                Users = userDC.users.ToList();
-                Pool.Free(ref userDC);
-                KeyToUID = Users.ToDictionary(p => p.key, p => p.index);
+                var userDc = UserDataCollection.Deserialize(File.ReadAllBytes("Database/UserData.bin"));
+                _users = userDc.users.ToList();
+                Pool.Free(ref userDc);
+                _keyToUid = _users.ToDictionary(p => p.key, p => p.index);
             }
         }
 
@@ -65,10 +65,10 @@ namespace OxidePack.Server.App.Data
             if (Directory.Exists("Database") == false)
                 Directory.CreateDirectory("Database");
             
-            var userDC = Pool.Get<UserDataCollection>();
-            userDC.users = Users.ToList();
-            File.WriteAllBytes("Database/UserData.bin", UserDataCollection.SerializeToBytes(userDC));
-            Pool.Free(ref userDC);
+            var userDc = Pool.Get<UserDataCollection>();
+            userDc.users = _users.ToList();
+            File.WriteAllBytes("Database/UserData.bin", UserDataCollection.SerializeToBytes(userDc));
+            Pool.Free(ref userDc);
         }
     }
 }

@@ -4,21 +4,17 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Configuration;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using Octokit;
 using OxidePack.Client.App;
-using SapphireEngine;
 
 namespace OxidePack.Client.Core.OxideDownloader
 {
     public static class OxideDownloader
     {
-        static WebClient wClient = new WebClient();
-        static GitHubClient ghClient = new GitHubClient(new ProductHeaderValue("OxidePack"));
+        private static readonly WebClient wClient = new WebClient();
+        private static readonly GitHubClient ghClient = new GitHubClient(new ProductHeaderValue("OxidePack"));
 
         public static void FixWeb()
         {

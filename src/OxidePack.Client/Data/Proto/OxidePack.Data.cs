@@ -8,8 +8,6 @@
 // This file will be overwritten when CodeGenerator is run.
 // To make custom modifications, edit the .proto file and add //:external before the message line
 // then write the code and the changes in a separate file.
-using System;
-using System.Collections.Generic;
-using SilentOrbit.ProtocolBuffers;
-using OxidePack;
+
+
 

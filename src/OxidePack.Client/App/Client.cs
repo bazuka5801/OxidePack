@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ether.Network.Client;
 using Ether.Network.Packets;
-using OxidePack.Client;
 using OxidePack.Data;
 using SapphireEngine;
 using SilentOrbit.ProtocolBuffers;

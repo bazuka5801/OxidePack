@@ -1,5 +1,4 @@
 using System;
-using Ether.Network.Common;
 using Ether.Network.Server;
 using SapphireEngine;
 using SapphireEngine.Functions;

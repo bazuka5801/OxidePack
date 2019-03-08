@@ -24,37 +24,37 @@ namespace OxidePack.CoreLib
         
         public Dictionary<ParameterSyntax, string> RenamedParameters { get; set; }
         
-        private List<string> _existingNames = new List<string>();
+        private readonly List<string> _existingNames = new List<string>();
 
-        private int KeywordStartCount = 1;
-        private int LastKeywordIndex => _IdentifierKeywords.Length - 1;
-        private List<int> currentKey = new List<int>();
-        private int pointer = 0; 
+        private readonly int _keywordStartCount = 1;
+        private int LastKeywordIndex => IdentifierKeywords.Length - 1;
+        private List<int> _currentKey = new List<int>();
+        private int _pointer = 0; 
         
         public string GetNewIdentifier()
         {
-            if (currentKey.Count <= 0)
+            if (_currentKey.Count <= 0)
             {
-                currentKey = new List<int>();
-                for (int i = 0; i < KeywordStartCount; i++)
-                    currentKey.Add(0);
+                _currentKey = new List<int>();
+                for (int i = 0; i < _keywordStartCount; i++)
+                    _currentKey.Add(0);
             }
-            if (currentKey.Last() == LastKeywordIndex)
+            if (_currentKey.Last() == LastKeywordIndex)
             {
-                for (var i = 0; i < currentKey.Count; i++)
-                    currentKey[i] = 0;
-                currentKey.Add(0);
-                pointer = 0;
+                for (var i = 0; i < _currentKey.Count; i++)
+                    _currentKey[i] = 0;
+                _currentKey.Add(0);
+                _pointer = 0;
             }
             else
             {
-                if (currentKey[pointer] == LastKeywordIndex)
-                    pointer++;
-                currentKey[pointer]++;
+                if (_currentKey[_pointer] == LastKeywordIndex)
+                    _pointer++;
+                _currentKey[_pointer]++;
             }
-            return string.Concat(currentKey.Select(p => _IdentifierKeywords[p]));
+            return string.Concat(_currentKey.Select(p => IdentifierKeywords[p]));
         }
-        private static readonly string[] _cSharpKeywords = new string[]
+        private static readonly string[] CSharpKeywords = new string[]
         {
             "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char",
             "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double",
@@ -67,7 +67,7 @@ namespace OxidePack.CoreLib
             "ushort", "using", "virtual", "void", "volatile", "while"
         };
 
-        private static readonly string[] _IdentifierKeywords = new string[]
+        private static readonly string[] IdentifierKeywords = new string[]
         {
 //            "SerezhaNeDelaet", "GraimSlivaet", "FacePunchNeDruzitSoMnoi",
 //            "WulfNeHochetDelatDLLplugini", "WulfDelayDLLplugini", "GraimSolieshHanaTebe", "VsePidorasi",
@@ -75,28 +75,28 @@ namespace OxidePack.CoreLib
 "a", "b", "c"
         };
 
-        StringBuilder sb = new StringBuilder(512);
+        private readonly StringBuilder _sb = new StringBuilder(512);
 
-        HashSet<string> ExistingIdentifiers = new HashSet<string>();
-        static Random rand = new Random();
-        
-        
-        string GenerateFuckIdentifier(int length = 512)
+        private readonly HashSet<string> _existingIdentifiers = new HashSet<string>();
+        private static readonly Random Rand = new Random();
+
+
+        private string FuckIdentifier(int length = 512)
         {
             string str = null;
             do
             {
-                sb.Clear();
+                _sb.Clear();
                 for (int i = 0; i < length; i++)
                 {
 //                    sb.Append(chars[rand.Next(0, chars.Count)]);
-                    sb.Append(rand.Next(0, 2) > 0 ? "I" : "l");
+                    _sb.Append(Rand.Next(0, 2) > 0 ? "I" : "l");
                 }
 
-                str = sb.ToString();
-            } while (ExistingIdentifiers.Contains(str));
+                str = _sb.ToString();
+            } while (_existingIdentifiers.Contains(str));
 
-            ExistingIdentifiers.Add(str);
+            _existingIdentifiers.Add(str);
             return str;
         }
         
@@ -117,7 +117,7 @@ namespace OxidePack.CoreLib
 
         public string GetNextName(SyntaxNode node)
         {
-            string nextName = GenerateFuckIdentifier();
+            string nextName = FuckIdentifier();
             _existingNames.Add(nextName);
             AddToDictionary(node);
             return nextName;
