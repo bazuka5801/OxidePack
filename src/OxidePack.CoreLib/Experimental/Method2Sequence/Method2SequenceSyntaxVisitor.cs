@@ -24,6 +24,8 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
         {
             // Abstart and Extern methods
             if (method.Body == null && method.ExpressionBody == null) return;
+            // IEnumerator methods with yield
+            if (method.ReturnType.ToString() == "IEnumerator") return;
             // <T> Classes
             if (method.GetParent<ClassDeclarationSyntax>().ConstraintClauses.Count > 0) return;
             
