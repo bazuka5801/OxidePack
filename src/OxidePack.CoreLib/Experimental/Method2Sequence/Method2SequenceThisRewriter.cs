@@ -27,10 +27,11 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
 
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
         {
-            if (_thisInfo.IdentifiersNeedsThis.Contains(node))
+            var method = node.GetParent<MethodDeclarationSyntax>();
+            if (method != null && _thisInfo.IdentifiersNeedsThis.Contains(node))
             {
                 return node.WithIdentifier(Identifier(
-                    $"{_thisInfo.ThisNames[node.GetParent<MethodDeclarationSyntax>().FullPath()]}." +
+                    $"{_thisInfo.ThisNames[method.FullPath()]}." +
                     node.Identifier.Text));
             }
 
@@ -42,7 +43,9 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
             if (node.ExpressionBody != null)
             {
                 node = (MethodDeclarationSyntax) base.VisitMethodDeclaration(node);
-                var body = ExpressionStatement(node.ExpressionBody.Expression);
+                var body = node.ReturnType.ToString() == "void"
+                        ? ExpressionStatement(node.ExpressionBody.Expression)
+                        : (StatementSyntax)ReturnStatement(node.ExpressionBody.Expression);
                 return MethodDeclaration(node.AttributeLists,
                     node.Modifiers,
                     node.ReturnType,
