@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
-namespace OxidePack.CoreLib.Experimental.Method2Sequence
+namespace OxidePack.CoreLib.Experimental.Method2Sequence.Old
 {
     public class Method2SequenceRewriter : CSharpSyntaxRewriter
     {

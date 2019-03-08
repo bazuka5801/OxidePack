@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace OxidePack.CoreLib.Experimental.Method2Sequence
+namespace OxidePack.CoreLib.Experimental.Method2Sequence.Old
 {
     public class Method2SequenceSyntaxVisitor : CSharpSyntaxWalker
     {
