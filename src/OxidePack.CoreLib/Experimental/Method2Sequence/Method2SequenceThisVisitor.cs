@@ -49,6 +49,13 @@ namespace OxidePack.CoreLib.Experimental.Method2Sequence
                 return;
             }
 
+            if (node.GetParent<InitializerExpressionSyntax>() != null &&
+                node.GetParent<AssignmentExpressionSyntax>()?.Left == node)
+            {
+                base.VisitIdentifierName(node);
+                return;
+            }
+
             var symbol = _semanticModel.GetSymbolInfo(node).Symbol;
             if (symbol != null)
             {
