@@ -41,6 +41,18 @@ namespace OxidePack.CoreLib
                         case NamespaceDeclarationSyntax n:
                             sb.Insert(0, $"{n.Name}.");
                             break;
+                        case IdentifierNameSyntax n:
+                            sb.Insert(0, $"{n.Identifier.ToString()}.");
+                            break;
+                        case VariableDeclaratorSyntax n:
+                            sb.Insert(0, $"{n.Identifier.ToString()}.");
+                            break;
+                        case PropertyDeclarationSyntax n:
+                            sb.Insert(0, $"{n.Identifier.ToString()}.");
+                            break;
+                        case ParameterSyntax n:
+                            sb.Insert(0, $"{n.Identifier.ToString()}.");
+                            break;
                     }
 
                     node = node.Parent;
