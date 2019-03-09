@@ -38,7 +38,7 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
         }
         
         
-        static Func<int, int, int> action;
+        Func<int, int, int> action;
         delegate int HandlerEmptyMethod(int a, int b);
         HandlerEmptyMethod delegat;
 

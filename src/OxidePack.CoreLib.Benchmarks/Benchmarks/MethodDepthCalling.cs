@@ -5,21 +5,8 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
 {
     public class TheEasiestBenchmark
     {
-        int[] array = new int[65536];
-
-//        [Benchmark(Description = "Array[i]")]
-//        public void TestArrayAcces()
-//        {
-//            for (int i = 0; i < 65536; i++)
-//            {
-//                array[i] = i;
-//            }
-//        }
-
         [Params(2,4,8)]
         public int Depth;
-
-
         
 
         [Benchmark(Description = "Depth")]
