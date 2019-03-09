@@ -17,7 +17,6 @@ namespace OxidePack.CoreLib.Utils
 
         public static (CSharpCompilation compilation, CompilationUnitSyntax root) ParseSource(string source, string referencesPath = "references/")
         {
-            ParseCompilationUnit(source);
             var tree = CSharpSyntaxTree.ParseText(source);
             var root = tree?.GetCompilationUnitRoot();
             var compilation = CSharpCompilation.Create("CoreLib")
@@ -35,9 +34,10 @@ namespace OxidePack.CoreLib.Utils
             return compilation.GetSemanticModel(compilation.SyntaxTrees[syntaxTreeIndex]);
         }
 
-        public static string ConvertToSourceText(CompilationUnitSyntax root)
+        public static string ConvertToSourceText(CompilationUnitSyntax root, bool normalizeWhitespace = true)
         {
-            root = root.NormalizeWhitespace();
+            if (normalizeWhitespace)
+                root = root.NormalizeWhitespace();
             Workspace.Options.WithChangedOption(CSharpFormattingOptions.IndentBraces, true);
             var formattedCode = Formatter.Format(root, Workspace);
             return formattedCode.ToFullString();
