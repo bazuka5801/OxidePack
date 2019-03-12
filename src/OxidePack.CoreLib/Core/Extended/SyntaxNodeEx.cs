@@ -13,19 +13,28 @@ namespace OxidePack.CoreLib
             while (true)
             {
                 if (one == null && two == null)
+                {
                     return true;
+                }
+
                 if (one == null || two == null)
+                {
                     return false;
+                }
+
                 if (one.Kind() != two.Kind())
+                {
                     return false;
+                }
+
                 one = one.Parent;
                 two = two.Parent;
             }
         }
-        
+
         public static string FullPath(this SyntaxNode node)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 while (node.Parent != null)
@@ -33,7 +42,8 @@ namespace OxidePack.CoreLib
                     switch (node)
                     {
                         case MethodDeclarationSyntax m:
-                            sb.Insert(0, $"{m.Identifier.Text}({string.Join(", ",m.ParameterList.Parameters.Select(p=>p.Type.ToString()+p.Identifier.Text))}).");
+                            sb.Insert(0,
+                                $"{m.Identifier.Text}({string.Join(", ", m.ParameterList.Parameters.Select(p => p.Type.ToString() + p.Identifier.Text))}).");
                             break;
                         case ClassDeclarationSyntax c:
                             sb.Insert(0, $"{c.Identifier.Text}.");
@@ -65,28 +75,35 @@ namespace OxidePack.CoreLib
                 sb.Clear();
             }
         }
-        
+
         public static T GetParent<T>(this SyntaxNode node)
             where T : SyntaxNode
         {
             while (node.Parent != null)
             {
                 node = node.Parent;
-                if (node is T t) return t;
+                if (node is T t)
+                {
+                    return t;
+                }
             }
 
             return default;
         }
-        
+
         public static string GetFullParameter(this ParameterSyntax param)
         {
-            string name = "";
+            var name = "";
             foreach (var modifier in param.Modifiers)
             {
                 if (modifier.IsKind(SyntaxKind.RefKeyword))
+                {
                     name += "ref ";
+                }
                 else if (modifier.IsKind(SyntaxKind.OutKeyword))
+                {
                     name += "out ";
+                }
             }
 
             return name + param.Identifier;

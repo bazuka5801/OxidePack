@@ -11,8 +11,9 @@ namespace OxidePack.CoreLib
     {
         private readonly AdhocWorkspace _workspace;
         private EncryptorOptions _options;
-        
-        public EncodingChanger(AdhocWorkspace workspace, EncryptorOptions options = null, bool visitIntoStructuredTrivia = true) : base(visitIntoStructuredTrivia)
+
+        public EncodingChanger(AdhocWorkspace workspace, EncryptorOptions options = null,
+            bool visitIntoStructuredTrivia = true) : base(visitIntoStructuredTrivia)
         {
             _options = options ?? new EncryptorOptions();
             _workspace = workspace;
@@ -31,14 +32,12 @@ namespace OxidePack.CoreLib
                     _workspace.TryApplyChanges(document.Project.Solution.WithDocumentSyntaxRoot(document.Id, node));
                 }
             }
-            
+
             return _workspace;
         }
 
-        public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
-        {
-            return node.WithIdentifier(Identifier(StringUtils.ConvertToCodePoints(node.Identifier.ToString())));
-        }
+        public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node) =>
+            node.WithIdentifier(Identifier(StringUtils.ConvertToCodePoints(node.Identifier.ToString())));
 
         public override SyntaxToken VisitToken(SyntaxToken token)
         {
@@ -54,6 +53,7 @@ namespace OxidePack.CoreLib
                 var text = StringUtils.ConvertToCodePoints(token.ValueText);
                 return Identifier(token.LeadingTrivia, text, token.TrailingTrivia);
             }
+
             return base.VisitToken(token);
         }
 

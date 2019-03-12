@@ -11,8 +11,8 @@ namespace OxidePack.CoreLib
 {
     public partial class Plugin
     {
-        private (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings) _generatedCache; 
-        
+        private (SyntaxList<MemberDeclarationSyntax> members, SyntaxList<UsingDirectiveSyntax> usings) _generatedCache;
+
 
         public string GetGeneratedFile(List<string> modulesNames, string @namespace)
         {
@@ -28,12 +28,12 @@ namespace OxidePack.CoreLib
                         Token(PartialKeyword)))
                 .WithMembers(classBody);
 
-            var @namespaceDeclaration = NamespaceDeclaration(ParseName(@namespace))
+            var namespaceDeclaration = NamespaceDeclaration(ParseName(@namespace))
                 .WithUsings(usings)
                 .AddMembers(generatedClass);
 
-            Workspace.Options.WithChangedOption (CSharpFormattingOptions.IndentBraces, true);
-            var formattedCode = Formatter.Format (@namespaceDeclaration, Workspace);
+            Workspace.Options.WithChangedOption(CSharpFormattingOptions.IndentBraces, true);
+            var formattedCode = Formatter.Format(namespaceDeclaration, Workspace);
             return formattedCode.ToFullString();
         }
     }

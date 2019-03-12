@@ -11,16 +11,17 @@ namespace OxidePack.CoreLib
     public class SourceFile
     {
         public Data.SourceFile Data;
+
+        private SourceFile(Data.SourceFile data)
+        {
+            Data = data;
+            Load(data);
+        }
+
         public List<UsingDirectiveSyntax> Usings { get; private set; }
         public MemberDeclarationSyntax[] Members { get; private set; }
 
         public static SourceFile Create(Data.SourceFile data) => new SourceFile(data);
-        
-        private SourceFile(Data.SourceFile data)
-        {
-            this.Data = data;
-            Load(data);
-        }
 
         public void Load(Data.SourceFile data)
         {
@@ -34,6 +35,7 @@ namespace OxidePack.CoreLib
             {
                 Usings.AddRange(@namespace.Usings);
             }
+
             var mainClass = sTree.DescendantNodes(node => node.IsKind(SyntaxKind.ClassDeclaration) == false)
                 .OfType<ClassDeclarationSyntax>().FirstOrDefault();
 
@@ -52,7 +54,7 @@ namespace OxidePack.CoreLib
                     .AddRange(mainClass.CloseBraceToken.LeadingTrivia));
             }
 
-            this.Members = members.ToArray();
+            Members = members.ToArray();
         }
     }
 }

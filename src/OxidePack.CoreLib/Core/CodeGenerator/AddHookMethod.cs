@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MemberList = Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax>;
 // </Minified names>
-
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
@@ -13,10 +12,11 @@ namespace OxidePack.CoreLib
 {
     public class CodeGenerator
     {
-        public static MemberDeclarationSyntax AddHookMethod(string hookname, List<MethodDeclarationSyntax> methods, bool prepareEncrypt)
+        public static MemberDeclarationSyntax AddHookMethod(string hookname, List<MethodDeclarationSyntax> methods,
+            bool prepareEncrypt)
         {
-            bool hasReturn = methods.Any(p => p.ReturnType.ToString() != "void");
-            TypeSyntax retType = ParseTypeName(hasReturn ? "object" : "void");
+            var hasReturn = methods.Any(p => p.ReturnType.ToString() != "void");
+            var retType = ParseTypeName(hasReturn ? "object" : "void");
             var parameters = methods
                 .OrderByDescending(p => p.ParameterList.Parameters.Count)
                 .First().ParameterList;
@@ -47,9 +47,9 @@ namespace OxidePack.CoreLib
                     //  temp = fuckyou1(player);
                     //  if (temp != null) ret = temp;
                     //  return ret;
-                    // } 
+                    // }
 
-                    List<StatementSyntax> statements = new List<StatementSyntax>();
+                    var statements = new List<StatementSyntax>();
                     statements.Add(GenerateVariable("object", "ret", "null"));
                     statements.Add(GenerateVariable("object", "temp", "null"));
 
@@ -70,26 +70,23 @@ namespace OxidePack.CoreLib
                                         SimpleAssignmentExpression,
                                         ret,
                                         temp))));
-
-
                         }
                         else
                         {
                             statements.Add(ExpressionStatement(GenerateCallHook(method)));
                         }
                     }
+
                     statements.Add(ReturnStatement(ret));
 
                     return Block(statements);
                 }
-                else
-                {
-                    return Block(methods.Select(method=> ExpressionStatement(GenerateCallHook(method))));
-                }
+
+                return Block(methods.Select(method => ExpressionStatement(GenerateCallHook(method))));
 
                 InvocationExpressionSyntax GenerateCallHook(MethodDeclarationSyntax method)
                 {
-                    return 
+                    return
                         InvocationExpression(
                             IdentifierName(method.Identifier),
                             ArgumentList(
@@ -101,13 +98,13 @@ namespace OxidePack.CoreLib
                 LocalDeclarationStatementSyntax GenerateVariable(string type, string name, string defaultValue)
                 {
                     return LocalDeclarationStatement(
-                            VariableDeclaration(
-                                ParseTypeName(type),
-                                SeparatedList(new[]
-                                {
-                                    VariableDeclarator(name)
+                        VariableDeclaration(
+                            ParseTypeName(type),
+                            SeparatedList(new[]
+                            {
+                                VariableDeclarator(name)
                                     .WithInitializer(EqualsValueClause(IdentifierName(defaultValue)))
-                                })
+                            })
                         ));
                 }
             }

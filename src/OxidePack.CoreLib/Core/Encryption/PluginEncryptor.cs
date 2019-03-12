@@ -3,31 +3,34 @@ using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
 
 namespace OxidePack.CoreLib
 {
     public class PluginEncryptor
     {
-        public EncryptorOptions Options { get; private set; }
-
-        public List<string> IgnoredIdentifiers { get; private set; }
-
-        public List<string> IgnoredComments { get; private set; }
-
-        private AdhocWorkspace _workspace = new AdhocWorkspace();
         private readonly List<PortableExecutableReference> _references;
 
-        public PluginEncryptor(EncryptorOptions options = null, string referencesFolder = "server", string[] ignoredIdentifiers = null, string[] ignoredComments = null)
+        private AdhocWorkspace _workspace = new AdhocWorkspace();
+
+        public PluginEncryptor(EncryptorOptions options = null, string referencesFolder = "server",
+            string[] ignoredIdentifiers = null, string[] ignoredComments = null)
         {
             Options = options ?? new EncryptorOptions();
             IgnoredIdentifiers = ignoredIdentifiers?.ToList() ?? new List<string>();
             IgnoredComments = ignoredComments?.ToList() ?? new List<string>();
             _references = Directory.GetFiles($"references/{referencesFolder}")
-                .Select(path => MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(),path)))
+                .Select(path => MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(), path)))
                 .ToList();
-            
-            var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
+
+            var _ = typeof(CSharpFormattingOptions);
         }
+
+        public EncryptorOptions Options { get; }
+
+        public List<string> IgnoredIdentifiers { get; }
+
+        public List<string> IgnoredComments { get; }
 
         public string MinifyFromString(string csharpCode)
         {

@@ -1,12 +1,10 @@
-using System;
-
 namespace OxidePack.CoreLib
 {
     public class PluginOptions
     {
-        public Boolean Debug = false;
-        public String ReferencesPath = String.Empty;
-        
-        public Boolean Encrypt = false;
+        public bool Debug = false;
+
+        public bool Encrypt = false;
+        public string ReferencesPath = string.Empty;
     }
 }

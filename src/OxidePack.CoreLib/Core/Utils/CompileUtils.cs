@@ -1,76 +1,73 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using CompilerError = OxidePack.Data.CompilerError;
 
 namespace OxidePack.CoreLib.Utils
 {
     public class CompileUtils
     {
-        public static bool CanCompile(string program, string referencesFolder = "references")
-        {
-            return !Compile(program, referencesFolder).Errors.HasErrors;
-        }
-        
+        public static bool CanCompile(string program, string referencesFolder = "references") =>
+            !Compile(program, referencesFolder).Errors.HasErrors;
+
         public static CompilerResults Compile(string program, string referencesFolder = "references")
         {
             CompilerResults compilerResults = null;
-            using (CSharpCodeProvider provider = new CSharpCodeProvider())
+            using (var provider = new CSharpCodeProvider())
             {
-                var references = Directory.Exists(referencesFolder) ?
-                    Directory.GetFiles(referencesFolder, "*.dll").Select(p=>Path.Combine(Directory.GetCurrentDirectory(), p)).ToArray() : new string[0];
+                var references = Directory.Exists(referencesFolder)
+                    ? Directory.GetFiles(referencesFolder, "*.dll")
+                        .Select(p => Path.Combine(Directory.GetCurrentDirectory(), p)).ToArray()
+                    : new string[0];
                 compilerResults = provider.CompileAssemblyFromSource(
-                    new CompilerParameters(references),
-                    new string[] { program });
+                    new CompilerParameters(references), program);
             }
+
             return compilerResults;
         }
-        
-        public static (byte[], List<Data.CompilerError>) CompileAssembly(string program, string assemblyName, string referencesFolder = "server")
+
+        public static (byte[], List<CompilerError>) CompileAssembly(string program, string assemblyName,
+            string referencesFolder = "server")
         {
             byte[] compiled = null;
-            List<Data.CompilerError> errors = new List<Data.CompilerError>();
-            
-            List<MetadataReference> references = new List<MetadataReference>
-            {
-//                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-//                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
-            };
+            var errors = new List<CompilerError>();
+
+            var references = new List<MetadataReference>();
 
             referencesFolder = $"references/{referencesFolder}";
 
             references.AddRange(
                 (Directory.Exists(referencesFolder) ? Directory.GetFiles(referencesFolder, "*.dll") : new string[0])
                 .Select(p => MetadataReference.CreateFromFile(p)));
-            
-            CSharpCompilation compilation = CSharpCompilation.Create(
+
+            var compilation = CSharpCompilation.Create(
                 assemblyName,
-                syntaxTrees: new[] { CSharpSyntaxTree.ParseText(program, new CSharpParseOptions(LanguageVersion.CSharp7_2)) },
-                references: references,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            
+                new[] {CSharpSyntaxTree.ParseText(program, new CSharpParseOptions(LanguageVersion.CSharp7_2))},
+                references,
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
             using (var ms = new MemoryStream())
             {
-                EmitResult result = compilation.Emit(ms);
+                var result = compilation.Emit(ms);
 
                 if (!result.Success)
                 {
-                    IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic => 
-                        diagnostic.IsWarningAsError || 
+                    var failures = result.Diagnostics.Where(diagnostic =>
+                        diagnostic.IsWarningAsError ||
                         diagnostic.Severity == DiagnosticSeverity.Error);
 
-                    foreach (Diagnostic diagnostic in failures)
+                    foreach (var diagnostic in failures)
                     {
                         var linespan = diagnostic.Location.GetLineSpan();
                         var line = linespan.Span.Start.Line + 1;
                         var column = linespan.Span.Start.Character + 1;
                         var lineEnd = linespan.Span.End.Line + 1;
                         var columnEnd = linespan.Span.End.Character + 1;
-                        errors.Add(new Data.CompilerError()
+                        errors.Add(new CompilerError
                         {
                             line = line, column = column,
                             lineEnd = lineEnd, columnEnd = columnEnd,

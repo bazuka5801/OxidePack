@@ -41,6 +41,7 @@ namespace OxidePack.CoreLib.Utils
             list.Add(EndOfLine("\r\n"));
             return member.WithTrailingTrivia(list);
         }
+
         public static MemberDeclarationSyntax AddLeadingText(MemberDeclarationSyntax member, string text)
         {
             var list = member.GetLeadingTrivia().ToList();

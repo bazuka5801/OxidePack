@@ -9,23 +9,24 @@ namespace OxidePack.CoreLib
 {
     public class MembersShuffler : CSharpSyntaxVisitor<SyntaxNode>
     {
-        private static readonly HashSet<SyntaxKind> ShuffleKinds = new HashSet<SyntaxKind>()
+        private static readonly HashSet<SyntaxKind> ShuffleKinds = new HashSet<SyntaxKind>
         {
             SyntaxKind.CompilationUnit,
             SyntaxKind.NamespaceDeclaration,
-            SyntaxKind.ClassDeclaration,
+            SyntaxKind.ClassDeclaration
         };
-        
-        private SemanticModel _semanticModel;
+
         private readonly AdhocWorkspace _workspace;
         private EncryptorOptions _options;
-        
+
+        private SemanticModel _semanticModel;
+
         public MembersShuffler(AdhocWorkspace workspace, EncryptorOptions options)
         {
-            this._workspace = workspace;
-            this._options = options;
+            _workspace = workspace;
+            _options = options;
         }
-        
+
         public AdhocWorkspace Shuffle()
         {
             foreach (var project in _workspace.CurrentSolution.Projects)
@@ -42,14 +43,19 @@ namespace OxidePack.CoreLib
 
             return _workspace;
         }
-        
+
         private SyntaxNode RecursiveVisit(SyntaxNode node)
         {
             foreach (var child in node.ChildNodes().ToList())
             {
-                if (!ShuffleKinds.Contains(child.Kind())) continue;
+                if (!ShuffleKinds.Contains(child.Kind()))
+                {
+                    continue;
+                }
+
                 node = node.ReplaceNode(child, RecursiveVisit(child));
             }
+
             node = Visit(node);
             return node;
         }

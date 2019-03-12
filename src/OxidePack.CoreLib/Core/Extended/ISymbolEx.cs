@@ -7,13 +7,13 @@ namespace OxidePack.CoreLib
     {
         public static string FullPath(this ISymbol symbol)
         {
-            StringBuilder sb = new StringBuilder(symbol.Name);
+            var sb = new StringBuilder(symbol.Name);
             while ((symbol = symbol.ContainingSymbol) != null)
             {
                 sb.Insert(0, $"{symbol.Name}.");
             }
 
-            string result = sb.ToString();
+            var result = sb.ToString();
             sb.Clear();
             return result;
         }
@@ -23,12 +23,14 @@ namespace OxidePack.CoreLib
             for (var i = 0; i < kinds.Length; i++)
             {
                 if (symbol.Kind == kinds[i])
+                {
                     return true;
+                }
             }
 
             return false;
         }
-        
+
         public static bool IsKind(this ISymbol symbol, SymbolKind kind) => symbol.Kind == kind;
     }
 }

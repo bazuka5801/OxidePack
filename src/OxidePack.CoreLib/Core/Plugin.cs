@@ -4,9 +4,6 @@ namespace OxidePack.CoreLib
 {
     public partial class Plugin : IDisposable
     {
-        public PluginOptions Options { get; private set; }
-        public string PluginName { get; private set; }
-        
         public Plugin(string pluginname)
             : this(pluginname, new PluginOptions())
         {
@@ -14,9 +11,12 @@ namespace OxidePack.CoreLib
 
         public Plugin(string pluginname, PluginOptions options)
         {
-            this.PluginName = pluginname;
-            this.Options = options;
+            PluginName = pluginname;
+            Options = options;
         }
+
+        public PluginOptions Options { get; }
+        public string PluginName { get; }
 
         public void Dispose()
         {
