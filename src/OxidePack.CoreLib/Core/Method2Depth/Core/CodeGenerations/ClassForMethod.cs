@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -13,21 +12,21 @@ namespace OxidePack.CoreLib.Method2Depth
 
     internal partial class Core
     {
-        class MethodClassGeneration
+        private class MethodClassGeneration
         {
-            private MethodClassData _methodClassData;
-            private LocalsVisitorResults _localsVisitorResults;
-            private ThisVisitorResults _thisVisitorResults;
-            private string _nullStructName;
-            private SyntaxGenerator _generator;
+            private readonly SyntaxGenerator _generator;
+            private readonly LocalsVisitorResults _localsVisitorResults;
+
+            private readonly List<MemberDeclarationSyntax> _members;
 
             private MethodDeclarationSyntax _method;
+            private readonly MethodClassData _methodClassData;
+            private readonly string _nullStructName;
             private string _thisKeyword;
-
-            private List<MemberDeclarationSyntax> _members;
+            private readonly ThisVisitorResults _thisVisitorResults;
 
             /// <summary>
-            ///   Create an instance of MethodClassGeneration
+            ///     Create an instance of MethodClassGeneration
             /// </summary>
             /// <param name="methodClassData">MethodClassData</param>
             /// <param name="localsVisitorResults">Results of LocalsVisitor</param>
@@ -46,7 +45,7 @@ namespace OxidePack.CoreLib.Method2Depth
             }
 
             /// <summary>
-            ///   Generate a class for method execution
+            ///     Generate a class for method execution
             /// </summary>
             /// <returns></returns>
             public ClassDeclarationSyntax Generate()
@@ -58,11 +57,18 @@ namespace OxidePack.CoreLib.Method2Depth
                 _members.AddRange(Fields(initializingParameters));
                 _members.Add(InitializeMethod(initializingParameters));
                 _members.Add(ExecuteMethod());
+
+                var methodClass = (ClassDeclarationSyntax) _generator.ClassDeclaration(
+                    _methodClassData.methodClassName,
+                    members: _members
+                );
+
+                return methodClass;
             }
 
 
             /// <summary>
-            ///   Create fields from [this(if not static), parameters, locals] 
+            ///     Create fields from [this(if not static), parameters, locals]
             /// </summary>
             /// <param name="initializingParameters">[this(if not static), parameters]</param>
             /// <returns>List with fields</returns>
@@ -71,11 +77,11 @@ namespace OxidePack.CoreLib.Method2Depth
                 var fields = new List<FieldDeclarationSyntax>();
                 foreach (var parameter in initializingParameters)
                 {
-                    var field = (FieldDeclarationSyntax)_generator.FieldDeclaration(
-                        name: parameter.Identifier.Text,
-                        type: parameter.Type,
-                        accessibility: Accessibility.Public
-                        );
+                    var field = (FieldDeclarationSyntax) _generator.FieldDeclaration(
+                        parameter.Identifier.Text,
+                        parameter.Type,
+                        Accessibility.Public
+                    );
 
                     fields.Add(field);
                 }
@@ -84,10 +90,10 @@ namespace OxidePack.CoreLib.Method2Depth
                 {
                     foreach (var local in locals)
                     {
-                        var field = (FieldDeclarationSyntax)_generator.FieldDeclaration(
-                            name: local.locName,
-                            type: local.locType,
-                            accessibility: Accessibility.Public
+                        var field = (FieldDeclarationSyntax) _generator.FieldDeclaration(
+                            local.locName,
+                            local.locType,
+                            Accessibility.Public
                         );
 
                         fields.Add(field);
@@ -99,7 +105,7 @@ namespace OxidePack.CoreLib.Method2Depth
 
 
             /// <summary>
-            ///   Initializing parameters [this(if not static), parameters]
+            ///     Initializing parameters [this(if not static), parameters]
             /// </summary>
             /// <returns>SeparatedList with parameters</returns>
             private SeparatedSyntaxList<ParameterSyntax> InitializingParameters()
@@ -117,39 +123,38 @@ namespace OxidePack.CoreLib.Method2Depth
 
 
             /// <summary>
-            ///   public void Initialize(t1 arg1, t2 arg2)
-            ///   {
-            ///       this.arg1 = arg1;
-            ///       this.arg2 = arg2;
-            ///   }
-            ///
-            ///   If method is not static, then insert(0, _this)
+            ///     public void Initialize(t1 arg1, t2 arg2)
+            ///     {
+            ///     this.arg1 = arg1;
+            ///     this.arg2 = arg2;
+            ///     }
+            ///     If method is not static, then insert(0, _this)
             /// </summary>
             /// <returns></returns>
             private MethodDeclarationSyntax InitializeMethod(SeparatedSyntaxList<ParameterSyntax> parameters)
             {
-                var initializeMethod = (MethodDeclarationSyntax)_generator.MethodDeclaration(
-                    name: _methodClassData.methodClassInitializeMethodName,
-                    returnType: _generator.TypeExpression(SpecialType.System_Void),
+                var initializeMethod = (MethodDeclarationSyntax) _generator.MethodDeclaration(
+                    _methodClassData.methodClassInitializeMethodName,
+                    returnType: ParseTypeName("void"),
                     accessibility: Accessibility.Public,
                     parameters: parameters,
                     statements: parameters.Select(p =>
                         _generator.AssignmentStatement(
-                            left:  _generator.MemberAccessExpression(ThisExpression(), p.Identifier.Text),
-                            right: IdentifierName(p.Identifier)
-                            )
+                            _generator.MemberAccessExpression(ThisExpression(), p.Identifier.Text),
+                            IdentifierName(p.Identifier)
                         )
-                    );
+                    )
+                );
 
                 return initializeMethod;
             }
 
 
             /// <summary>
-            ///   public ReturnType execute()
-            ///   {
-            ///       ... statements ...
-            ///   }
+            ///     public ReturnType execute()
+            ///     {
+            ///     ... statements ...
+            ///     }
             /// </summary>
             /// <returns>Execute method</returns>
             private MethodDeclarationSyntax ExecuteMethod()
@@ -159,19 +164,19 @@ namespace OxidePack.CoreLib.Method2Depth
 
                 SeparateStatements(methodBody);
 
-                var executeMethod = (MethodDeclarationSyntax)_generator.MethodDeclaration(
-                    name:          _methodClassData.methodClassMethodName,
-                    returnType:    _method.ReturnType,
+                var executeMethod = (MethodDeclarationSyntax) _generator.MethodDeclaration(
+                    _methodClassData.methodClassMethodName,
+                    returnType: _method.ReturnType,
                     accessibility: Accessibility.Public,
-                    statements:    methodBody
-                    );
+                    statements: methodBody
+                );
 
                 return executeMethod;
             }
 
 
             /// <summary>
-            ///   Separate statements to multiple methods
+            ///     Separate statements to multiple methods
             /// </summary>
             /// <param name="statements">Statements</param>
             private void SeparateStatements(List<StatementSyntax> statements)
@@ -214,10 +219,10 @@ namespace OxidePack.CoreLib.Method2Depth
                         {
                             returnTemp = IdentifierName(IdentifierGenerator.GetSimpleName());
                             _members.Add(
-                                (FieldDeclarationSyntax)_generator.FieldDeclaration(
-                                    name: returnTemp.Identifier.Text,
-                                    type: _generator.TypeExpression(SpecialType.System_Object),
-                                    accessibility: Accessibility.Public
+                                (FieldDeclarationSyntax) _generator.FieldDeclaration(
+                                    returnTemp.Identifier.Text,
+                                    _generator.TypeExpression(SpecialType.System_Object),
+                                    Accessibility.Public
                                 )
                             );
                         }

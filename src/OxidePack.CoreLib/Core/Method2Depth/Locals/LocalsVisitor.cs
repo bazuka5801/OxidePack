@@ -6,20 +6,33 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace OxidePack.CoreLib.Method2Depth
 {
     using static SyntaxFactory;
-    
-    public class LocalsVisitor: CSharpSyntaxWalker
+
+    public class LocalsVisitor : CSharpSyntaxWalker
     {
         private LocalsVisitorResults _localsVisitorResults;
+        private MethodsVisitorResults _methodsVisitorResults;
         private SemanticModel _semanticModel;
 
-        public LocalsVisitorResults Walk(ClassDeclarationSyntax baseClass, SemanticModel semanticModel)
+        public LocalsVisitorResults Walk(ClassDeclarationSyntax baseClass, MethodsVisitorResults methodsVisitorResults,
+            SemanticModel semanticModel)
         {
             _localsVisitorResults = new LocalsVisitorResults();
+            _methodsVisitorResults = methodsVisitorResults;
             _semanticModel = semanticModel;
 
             Visit(baseClass);
 
             return _localsVisitorResults;
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            if (_methodsVisitorResults.Methods.ContainsKey(node.FullPath()) == false)
+            {
+                return;
+            }
+
+            base.VisitMethodDeclaration(node);
         }
 
         public override void VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
@@ -38,7 +51,7 @@ namespace OxidePack.CoreLib.Method2Depth
                 var type = node.Declaration.Type;
                 if (type.IsVar)
                 {
-                    type = ParseTypeName(_semanticModel.GetSymbolInfo(node.Declaration.Type).Symbol.ToString());
+                    type = ParseTypeName(_semanticModel.GetTypeInfo(node.Declaration.Type).Type.ToString());
                 }
 
                 dict.Add((variable.Identifier.Text, type));
