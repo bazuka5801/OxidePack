@@ -68,7 +68,7 @@ namespace OxidePack.Server.App
                                 TypesCompressing = bRequest.encryptOptions.types,
                                 SpacesRemoving = bRequest.encryptOptions.spacesremoving,
                                 TrashRemoving = bRequest.encryptOptions.trashremoving,
-                                Secret = bRequest.encryptOptions.secret
+                                Encoding = bRequest.encryptOptions.secret
                             };
                             try
                             {

@@ -53,7 +53,7 @@ namespace OxidePack.CoreLib
             workspace = tokensMinifier.MinifyIdentifiers();
             var membersShuffler = new MembersShuffler(workspace, Options);
             workspace = membersShuffler.Shuffle();
-            if (Options.Secret)
+            if (Options.Encoding)
             {
                 var encodingChanger = new EncodingChanger(workspace, Options);
                 workspace = encodingChanger.Process();
