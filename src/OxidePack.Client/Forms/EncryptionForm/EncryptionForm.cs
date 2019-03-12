@@ -52,7 +52,7 @@ namespace OxidePack.Client
                 types = cbTypes.Checked,
                 spacesremoving = cbSpaceRemoving.Checked,
                 trashremoving = cbTrashRemoving.Checked,
-                secret = cbSecret.Checked
+                encoding = cbSecret.Checked
             });
         }
 

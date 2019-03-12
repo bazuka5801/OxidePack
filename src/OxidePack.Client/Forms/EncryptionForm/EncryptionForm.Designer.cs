@@ -122,9 +122,9 @@
             this.cbSecret.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSecret.Location = new System.Drawing.Point(287, 83);
             this.cbSecret.Name = "cbSecret";
-            this.cbSecret.Size = new System.Drawing.Size(78, 22);
+            this.cbSecret.Size = new System.Drawing.Size(100, 22);
             this.cbSecret.TabIndex = 6;
-            this.cbSecret.Text = "Secret";
+            this.cbSecret.Text = "Encoding";
             this.cbSecret.UseVisualStyleBackColor = true;
             // 
             // cbTrashRemoving
