@@ -91,5 +91,11 @@ namespace OxidePack.CoreLib
 
             return name + param.Identifier;
         }
+
+        public static T FirstInDepth<T>(this SyntaxNode node)
+            where T : SyntaxNode
+        {
+            return (T)node.DescendantNodes(p => p is T).FirstOrDefault();
+        }
     }
 }

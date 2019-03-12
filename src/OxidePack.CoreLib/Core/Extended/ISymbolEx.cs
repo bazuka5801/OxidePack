@@ -17,6 +17,18 @@ namespace OxidePack.CoreLib
             sb.Clear();
             return result;
         }
+
+        public static bool HasAnyKind(this ISymbol symbol, params SymbolKind[] kinds)
+        {
+            for (var i = 0; i < kinds.Length; i++)
+            {
+                if (symbol.Kind == kinds[i])
+                    return true;
+            }
+
+            return false;
+        }
         
+        public static bool IsKind(this ISymbol symbol, SymbolKind kind) => symbol.Kind == kind;
     }
 }
