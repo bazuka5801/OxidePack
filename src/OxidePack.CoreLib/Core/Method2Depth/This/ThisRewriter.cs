@@ -28,10 +28,6 @@ namespace OxidePack.CoreLib.Method2Depth
 
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
         {
-            if (node.ToString() == "Spawner__OnEntityKill")
-            {
-            }
-
             var method = node.GetParent<MethodDeclarationSyntax>();
             if (method != null && _thisInfo.IdentifiersNeedsThis.Contains(node.Identifier))
             {

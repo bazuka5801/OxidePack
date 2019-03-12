@@ -35,11 +35,6 @@ namespace OxidePack.CoreLib.Method2Depth
                 return;
             }
 
-            if (node.GetParent<MethodDeclarationSyntax>()?.Identifier.Text == "GeneratePopulationImage" &&
-                node.ToString() == "EntityPosToImagePos")
-            {
-            }
-
             if (node.GetParent<MemberAccessExpressionSyntax>()?.Name == node ||
                 node.GetParent<ConditionalAccessExpressionSyntax>()?.WhenNotNull.FirstInDepth<IdentifierNameSyntax>() ==
                 node)
