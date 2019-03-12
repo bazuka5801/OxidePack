@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using OxidePack.CoreLib.Method2Depth.ControlFlowObfuscation;
 
 namespace OxidePack.CoreLib.Method2Depth
 {
@@ -31,7 +32,7 @@ namespace OxidePack.CoreLib.Method2Depth
             _mainClass = compilationTree.Root.FirstInDepth<ClassDeclarationSyntax>();
         }
 
-        public void Process()
+        public void Process(bool controlFlow)
         {
             // Collect information about methods
             var methodResults = new MethodsVisitor().Walk(_mainClass);
@@ -64,7 +65,7 @@ namespace OxidePack.CoreLib.Method2Depth
                 new MethodsRewriter().Rewrite(_compilationTree.Root, methodResults, _compilationTree.Generator);
 
             // Generate classes for method based on collected information
-            GenerateMethodClasses(methodResults, localsResult, thisInfo, nullReturnValue.Identifier.Text);
+            GenerateMethodClasses(methodResults, localsResult, thisInfo, nullReturnValue.Identifier.Text, controlFlow);
 
             // Generate pool members for MethodClasses based on collected information
             GeneratePoolMembers(methodResults, thisInfo);
@@ -81,12 +82,18 @@ namespace OxidePack.CoreLib.Method2Depth
         /// <param name="thisResults">Information about this and _this</param>
         /// <param name="nullStructName">Name of NullStruct</param>
         private void GenerateMethodClasses(MethodsVisitorResults methods, LocalsVisitorResults locals,
-            ThisVisitorResults thisResults, string nullStructName)
+            ThisVisitorResults thisResults, string nullStructName, bool controlFlow)
         {
             foreach (var method in methods.Methods)
             {
                 var mClass = new MethodClassGeneration(method.Value, locals, thisResults, nullStructName,
                     _compilationTree.Generator).Generate();
+
+                if (controlFlow)
+                {
+                    mClass = (ClassDeclarationSyntax) new ControlFlowRewriter().Rewrite(mClass);
+                }
+
                 _members.Add(mClass);
             }
         }

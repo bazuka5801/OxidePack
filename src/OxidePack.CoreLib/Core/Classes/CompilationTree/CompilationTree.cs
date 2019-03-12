@@ -35,6 +35,20 @@ namespace OxidePack.CoreLib
             UpdateSourceText(sourceText);
         }
 
+        /// <summary>
+        ///     Create a new instance of CompilationTree with SyntaxTree and ReferencesPath
+        /// </summary>
+        /// <param name="tree">SyntaxTree</param>
+        /// <param name="referencesPath">ReferencesPath</param>
+        public CompilationTree(SyntaxTree tree, string referencesPath = "references/")
+        {
+            _subscribers = new List<ICompilationTreeSubscriber>();
+
+            UpdateCompilation(CSharpCompilation.Create("CoreLib"));
+            UpdateReferences(referencesPath);
+            UpdateTree(tree, true);
+        }
+
 
         /// <summary>
         ///     Syntax Tree what contains root node

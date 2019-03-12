@@ -15,5 +15,11 @@ namespace OxidePack.CoreLib
         public bool TrashRemoving { get; set; }
 
         public bool Secret { get; set; }
+
+        public bool Spaghetti { get; set; }
+
+        public int SpaghettiDepth { get; set; }
+
+        public bool SpaghettiControlFlow { get; set; }
     }
 }

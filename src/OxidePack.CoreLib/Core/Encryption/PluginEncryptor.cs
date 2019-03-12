@@ -41,18 +41,14 @@ namespace OxidePack.CoreLib
             _workspace.TryApplyChanges(project.Solution);
             var document = _workspace.AddDocument(project.Id, "Doc", sourceTree.GetText());
             _workspace = Encrypt(_workspace);
-
-//            var resultTree = _workspace.CurrentSolution.Projects.First()
-//                .Documents.First().GetSyntaxTreeAsync().Result;
-//            CompilationUnitSyntax root = resultTree.GetCompilationUnitRoot();
-//            root = root.NormalizeWhitespace();
-//            var formattedCode = Formatter.Format (root, _workspace);
             return _workspace.CurrentSolution.Projects.First()
                 .Documents.First().GetTextAsync().Result.ToString();
         }
 
         private AdhocWorkspace Encrypt(AdhocWorkspace workspace)
         {
+            var spaghettiGenerator = new Method2Depth.Method2Depth();
+            workspace = spaghettiGenerator.ProcessWorkspace(workspace, Options);
             var tokensMinifier = new TokensEncryptor(workspace, Options);
             workspace = tokensMinifier.MinifyIdentifiers();
             var membersShuffler = new MembersShuffler(workspace, Options);

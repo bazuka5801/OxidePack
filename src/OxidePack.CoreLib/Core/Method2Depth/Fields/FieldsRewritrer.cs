@@ -30,5 +30,11 @@ namespace OxidePack.CoreLib.Method2Depth
 
             return _generator.WithAccessibility(node, Accessibility.Public);
         }
+
+        public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            node = (ClassDeclarationSyntax)base.VisitClassDeclaration(node);
+            return _generator.WithAccessibility(node, Accessibility.Public);
+        }
     }
 }
