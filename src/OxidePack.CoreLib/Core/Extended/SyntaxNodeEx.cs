@@ -58,7 +58,7 @@ namespace OxidePack.CoreLib
                     node = node.Parent;
                 }
 
-                return sb.ToString();
+                return sb.ToString().Trim('.');
             }
             finally
             {
