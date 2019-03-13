@@ -36,11 +36,11 @@ namespace OxidePack.CoreLib.Method2Depth
 
                             new Core(compilationTree).Process(options.SpaghettiControlFlow);
 
-                            root = compilationTree.Root;
+                            root = compilationTree.Root.NormalizeWhitespace();
                         }
 
-                        project.RemoveDocument(document.Id);
-                        project.AddDocument("Plugin", root);
+                        
+                        workspace.TryApplyChanges(document.Project.Solution.WithDocumentSyntaxRoot(document.Id, root));
                     }
                 }
             }
