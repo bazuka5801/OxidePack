@@ -15,10 +15,10 @@ namespace OxidePack.CoreLib.TestApp
             File.WriteAllText($"E:\\Work\\OxidePack\\src\\OxidePack.CoreLib.Benchmarks\\Inputs\\Source.cs", result);
             Stopwatch sw = Stopwatch.StartNew();
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 2; i++)
             {
 //                result =  new Method2Sequence().ProcessSource(result);
-                result = new Method2Depth.Method2Depth().ProcessSource(result);
+                result = new Method2Depth.Method2Depth().ProcessSource(result, true);
                 Console.WriteLine(i);
             }
             File.WriteAllText($"E:\\Work\\OxidePack\\src\\OxidePack.CoreLib.Benchmarks\\Inputs\\Encrypted.cs", result);
