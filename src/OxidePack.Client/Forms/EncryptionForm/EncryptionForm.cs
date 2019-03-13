@@ -52,7 +52,9 @@ namespace OxidePack.Client
                 types = cbTypes.Checked,
                 spacesremoving = cbSpaceRemoving.Checked,
                 trashremoving = cbTrashRemoving.Checked,
-                encoding = cbSecret.Checked
+                encoding = cbSecret.Checked,
+                spaghetti = cbSpaghetti.Checked,
+                spaghettiControlFlow = cbSpaghettiCF.Checked,
             });
         }
 

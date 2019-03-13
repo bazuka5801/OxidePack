@@ -68,8 +68,14 @@ namespace OxidePack.Server.App
                                 TypesCompressing = bRequest.encryptOptions.types,
                                 SpacesRemoving = bRequest.encryptOptions.spacesremoving,
                                 TrashRemoving = bRequest.encryptOptions.trashremoving,
-                                Encoding = bRequest.encryptOptions.secret
+                                Encoding = bRequest.encryptOptions.encoding,
                             };
+                            if (Data.HasPermission("spaghetti") && bRequest.encryptOptions.spaghetti)
+                            {
+                                options.Spaghetti = true;
+                                options.SpaghettiControlFlow = bRequest.encryptOptions.spaghettiControlFlow;
+                            }
+                            
                             try
                             {
                                 sw.Start();

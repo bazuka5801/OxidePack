@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EncryptionForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textEditor = new ICSharpCode.TextEditor.TextEditorControl();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbSpaghetti = new System.Windows.Forms.CheckBox();
             this.cbSecret = new System.Windows.Forms.CheckBox();
             this.cbTrashRemoving = new System.Windows.Forms.CheckBox();
             this.cbSpaceRemoving = new System.Windows.Forms.CheckBox();
@@ -46,6 +46,7 @@
             this.co_error = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.co_line = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.co_column = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbSpaghettiCF = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -98,6 +99,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbSpaghettiCF);
+            this.groupBox1.Controls.Add(this.cbSpaghetti);
             this.groupBox1.Controls.Add(this.cbSecret);
             this.groupBox1.Controls.Add(this.cbTrashRemoving);
             this.groupBox1.Controls.Add(this.cbSpaceRemoving);
@@ -114,6 +117,18 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // cbSpaghetti
+            // 
+            this.cbSpaghetti.AutoSize = true;
+            this.cbSpaghetti.Checked = true;
+            this.cbSpaghetti.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSpaghetti.Location = new System.Drawing.Point(149, 56);
+            this.cbSpaghetti.Name = "cbSpaghetti";
+            this.cbSpaghetti.Size = new System.Drawing.Size(106, 22);
+            this.cbSpaghetti.TabIndex = 7;
+            this.cbSpaghetti.Text = "Spaghetti";
+            this.cbSpaghetti.UseVisualStyleBackColor = true;
             // 
             // cbSecret
             // 
@@ -266,6 +281,18 @@
             this.co_column.ReadOnly = true;
             this.co_column.Width = 94;
             // 
+            // cbSpaghettiCF
+            // 
+            this.cbSpaghettiCF.AutoSize = true;
+            this.cbSpaghettiCF.Checked = true;
+            this.cbSpaghettiCF.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSpaghettiCF.Location = new System.Drawing.Point(149, 84);
+            this.cbSpaghettiCF.Name = "cbSpaghettiCF";
+            this.cbSpaghettiCF.Size = new System.Drawing.Size(132, 22);
+            this.cbSpaghettiCF.TabIndex = 8;
+            this.cbSpaghettiCF.Text = "Spaghetti CF";
+            this.cbSpaghettiCF.UseVisualStyleBackColor = true;
+            // 
             // EncryptionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -308,5 +335,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn co_error;
         private System.Windows.Forms.DataGridViewTextBoxColumn co_line;
         private System.Windows.Forms.DataGridViewTextBoxColumn co_column;
+        private System.Windows.Forms.CheckBox cbSpaghetti;
+        private System.Windows.Forms.CheckBox cbSpaghettiCF;
     }
 }

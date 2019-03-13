@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using SilentOrbit.ProtocolBuffers;
+using OxidePack;
 
 namespace OxidePack.Data
 {
@@ -96,9 +97,13 @@ namespace OxidePack.Data
 
         public bool trashremoving;
 
-        public bool secret;
+        public bool encoding;
 
         public bool forClient;
+
+        public bool spaghetti;
+
+        public bool spaghettiControlFlow;
 
     }
 

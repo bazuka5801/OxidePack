@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using OxidePack;
 
 namespace OxidePack.Data
 {
@@ -2322,11 +2323,17 @@ namespace OxidePack.Data
             // [bool] trashremoving
             instance.trashremoving = default(bool);
 
-            // [bool] secret
-            instance.secret = default(bool);
+            // [bool] encoding
+            instance.encoding = default(bool);
 
             // [bool] forClient
             instance.forClient = default(bool);
+
+            // [bool] spaghetti
+            instance.spaghetti = default(bool);
+
+            // [bool] spaghettiControlFlow
+            instance.spaghettiControlFlow = default(bool);
 
             Pool.Free<OxidePack.Data.EncryptOptions>(ref instance);
         }
@@ -2436,11 +2443,19 @@ namespace OxidePack.Data
                         continue;
                     // Field 8 Varint
                     case 64:
-                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.encoding = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                     // Field 9 Varint
                     case 72:
                         instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.spaghetti = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.spaghettiControlFlow = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
@@ -2510,11 +2525,19 @@ namespace OxidePack.Data
                         continue;
                     // Field 8 Varint
                     case 64:
-                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.encoding = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                     // Field 9 Varint
                     case 72:
                         instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.spaghetti = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.spaghettiControlFlow = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
@@ -2583,11 +2606,19 @@ namespace OxidePack.Data
                         continue;
                     // Field 8 Varint
                     case 64:
-                        instance.secret = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.encoding = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                     // Field 9 Varint
                     case 72:
                         instance.forClient = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.spaghetti = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.spaghettiControlFlow = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
@@ -2636,10 +2667,16 @@ namespace OxidePack.Data
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.trashremoving);
             // Key for field: 8, Varint
             stream.WriteByte(64);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.secret);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.encoding);
             // Key for field: 9, Varint
             stream.WriteByte(72);
             global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
+            // Key for field: 10, Varint
+            stream.WriteByte(80);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spaghetti);
+            // Key for field: 11, Varint
+            stream.WriteByte(88);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spaghettiControlFlow);
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -2705,17 +2742,29 @@ namespace OxidePack.Data
                 stream.WriteByte(56);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.trashremoving);
             }
-            if (instance.secret != previous.secret)
+            if (instance.encoding != previous.encoding)
             {
                 // Key for field: 8, Varint
                 stream.WriteByte(64);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.secret);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.encoding);
             }
             if (instance.forClient != previous.forClient)
             {
                 // Key for field: 9, Varint
                 stream.WriteByte(72);
                 global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.forClient);
+            }
+            if (instance.spaghetti != previous.spaghetti)
+            {
+                // Key for field: 10, Varint
+                stream.WriteByte(80);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spaghetti);
+            }
+            if (instance.spaghettiControlFlow != previous.spaghettiControlFlow)
+            {
+                // Key for field: 11, Varint
+                stream.WriteByte(88);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.spaghettiControlFlow);
             }
             Pool.FreeMemoryStream(ref msField);
         }

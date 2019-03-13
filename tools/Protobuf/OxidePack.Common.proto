@@ -39,15 +39,17 @@ message BuildOptions {
 }
 
 message EncryptOptions {
-	required bool        enabled = 1;
-	required bool 	   localvars = 2;
-	required bool    	  fields = 3;
-	required bool   	 methods = 4;
-	required bool          types = 5;
-	required bool spacesremoving = 6;
-	required bool  trashremoving = 7;
-	required bool         secret = 8;
-	required bool      forClient = 9;
+	required bool              enabled = 1;
+	required bool 	         localvars = 2;
+	required bool    	        fields = 3;
+	required bool   	       methods = 4;
+	required bool                types = 5;
+	required bool       spacesremoving = 6;
+	required bool        trashremoving = 7;
+	required bool             encoding = 8;
+	required bool            forClient = 9;
+	required bool      	     spaghetti = 10;
+	required bool spaghettiControlFlow = 11;
 }
 
 message PluginInfo {
