@@ -39,14 +39,17 @@ namespace OxidePack.Data
         {
             if (this.permissions == null) this.permissions = new List<Permission>();
             var permission = this.permissions.FirstOrDefault(p => p.name == name);
-            if (PermissionIsExpired(permission))
+            
+            if (permission != null && PermissionIsExpired(permission))
             {
                 this.permissions.Remove(permission);
                 permission = null;
             }
+            
             if (permission == null)
             {
                 this.permissions.Add(permission = Pool.Get<Permission>());
+                permission.name = name;
                 permission.expired = (ulong)ConvertToUnixTimestamp(DateTime.Now);
             }
 
