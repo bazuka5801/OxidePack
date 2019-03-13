@@ -80,7 +80,7 @@ namespace OxidePack.Client
             SaveConfig();
             var sources = Directory.GetFiles(Folder, "*.cs", SearchOption.AllDirectories).Select(filename =>
             {
-                var content = File.ReadAllText(filename);
+                var content = File.ReadAllText(filename, Encoding.UTF8);
                 return new SourceFile
                     {filename = Path.GetFileName(filename), content = content, sha256 = content.ToSHA512()};
             }).ToList();
@@ -126,7 +126,7 @@ namespace OxidePack.Client
             else
             {
                 var outputPath = Path.Combine(outputDir, $"{Name}.cs");
-                File.WriteAllText(outputPath, bResponse.content);
+                File.WriteAllText(outputPath, bResponse.content, Encoding.UTF8);
             }
 
             if (bResponse.buildErrors.Count > 0)
