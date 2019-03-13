@@ -38,6 +38,11 @@ namespace OxidePack.Client.App
             var connectionData = connectionString.Split(':');
             var ip = connectionData[0];
             var port = int.Parse(connectionData[1]);
+
+#if DEBUG
+            ip = "127.0.0.1";
+            port = 10000;
+#endif
             
             using (var client = new OPClient(ip, port, Config.BufferSize))
             {
