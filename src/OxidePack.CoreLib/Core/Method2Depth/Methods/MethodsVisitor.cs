@@ -73,5 +73,24 @@ namespace OxidePack.CoreLib.Method2Depth
             var visitor = new MethodsVisitor();
             _methodsVisitorResults.Merge(visitor.Walk(mClass));
         }
+
+        public override void VisitBaseExpression(BaseExpressionSyntax node)
+        {
+            base.VisitBaseExpression(node);
+            var method = node.GetParent<MethodDeclarationSyntax>();
+            if (method == null)
+            {
+                return;
+            }
+
+            if (method.HasModifier(SyntaxKind.OverrideKeyword))
+            {
+                var baseMethodName = node.GetParent<MemberAccessExpressionSyntax>()?.Name;
+                if (baseMethodName.Identifier.Text == method.Identifier.Text)
+                {
+                    _methodsVisitorResults.Methods.Remove(method.FullPath());
+                }
+            }
+        }
     }
 }
