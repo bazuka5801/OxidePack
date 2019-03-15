@@ -35,7 +35,13 @@ namespace OxidePack.CoreLib.Method2Depth
             }
 
             // <T> Classes
-            if (method.GetParent<ClassDeclarationSyntax>().ConstraintClauses.Count > 0)
+            if (method.GetParent<ClassDeclarationSyntax>()?.TypeParameterList?.Parameters.Count > 0)
+            {
+                return;
+            }
+
+            // <T> Methods
+            if (method.TypeParameterList?.Parameters.Count > 0)
             {
                 return;
             }
