@@ -10,7 +10,7 @@ namespace OxidePack.CoreLib
     public class PluginEncryptor
     {
         private readonly List<PortableExecutableReference> _references;
-
+        private readonly string _referencesPath;
         private AdhocWorkspace _workspace = new AdhocWorkspace();
 
         public PluginEncryptor(EncryptorOptions options = null, string referencesFolder = "server",
@@ -19,7 +19,8 @@ namespace OxidePack.CoreLib
             Options = options ?? new EncryptorOptions();
             IgnoredIdentifiers = ignoredIdentifiers?.ToList() ?? new List<string>();
             IgnoredComments = ignoredComments?.ToList() ?? new List<string>();
-            _references = Directory.GetFiles($"references/{referencesFolder}")
+            _referencesPath = $"references/{referencesFolder}";
+            _references = Directory.GetFiles(_referencesPath)
                 .Select(path => MetadataReference.CreateFromFile(Path.Combine(Directory.GetCurrentDirectory(), path)))
                 .ToList();
 
@@ -47,10 +48,10 @@ namespace OxidePack.CoreLib
 
         private AdhocWorkspace Encrypt(AdhocWorkspace workspace)
         {
-            var spaghettiGenerator = new Method2Depth.Method2Depth();
-            workspace = spaghettiGenerator.ProcessWorkspace(workspace, Options);
             var tokensMinifier = new TokensEncryptor(workspace, Options);
             workspace = tokensMinifier.MinifyIdentifiers();
+            var spaghettiGenerator = new Method2Depth.Method2Depth();
+            workspace = spaghettiGenerator.ProcessWorkspace(workspace, _referencesPath, Options);
             var membersShuffler = new MembersShuffler(workspace, Options);
             workspace = membersShuffler.Shuffle();
             if (Options.Encoding)
