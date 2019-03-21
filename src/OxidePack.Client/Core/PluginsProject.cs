@@ -18,11 +18,11 @@ namespace OxidePack.Client
         private Dictionary<string, PluginProject> _Plugins = new Dictionary<string, PluginProject>();
 
         private Dictionary<string, string> PluginsPaths = new Dictionary<string, string>();
-        
+
         private FSWatcher _watcher;
 
         private string _directory => Path.GetDirectoryName(csProject.FilePath);
-        
+
         public class PluginsProjectData
         {
             [JsonProperty("BuildedCopyPath")]
@@ -69,7 +69,7 @@ namespace OxidePack.Client
                 csFiles.ForEach(csProject.CompileRemove);
             }
         }
-        
+
         /// <summary>
         ///     Return all plugins in project folder
         /// </summary>
@@ -80,7 +80,7 @@ namespace OxidePack.Client
                 .Select(Path.GetDirectoryName)
                 .ToList();
         }
-        
+
         /// <summary>
         ///     Return all plugins in project folder
         /// </summary>
@@ -90,7 +90,7 @@ namespace OxidePack.Client
             return Directory.GetFiles(_directory, "plugin.json", SearchOption.AllDirectories)
                 .ToDictionary(jsonFile =>  Path.GetFileName(Path.GetDirectoryName(jsonFile)), Path.GetDirectoryName);
         }
-        
+
         private void StartWatching()
         {
             _watcher?.Close();
@@ -110,7 +110,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
             {
                 return false;
             }
-                
+
             // .builded, etc...
             if (pluginname.StartsWith("."))
             {
@@ -119,7 +119,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
 
             return true;
         }
-        
+
         private void OnSourceFileChanged(string file)
         {
             var extension = Path.GetExtension(file);
@@ -129,7 +129,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
                 {
                     return;
                 }
-                
+
                 var plugin = GetPlugin(pluginname);
                 if (plugin != null)
                 {
@@ -154,7 +154,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
                 }
             }
         }
-        
+
         public bool AddPlugin(string pName, out PluginProject plugin)
         {
             if (_Plugins.ContainsKey(pName))
@@ -195,7 +195,7 @@ ConsoleSystem.Log($"fName: {filename}, pName: {pluginname}");
             {
                 throw new NullReferenceException("_Config is null!!!");
             }
-            
+
             File.WriteAllText(this.DataFileName, JsonConvert.SerializeObject(Config, Formatting.Indented));
         }
         #endregion

@@ -31,11 +31,11 @@ namespace OxidePack.Client.App
             [JsonProperty("Version")]
             public VersionNumber Version = new VersionNumber(0, 0, 0);
         }
-        
+
         // TODO: Extract it to class
         [JsonProperty("ProjectsConfig")]
         public static Dictionary<string, DependenciesConfig> ProjectsConfig = new Dictionary<string, DependenciesConfig>();
-        
+
         public class DependenciesConfig
         {
             public List<string> SelectedFiles = new List<string>();

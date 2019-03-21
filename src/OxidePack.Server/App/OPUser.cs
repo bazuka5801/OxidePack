@@ -16,8 +16,8 @@ namespace OxidePack.Server.App
     public class OpUser : BaseUser
     {
         public Plugin ActivePlugin;
-        
-        
+
+
         public override void HandleRpcMessage(RPCMessageType type, NetPacket stream)
         {
             if (IsAuthed == false)
@@ -43,7 +43,7 @@ namespace OxidePack.Server.App
                         try
                         {
                             buildResult = ActivePlugin.Build(bRequest);
-                            
+
                             sw.Stop();
                             Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
                             ConsoleSystem.Log($"User '{Data.username}' build '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
@@ -53,13 +53,13 @@ namespace OxidePack.Server.App
                             LogUtils.PutsException(e, "BuildTask");
                         }
                         sw.Reset();
-                        
+
                         string encryptResult = null;
                         CompilerResults compilerResults = null;
-                        
+
                         if (bRequest.encryptOptions.enabled)
                         {
-                            
+
                             var options = new EncryptorOptions()
                             {
                                 LocalVarsCompressing = bRequest.encryptOptions.localvars,
@@ -75,13 +75,13 @@ namespace OxidePack.Server.App
                                 options.Spaghetti = true;
                                 options.SpaghettiControlFlow = bRequest.encryptOptions.spaghettiControlFlow;
                             }
-                            
+
                             try
                             {
                                 sw.Start();
-                                
+
                                 (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
-                                
+
                                 sw.Stop();
                                 Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
                                 ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
@@ -92,15 +92,15 @@ namespace OxidePack.Server.App
                             }
                         }
 
-                        
-                        
+
+
                         BuildResponse bResponse = new BuildResponse()
                         {
                             pluginname = bRequest.buildOptions.name,
                             content = buildResult,
                             encrypted = encryptResult
                         };
-                        
+
                         if (bRequest.buildOptions.compileDll)
                         {
                             var (compiledAssembly, compilerErrors) = CompileUtils.CompileAssembly(buildResult, bRequest.buildOptions.name,
@@ -123,7 +123,7 @@ namespace OxidePack.Server.App
 
                             bResponse.encryptErrors = errorList;
                         }
-                    
+
                         SendRpc(RPCMessageType.BuildResponse, bResponse);
                     });
                     break;
@@ -151,7 +151,7 @@ namespace OxidePack.Server.App
                 pluginname = request.pluginname,
                 content = generatedFile
             };
-            
+
             SendRpc(RPCMessageType.GeneratedFileResponse, response);
         }
 
@@ -163,12 +163,12 @@ namespace OxidePack.Server.App
                 version = module.Manifest.Version,
                 description = module.Manifest.Description
             }).ToList();
-            
+
             var moduleListResponse = new ModuleListResponse()
             {
                 modules = moduleList
             };
-            
+
             SendRpc(RPCMessageType.ModuleListResponse, moduleListResponse);
         }
     }

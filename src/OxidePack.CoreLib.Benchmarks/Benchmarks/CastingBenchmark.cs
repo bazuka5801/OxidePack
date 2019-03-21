@@ -11,7 +11,7 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
 
         public object myClassObj = new MyClass();
         public MyClass myClass = new MyClass();
-        
+
         public MyClass Cast()
         {
             return (MyClass) myClassObj;

@@ -17,7 +17,7 @@ namespace OxidePack.Server.App
             var config = this.AddType<ConfigManager>();
             config.SetConfigType(typeof(Config));
             config.RunWatcher();
-            
+
             this.Initialize();
             ConsoleSystem.OnConsoleInput += OnConsoleCommand;
             ModuleMgr.Init();
@@ -27,7 +27,7 @@ namespace OxidePack.Server.App
         {
             this.Shutdown();
         }
-        
+
         public void Initialize()
         {
             UserDb.Load();
@@ -98,12 +98,12 @@ namespace OxidePack.Server.App
                     ConsoleSystem.LogError("User not found!");
                     return;
                 }
-                
+
                 user.AddPermission(perm, (int)seconds);
                 ConsoleSystem.LogError($"User '{username}' granted '{perm}' permission!");
             }
         }
-        
+
         private void RunServer()
         {
             Thread serverThread = new Thread(ServerWorker) { Name = "Server", IsBackground = true };

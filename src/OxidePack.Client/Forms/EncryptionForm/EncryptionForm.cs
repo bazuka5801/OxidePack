@@ -14,7 +14,7 @@ namespace OxidePack.Client
         {
             this.model = model;
             InitializeComponent();
-            
+
             this.model.Plugin.OnBuilded += OnBuilded;
         }
 

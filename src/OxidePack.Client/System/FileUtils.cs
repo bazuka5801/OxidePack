@@ -16,7 +16,7 @@ namespace OxidePack.Client
         /// Examples of returned values:
         ///  test.txt, ..\test.txt, ..\..\..\test.txt, ., .., subdir\test.txt
         /// </returns>
-        public static string GetRelativePath(string fullPath, string basePath ) 
+        public static string GetRelativePath(string fullPath, string basePath )
         {
             // Require trailing backslash for path
             if (!basePath.EndsWith("\\"))

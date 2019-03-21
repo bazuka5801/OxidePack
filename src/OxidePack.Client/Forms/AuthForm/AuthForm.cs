@@ -8,7 +8,7 @@ namespace OxidePack.Client
     public partial class AuthForm : Form
     {
         public static AuthForm Instance;
-        
+
         public AuthForm()
         {
             Instance = this;

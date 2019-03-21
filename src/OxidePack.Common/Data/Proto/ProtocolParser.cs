@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 // 
-//  Read/Write string and byte arrays 
+//  Read/Write string and byte arrays
 // 
 namespace SilentOrbit.ProtocolBuffers
 {
@@ -16,7 +16,7 @@ namespace SilentOrbit.ProtocolBuffers
 
         void WriteToStream(Stream stream);
     }
-    
+
     public static partial class ProtocolParser
     {
         private static byte[] staticBuffer = new byte[131072];
@@ -82,7 +82,7 @@ namespace SilentOrbit.ProtocolBuffers
                 return *(float*)numPointer;
             }
         }
-        
+
         public static unsafe void WriteSingle(Stream stream, float f)
         {
             byte* numPointer = (byte*)(&f);
@@ -92,7 +92,7 @@ namespace SilentOrbit.ProtocolBuffers
             ProtocolParser.staticBuffer[3] = *(numPointer + 3);
             stream.Write(ProtocolParser.staticBuffer, 0, 4);
         }
-        
+
         public static unsafe double ReadDouble(Stream stream)
         {
             stream.Read(ProtocolParser.staticBuffer, 0, 8);
@@ -101,7 +101,7 @@ namespace SilentOrbit.ProtocolBuffers
                 return (double)(*numPointer);
             }
         }
-        
+
         public static unsafe void WriteDouble(Stream stream, double f)
         {
             byte* numPointer = (byte*)(&f);
@@ -524,7 +524,7 @@ namespace SilentOrbit.ProtocolBuffers
         #endregion
 
         #region VarInt: UInt6
-        
+
         /// <summary>
         /// Unsigned VarInt format
         /// </summary>

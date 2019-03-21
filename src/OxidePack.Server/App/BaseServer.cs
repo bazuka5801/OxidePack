@@ -6,7 +6,7 @@ using SapphireEngine.Functions;
 namespace OxidePack.Server.App
 {
     public class BaseServer<T> : NetServer<T>
-        where T : BaseUser, new() 
+        where T : BaseUser, new()
     {
         public BaseServer()
         {
@@ -17,7 +17,7 @@ namespace OxidePack.Server.App
             this.Configuration.Blocking = true;
             this.Configuration.MaximumNumberOfConnections = 100;
         }
-        
+
         protected override void Initialize()
         {
             ConsoleSystem.Log("Server is Ready");

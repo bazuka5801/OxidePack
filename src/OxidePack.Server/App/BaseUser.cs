@@ -12,7 +12,7 @@ namespace OxidePack.Server.App
     public class BaseUser : NetUser
     {
         private static readonly HashSet<string> ActiveUsers = new HashSet<string>();
-        
+
         public bool     IsAuthed;
         public UserData Data;
         public int TimeoutSeconds = Config.Timeout;
@@ -105,7 +105,7 @@ namespace OxidePack.Server.App
                                               $"Your Version: {uInfo.version}");
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(uInfo.key))
             {
                 SendGiveUserInformationResult("Invalid key");
@@ -145,7 +145,7 @@ namespace OxidePack.Server.App
                 ConsoleSystem.ShowCallerInLog = false;
                 return;
             }
-            
+
             using (NetPacket packet = new NetPacket())
             {
                 packet.WritePackketID(PacketType.GiveUserInformationResult);
@@ -154,14 +154,14 @@ namespace OxidePack.Server.App
             }
         }
         #endregion
-        
+
         #region [Method] OnConnected
         public void OnConnected()
         {
             RequestUserInformation();
         }
         #endregion
-        
+
         #region [Method] OnDisconnected
         public void OnDisconnected()
         {
@@ -172,7 +172,7 @@ namespace OxidePack.Server.App
             }
         }
         #endregion
-        
+
         public void ConnectionAliveTimerTick()
         {
             if (--TimeoutSeconds <= 0)

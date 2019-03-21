@@ -15,7 +15,7 @@ namespace OxidePack.Client.App
     {
         private bool _needReconnect;
         public bool IsAuthed { get; private set; } = false;
-        
+
         public Client(string host, int port, int bufferSize)
         {
             this.Configuration.Host = host;
@@ -55,7 +55,7 @@ namespace OxidePack.Client.App
         #region [Method] HandleRPCMessage
         public virtual void HandleRPCMessage(RPCMessageType type, NetPacket stream)
         {
-            
+
         }
         #endregion
 
@@ -135,10 +135,10 @@ namespace OxidePack.Client.App
                 Send(packet);
             }
         }
-        
+
 
         #endregion
-        
+
         #region [Method] OnSocketError
         protected override void OnSocketError(SocketError socketError)
         {
@@ -152,17 +152,17 @@ namespace OxidePack.Client.App
             Connect();
 
             int tryingCount = 0;
-            
+
             while (true)
             {
                 Thread.Sleep(1000);
-                
+
                 if (IsConnected)
                 {
                     KeepConnectionAlive();
                     continue;
                 }
-                
+
                 if (_needReconnect)
                 {
                     _needReconnect = false;

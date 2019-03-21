@@ -39,7 +39,7 @@ namespace OxidePack.CoreLib.Method2Depth
                             root = compilationTree.Root.NormalizeWhitespace();
                         }
 
-                        
+
                         workspace.TryApplyChanges(document.Project.Solution.WithDocumentSyntaxRoot(document.Id, root));
                     }
                 }

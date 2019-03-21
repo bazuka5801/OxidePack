@@ -15,7 +15,7 @@ namespace OxidePack.Client.Components
     {
         private readonly string _directory;
         private string[] _files;
-        
+
         public DependencyTreeModel(string directory)
         {
             this._directory = directory;
@@ -49,7 +49,7 @@ namespace OxidePack.Client.Components
                     dir.Nodes.Add(file);
                 }
             }
-            
+
             SortNodes(this.Nodes);
         }
 
@@ -60,7 +60,7 @@ namespace OxidePack.Client.Components
             nodes.Clear();
             directories.ForEach(nodes.Add);
             files.ForEach(nodes.Add);
-            
+
             foreach (var node in nodes)
             {
                 if (node.Nodes.Count > 1)
@@ -69,12 +69,12 @@ namespace OxidePack.Client.Components
                 }
             }
         }
-        
+
         public Node CreateDependencyNode(string path)
         {
             var name = Path.GetFileNameWithoutExtension(path);
             var filename = Path.GetFileName(path);
-            
+
             string[] treePath = name.Split('.');
             if (treePath.Length == 1)
             {
@@ -140,7 +140,7 @@ namespace OxidePack.Client.Components
                 }
             }
         }
-        
+
         private Node AddChild(Node parent, Collection<Node> nodes, string text, string icon = null)
         {
             DependencyNode node = new DependencyNode(text);
@@ -159,7 +159,7 @@ namespace OxidePack.Client.Components
         }
 
         private Image DLLImage = null;
-        
+
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);

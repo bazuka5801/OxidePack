@@ -17,10 +17,10 @@ namespace OxidePack.Client
     public partial class DependenciesForm : Form
     {
         private string Dir = "";
-        
+
         private DependencyTreeModel _model;
         private DependenciesModel _formModel;
-        
+
         public DependenciesForm(DependenciesModel formModel)
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace OxidePack.Client
             _formModel = formModel;
             cbBundle.Checked = formModel.Bundle;
         }
-        
+
         public void InitTree()
         {
             if (Directory.Exists(Dir) == false)

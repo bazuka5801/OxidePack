@@ -9,7 +9,7 @@ namespace OxidePack
         public static Dictionary<Type, object> directory = new Dictionary<Type, object>();
 
         private static readonly int MaxPoolSize = 131072;
-        
+
         #region [Method] Clear
         public static void Clear()
         {
@@ -74,7 +74,7 @@ namespace OxidePack
             return Get<List<T>>();
         }
         #endregion
-        
+
         #region [Method] Free<T>
         public static void Free<T>(ref T obj)
             where T : class
@@ -143,7 +143,7 @@ namespace OxidePack
             }
         }
         #endregion
-        
+
         #region [Method] FindCollection
         public static PoolCollection<T> FindCollection<T>()
         {
@@ -191,7 +191,7 @@ namespace OxidePack
             void LeavePool();
         }
         #endregion
-        
+
         #region [Class] PoolCollection<T> : ICollection
         public class PoolCollection<T> : ICollection
         {

@@ -13,7 +13,7 @@ namespace OxidePack
 
         // Changes are buffered briefly to avoid duplicate events
         private readonly Dictionary<string, ChangeQueued> changeQueue;
-        
+
         private class ChangeQueued
         {
             public DateTime lastReadTime;
@@ -22,20 +22,20 @@ namespace OxidePack
         }
 
         private Action<string> callback;
-        
+
         private readonly object lockObject = new object();
 
         public void Subscribe(Action<string> action) => callback += action;
 
         public bool Enabled = true;
-        
+
         /// <summary>
         /// Empty - all extensions
         /// </summary>
         public List<string> AcceptExtensions = new List<string>();
-        
+
         public List<string> ExcludeDirectories = new List<string>();
-        
+
         /// <summary>
         /// Initializes a new instance of the FSWatcher class
         /// </summary>
@@ -75,7 +75,7 @@ namespace OxidePack
         {
             watcher.Dispose();
         }
-        
+
         /// <summary>
         /// Called when the watcher has registered a filesystem change
         /// </summary>
@@ -105,9 +105,9 @@ namespace OxidePack
                 var watcher = (FileSystemWatcher) sender;
                 var length = e.FullPath.Length - watcher.Path.Length - extension.Length - 1;
                 var sub_path = e.FullPath.Substring(watcher.Path.Length + 1, length);
-               
+
                 var path = e.FullPath;
-                
+
                 DateTime lastWriteTime = File.GetLastWriteTime(path);
                 if (!changeQueue.TryGetValue(sub_path, out var change))
                 {
@@ -120,7 +120,7 @@ namespace OxidePack
                 {
                     return;
                 }
-                
+
                 change.lastReadTime = lastWriteTime;
                 change.type = e.ChangeType;
                 change.timer?.Destroy();
@@ -150,8 +150,8 @@ namespace OxidePack
             }
             callback?.Invoke(fullpath);
         }
-        
-        
+
+
         protected virtual bool IsFileLocked(string fullpath)
         {
             FileStream stream = null;

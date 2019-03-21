@@ -22,7 +22,7 @@ namespace OxidePack.Client
             }
             return key;
         }
-        
+
         #region Original Device ID Getting Code
 
         private static readonly Dictionary<string, ManagementObjectCollection> mCollections = new Dictionary<string, ManagementObjectCollection>();
@@ -36,7 +36,7 @@ namespace OxidePack.Client
 
             return moc;
         }
-        
+
         //Return a hardware identifier
         private static string identifier
             (string wmiClass, string wmiProperty, string wmiMustBeTrue)
@@ -145,7 +145,7 @@ namespace OxidePack.Client
         //First enabled network card ID
         private static string macId()
         {
-            return identifier("Win32_NetworkAdapterConfiguration", 
+            return identifier("Win32_NetworkAdapterConfiguration",
                 "MACAddress", "IPEnabled");
         }
         #endregion

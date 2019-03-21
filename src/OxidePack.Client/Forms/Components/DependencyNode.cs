@@ -33,7 +33,7 @@ namespace OxidePack.Client.Components
             get => _checked;
             set => _checked = value;
         }
-        
+
         private Image _icon;
         public Image Icon
         {
