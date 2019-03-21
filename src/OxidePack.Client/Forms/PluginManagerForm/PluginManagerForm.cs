@@ -22,6 +22,11 @@ namespace OxidePack.Client
             ModuleMgr.Refresh();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            _PluginsProject.Dispose();
+        }
+
         private List<ModuleView> moduleViews = new List<ModuleView>();
         private PluginProject _PluginSelected;
 

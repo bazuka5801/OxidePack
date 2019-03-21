@@ -8,7 +8,7 @@ using SapphireEngine;
 
 namespace OxidePack.Client
 {
-    public class PluginsProject
+    public class PluginsProject : IDisposable
     {
         public CsProject csProject;
         public PluginsProjectData Config;
@@ -98,6 +98,18 @@ namespace OxidePack.Client
             _watcher.AcceptExtensions.AddRange(new[] {".cs", ".json"});
             _watcher.ExcludeDirectories.AddRange(new[] {".encrypted", ".builded"});
             _watcher.Subscribe(OnSourceFileChanged);
+        }
+
+        public void Dispose()
+        {
+            _watcher?.Close();
+            _watcher = null;
+
+            _Plugins.Clear();
+            _Plugins = null;
+
+            PluginsPaths.Clear();
+            PluginsPaths = null;
         }
 
         private bool GetPluginName(string filename, out string pluginname)
