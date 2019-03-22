@@ -8,11 +8,13 @@ namespace OxidePack.CoreLib.Method2Depth
     public class MethodsVisitor : CSharpSyntaxWalker
     {
         private ClassDeclarationSyntax _baseClass;
+        private SemanticModel _semanticModel;
         private MethodsVisitorResults _methodsVisitorResults;
 
-        public MethodsVisitorResults Walk(ClassDeclarationSyntax baseClass)
+        public MethodsVisitorResults Walk(ClassDeclarationSyntax baseClass, SemanticModel semanticModel)
         {
             _baseClass = baseClass;
+            _semanticModel = semanticModel;
             _methodsVisitorResults = new MethodsVisitorResults();
 
             Visit(baseClass);
@@ -71,7 +73,7 @@ namespace OxidePack.CoreLib.Method2Depth
             }
 
             var visitor = new MethodsVisitor();
-            _methodsVisitorResults.Merge(visitor.Walk(mClass));
+            _methodsVisitorResults.Merge(visitor.Walk(mClass, _semanticModel));
         }
 
         public override void VisitBaseExpression(BaseExpressionSyntax node)
