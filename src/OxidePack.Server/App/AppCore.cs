@@ -86,6 +86,21 @@ namespace OxidePack.Server.App
                 sb.Clear();
             }
 
+            if (line.StartsWith("changekey"))
+            {
+                var data = line.Split(' ');
+                string username = data[1];
+                string key = data[2];
+                if (UserDb.ChangeKey(username, key))
+                {
+                    ConsoleSystem.Log("Ключ успешно обновлён");
+                }
+                else
+                {
+                    ConsoleSystem.Log("Не удалось найти пользователя!");
+                }
+            }
+
             if (line.StartsWith("addperm"))
             {
                 var data = line.Split(' ');

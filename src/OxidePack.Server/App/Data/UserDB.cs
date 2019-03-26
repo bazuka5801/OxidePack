@@ -40,6 +40,21 @@ namespace OxidePack.Server.App.Data
             Save();
         }
 
+        public static bool ChangeKey(string username, string newKey)
+        {
+            var user = All.FirstOrDefault(p => p.username == username);
+            if (user != null)
+            {
+                _keyToUid.Remove(user.key);
+                _keyToUid[newKey] = user.index;
+                user.key = newKey;
+                Save();
+                return true;
+            }
+
+            return false;
+        }
+
         public static void Load()
         {
             if (Directory.Exists("Database") == false)
