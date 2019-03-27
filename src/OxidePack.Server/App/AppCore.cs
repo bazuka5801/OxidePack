@@ -73,14 +73,23 @@ namespace OxidePack.Server.App
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine();
-                foreach (var uData in UserDb.All.OrderByDescending(p=>p.millisecondsused))
+                foreach (var uData in UserDb.All.OrderByDescending(p=>p.statBuild))
                 {
                     foreach (var perm in uData.permissions)
                     {
                         uData.HasPermission(perm.name);
                     }
 
-                    sb.AppendLine($"[{uData.index}] {uData.username} usedseconds: {TimeSpan.FromMilliseconds(uData.millisecondsused).TotalSeconds.ToString("F3")}");
+                    var usedSecs = TimeSpan.FromMilliseconds(uData.milliseconds_used).TotalSeconds.ToString("F3");
+                    var buildSecs = TimeSpan.FromMilliseconds(uData.milliseconds_build).TotalSeconds.ToString("F3");
+                    var encryptionSecs = TimeSpan.FromMilliseconds(uData.milliseconds_encryption).TotalSeconds.ToString("F3");
+
+                    sb.AppendLine($"[{uData.index}] {uData.username} " +
+                                  $"builds: {uData.statBuild} " +
+                                  $"encryption {uData.statEncryption} " +
+                                  $"used: {usedSecs} " +
+                                  $"buildSecs: {buildSecs} " +
+                                  $"encryptionSecs: {encryptionSecs}");
                 }
                 ConsoleSystem.Log(sb.ToString());
                 sb.Clear();
@@ -99,6 +108,30 @@ namespace OxidePack.Server.App
                 {
                     ConsoleSystem.Log("Не удалось найти пользователя!");
                 }
+            }
+
+            if (line.StartsWith("verify"))
+            {
+                var data = line.Split(' ');
+                string username = data[1];
+                string encCount = data[2];
+                
+                var user = UserDb.All.FirstOrDefault(p => p.username == username);
+                if (user == null)
+                {
+                    ConsoleSystem.LogError("User not found!");
+                    return;
+                }
+
+                if (user.verified)
+                {
+                    ConsoleSystem.LogError("User already verified!");
+                    return;
+                }
+
+                user.verified = true;
+                user.encryptionCount += int.Parse(encCount);
+                ConsoleSystem.LogError($"User '{username}' was verified and give him {encCount} encryptions!");
             }
 
             if (line.StartsWith("addperm"))

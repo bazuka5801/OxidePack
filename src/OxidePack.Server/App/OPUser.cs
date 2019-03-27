@@ -45,7 +45,9 @@ namespace OxidePack.Server.App
                             buildResult = ActivePlugin.Build(bRequest);
 
                             sw.Stop();
-                            Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
+                            Data.milliseconds_used += (ulong)sw.ElapsedMilliseconds;
+                            Data.milliseconds_build += (ulong)sw.ElapsedMilliseconds;
+                            Data.statBuild++;
                             ConsoleSystem.Log($"User '{Data.username}' build '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
                         }
                         catch (Exception e)
@@ -57,7 +59,7 @@ namespace OxidePack.Server.App
                         string encryptResult = null;
                         CompilerResults compilerResults = null;
 
-                        if (bRequest.encryptOptions.enabled)
+                        if (bRequest.encryptOptions.enabled && Data.CanEncrypt())
                         {
 
                             var options = new EncryptorOptions()
@@ -70,7 +72,7 @@ namespace OxidePack.Server.App
                                 TrashRemoving = bRequest.encryptOptions.trashremoving,
                                 Encoding = bRequest.encryptOptions.encoding,
                             };
-                            if (Data.HasPermission("spaghetti") && bRequest.encryptOptions.spaghetti)
+                            if ((Data.HasPermission("spaghetti") || Data.HasPermission("vip")) && bRequest.encryptOptions.spaghetti)
                             {
                                 options.Spaghetti = true;
                                 options.SpaghettiControlFlow = bRequest.encryptOptions.spaghettiControlFlow;
@@ -83,7 +85,9 @@ namespace OxidePack.Server.App
                                 (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
 
                                 sw.Stop();
-                                Data.millisecondsused += (ulong)sw.ElapsedMilliseconds;
+                                Data.milliseconds_used += (ulong)sw.ElapsedMilliseconds;
+                                Data.milliseconds_encryption += (ulong)sw.ElapsedMilliseconds;
+                                Data.statEncryption++;
                                 ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
                             }
                             catch (Exception e)

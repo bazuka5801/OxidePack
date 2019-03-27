@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using OxidePack;
 
 namespace OxidePack.Data
 {
@@ -64,8 +65,26 @@ namespace OxidePack.Data
                 instance.permissions = inspermissions;
             }
 
-            // [ulong] millisecondsused
-            instance.millisecondsused = default(ulong);
+            // [ulong] milliseconds_used
+            instance.milliseconds_used = default(ulong);
+
+            // [ulong] milliseconds_build
+            instance.milliseconds_build = default(ulong);
+
+            // [ulong] milliseconds_encryption
+            instance.milliseconds_encryption = default(ulong);
+
+            // [bool] verified
+            instance.verified = default(bool);
+
+            // [int] encryptionCount
+            instance.encryptionCount = default(int);
+
+            // [uint] statEncryption
+            instance.statEncryption = default(uint);
+
+            // [uint] statBuild
+            instance.statBuild = default(uint);
 
             Pool.Free<OxidePack.Data.UserData>(ref instance);
         }
@@ -170,7 +189,31 @@ namespace OxidePack.Data
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.milliseconds_used = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.milliseconds_build = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.milliseconds_encryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.verified = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.encryptionCount = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.statEncryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        continue;
+                    // Field 12 Varint
+                    case 96:
+                        instance.statBuild = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
@@ -235,7 +278,31 @@ namespace OxidePack.Data
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.milliseconds_used = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.milliseconds_build = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.milliseconds_encryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.verified = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.encryptionCount = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.statEncryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        continue;
+                    // Field 12 Varint
+                    case 96:
+                        instance.statBuild = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
@@ -299,7 +366,31 @@ namespace OxidePack.Data
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.millisecondsused = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.milliseconds_used = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 7 Varint
+                    case 56:
+                        instance.milliseconds_build = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 8 Varint
+                    case 64:
+                        instance.milliseconds_encryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 9 Varint
+                    case 72:
+                        instance.verified = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        continue;
+                    // Field 10 Varint
+                    case 80:
+                        instance.encryptionCount = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        continue;
+                    // Field 11 Varint
+                    case 88:
+                        instance.statEncryption = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        continue;
+                    // Field 12 Varint
+                    case 96:
+                        instance.statBuild = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
@@ -358,7 +449,25 @@ namespace OxidePack.Data
             }
             // Key for field: 6, Varint
             stream.WriteByte(48);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.millisecondsused);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_used);
+            // Key for field: 7, Varint
+            stream.WriteByte(56);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_build);
+            // Key for field: 8, Varint
+            stream.WriteByte(64);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_encryption);
+            // Key for field: 9, Varint
+            stream.WriteByte(72);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.verified);
+            // Key for field: 10, Varint
+            stream.WriteByte(80);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.encryptionCount);
+            // Key for field: 11, Varint
+            stream.WriteByte(88);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, instance.statEncryption);
+            // Key for field: 12, Varint
+            stream.WriteByte(96);
+            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, instance.statBuild);
             Pool.FreeMemoryStream(ref msField);
         }
 
@@ -428,11 +537,47 @@ namespace OxidePack.Data
                     }
                 }
             }
-            if (instance.millisecondsused != previous.millisecondsused)
+            if (instance.milliseconds_used != previous.milliseconds_used)
             {
                 // Key for field: 6, Varint
                 stream.WriteByte(48);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.millisecondsused);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_used);
+            }
+            if (instance.milliseconds_build != previous.milliseconds_build)
+            {
+                // Key for field: 7, Varint
+                stream.WriteByte(56);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_build);
+            }
+            if (instance.milliseconds_encryption != previous.milliseconds_encryption)
+            {
+                // Key for field: 8, Varint
+                stream.WriteByte(64);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.milliseconds_encryption);
+            }
+            if (instance.verified != previous.verified)
+            {
+                // Key for field: 9, Varint
+                stream.WriteByte(72);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.verified);
+            }
+            if (instance.encryptionCount != previous.encryptionCount)
+            {
+                // Key for field: 10, Varint
+                stream.WriteByte(80);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream,(ulong)instance.encryptionCount);
+            }
+            if (instance.statEncryption != previous.statEncryption)
+            {
+                // Key for field: 11, Varint
+                stream.WriteByte(88);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, instance.statEncryption);
+            }
+            if (instance.statBuild != previous.statBuild)
+            {
+                // Key for field: 12, Varint
+                stream.WriteByte(96);
+                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, instance.statBuild);
             }
             Pool.FreeMemoryStream(ref msField);
         }
