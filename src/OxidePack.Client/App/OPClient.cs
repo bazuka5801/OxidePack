@@ -23,7 +23,7 @@ namespace OxidePack.Client.App
                         OnRPC_BuildResponse(bResponse);
                     }
                     break;
-                case RPCMessageType.EncryptionResponse:   
+                case RPCMessageType.EncryptionResponse:
                     break;
                 case RPCMessageType.GeneratedFileResponse:
                     OnRPC_GeneratedFileResponse(GeneratedFileResponse.Deserialize(stream));
@@ -54,7 +54,7 @@ namespace OxidePack.Client.App
                 PluginNotExistError(response.pluginname);
                 return;
             }
-            
+
             plugin.OnGeneratedFileResponse(response.content);
         }
 

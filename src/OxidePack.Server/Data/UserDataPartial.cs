@@ -39,13 +39,13 @@ namespace OxidePack.Data
         {
             if (this.permissions == null) this.permissions = new List<Permission>();
             var permission = this.permissions.FirstOrDefault(p => p.name == name);
-            
+
             if (permission != null && PermissionIsExpired(permission))
             {
                 this.permissions.Remove(permission);
                 permission = null;
             }
-            
+
             if (permission == null)
             {
                 this.permissions.Add(permission = Pool.Get<Permission>());
@@ -55,7 +55,17 @@ namespace OxidePack.Data
 
             permission.expired += (ulong)seconds;
         }
-        
+
+        public bool CanEncrypt()
+        {
+            if (encryptionCount > 0)
+            {
+                return true;
+            }
+
+            return HasPermission("vip");
+        }
+
         private static DateTime ConvertFromUnixTimestamp(ulong timestamp)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);

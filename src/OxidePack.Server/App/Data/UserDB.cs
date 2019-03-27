@@ -12,7 +12,7 @@ namespace OxidePack.Server.App.Data
         private static List<UserData> _users;
 
         public static IEnumerable<UserData> All => _users;
-        
+
         public static bool Get(string key, string username, out UserData uData)
         {
             if (_keyToUid.TryGetValue(key, out var index) == false)
@@ -33,19 +33,34 @@ namespace OxidePack.Server.App.Data
             uData.username = username;
             uData.registred = Epoch.Current;
             uData.permissions = new List<Permission>();
-                
+
             _keyToUid[key] = (uint)_users.Count;
             _users.Add(uData);
             ConsoleSystem.Log($"User '{username}' added");
             Save();
         }
-        
+
+        public static bool ChangeKey(string username, string newKey)
+        {
+            var user = All.FirstOrDefault(p => p.username == username);
+            if (user != null)
+            {
+                _keyToUid.Remove(user.key);
+                _keyToUid[newKey] = user.index;
+                user.key = newKey;
+                Save();
+                return true;
+            }
+
+            return false;
+        }
+
         public static void Load()
         {
             if (Directory.Exists("Database") == false)
                 Directory.CreateDirectory("Database");
-            
-            
+
+
             if (File.Exists("Database/UserData.bin") == false)
             {
                 _keyToUid = new Dictionary<string, uint>();
@@ -64,7 +79,7 @@ namespace OxidePack.Server.App.Data
         {
             if (Directory.Exists("Database") == false)
                 Directory.CreateDirectory("Database");
-            
+
             var userDc = Pool.Get<UserDataCollection>();
             userDc.users = _users.ToList();
             File.WriteAllBytes("Database/UserData.bin", UserDataCollection.SerializeToBytes(userDc));

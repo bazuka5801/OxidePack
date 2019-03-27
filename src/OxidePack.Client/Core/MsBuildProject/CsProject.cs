@@ -22,7 +22,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         public List<String> ReferenceList { get; private set; }
 
         public bool IsNewVersion;
-        
+
         public CsProject(Solution solution, CsProjFile project, string name, string relativeFilePath)
         {
             this.Solution = solution;
@@ -76,7 +76,7 @@ namespace OxidePack.Client.Core.MsBuildProject
             {
             _references = this.Project.BuildProject.ItemGroups
                 .FirstOrDefault(i => i.Items.Any(item => item.Name == "Reference"));
-                
+
             }
 
             if (IsNewVersion == false)
@@ -111,7 +111,7 @@ namespace OxidePack.Client.Core.MsBuildProject
             {
                 return;
             }
-            
+
             string relativePath = filepath;
             if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
                 relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
@@ -123,14 +123,14 @@ namespace OxidePack.Client.Core.MsBuildProject
                 Project.Save();
             }
         }
-        
+
         public void CompileRemove(string filepath)
         {
             if (IsNewVersion)
             {
                 return;
             }
-            
+
             string relativePath = filepath;
             if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
                 relativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
@@ -156,7 +156,7 @@ namespace OxidePack.Client.Core.MsBuildProject
                 }
                 return;
             }
-            
+
             string asmName, asmFullName;
             using (AssemblyDefinition asmDef = AssemblyDefinition.ReadAssembly(filepath))
             {
@@ -167,7 +167,7 @@ namespace OxidePack.Client.Core.MsBuildProject
             string asmRelativePath = filepath;
             if (Path.GetPathRoot(this.Solution.Directory) == Path.GetPathRoot(filepath))
                 asmRelativePath = FileUtils.GetRelativePath(filepath, Path.GetDirectoryName(this.FilePath));
-            
+
             // Check existing item for containing and fix it if invalid
             var existingReference = _references.Items.FirstOrDefault(reference => reference.Include.StartsWith(asmName));
             if (existingReference != null)
@@ -221,7 +221,7 @@ namespace OxidePack.Client.Core.MsBuildProject
                     }
                 }
             }
-            
+
             ConsoleSystem.LogError($"[CsProject] [{Name}] Failed to delete <{filename}> reference");
         }
     }

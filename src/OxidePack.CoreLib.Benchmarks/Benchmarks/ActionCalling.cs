@@ -13,7 +13,7 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
                 Test(i, i + 1);
             }
         }
-        
+
         [Benchmark(Description = "Action")]
         public void TestAction()
         {
@@ -36,8 +36,8 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
         {
             return a + b;
         }
-        
-        
+
+
         Func<int, int, int> action;
         delegate int HandlerEmptyMethod(int a, int b);
         HandlerEmptyMethod delegat;

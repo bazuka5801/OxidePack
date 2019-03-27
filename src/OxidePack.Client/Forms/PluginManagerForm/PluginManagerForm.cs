@@ -12,16 +12,21 @@ namespace OxidePack.Client
     public partial class PluginManagerForm : Form
     {
         private PluginsProject _PluginsProject;
-        
+
         public PluginManagerForm(PluginsProject pluginsProject)
         {
             InitializeComponent();
             LoadProject(pluginsProject);
-            
+
             ModuleMgr.OnModulesUpdateEvent += OnModulesUpdateEvent;
             ModuleMgr.Refresh();
         }
-        
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _PluginsProject.Dispose();
+        }
+
         private List<ModuleView> moduleViews = new List<ModuleView>();
         private PluginProject _PluginSelected;
 
@@ -35,14 +40,14 @@ namespace OxidePack.Client
                 {
                     moduleViews.Add(GenerateModuleView());
                 }
-                
+
                 for (var i = 0; i < ModuleMgr.Modules.Count; i++)
                 {
                     var mView = moduleViews[i];
                     mView.LoadModuleInfo(ModuleMgr.Modules[i]);
                     mView.SetIndex(i);
                 }
-                
+
                 // Reload selected plugin
                 SelectPlugin(_PluginSelected);
             });
@@ -119,7 +124,7 @@ namespace OxidePack.Client
                 lbPlugins.Items.Add(new ModuleListViewItem(plugin, lbPlugins));
             });
 
-            
+
             if (exist)
             {
                 // Select first plugin
@@ -157,7 +162,7 @@ namespace OxidePack.Client
                 this.lblName = lblName;
                 this._btnInfo = btnInfo;
                 this.btnAddRemove = btnAddRemove;
-                
+
                 this._btnInfo.Click += BtnInfo_OnClick;
                 this.btnAddRemove.Click += BtnAddRemove_OnClick;
             }
@@ -217,7 +222,7 @@ namespace OxidePack.Client
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
                 TabIndex = 0
             };
-            
+
             var tlpModule = new TableLayoutPanel
             {
                 ColumnCount = 2,
@@ -231,8 +236,8 @@ namespace OxidePack.Client
             tlpModule.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpModule.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
             tlpModule.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            
-            
+
+
             var lblModuleName = new Label
             {
                 Dock = DockStyle.Fill,
@@ -242,7 +247,7 @@ namespace OxidePack.Client
                 TabIndex = 0,
                 TextAlign = ContentAlignment.MiddleLeft
             };
-            
+
             var tlpModuleButtons = new TableLayoutPanel
             {
                 ColumnCount = 2,
@@ -256,7 +261,7 @@ namespace OxidePack.Client
             tlpModuleButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpModuleButtons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50F));
             tlpModuleButtons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            
+
             var btnModuleInfo = new Button
             {
                 BackgroundImage = Resources.info,
@@ -269,7 +274,7 @@ namespace OxidePack.Client
                 TabIndex = 0,
                 UseVisualStyleBackColor = true
             };
-            
+
             var btnAddRemove = new Button
             {
                 BackColor = Color.Transparent,
@@ -282,7 +287,7 @@ namespace OxidePack.Client
                 TabIndex = 1,
                 UseVisualStyleBackColor = false
             };
-            
+
             pnlModule.Controls.Add(tlpModule);
             tlpModule.Controls.Add(lblModuleName, 0, 0);
             tlpModule.Controls.Add(tlpModuleButtons, 1, 0);
@@ -300,8 +305,8 @@ namespace OxidePack.Client
         private void SelectPlugin(PluginProject plugin)
         {
             this._PluginSelected = plugin;
-            
-            
+
+
             this.lblPluginName.Text = plugin.config.Name;
             this.lblVersion.Text = plugin.config.Version.ToString();
             this.lblAuthor.Text = plugin.config.Author;
@@ -345,7 +350,7 @@ namespace OxidePack.Client
             {
                 return;
             }
-            
+
             var plugin = _PluginsProject.GetPlugin(selected.Name);
             SelectPlugin(plugin);
         }
@@ -376,7 +381,7 @@ namespace OxidePack.Client
         {
             if (_PluginSelected == null)
             {
-                throw new Exception("PluginSelected is null");                
+                throw new Exception("PluginSelected is null");
             }
 
             _PluginSelected.RequestGeneratedFile();

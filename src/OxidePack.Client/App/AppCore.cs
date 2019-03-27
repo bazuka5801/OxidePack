@@ -9,7 +9,7 @@ namespace OxidePack.Client.App
     public class AppCore : SapphireType
     {
         public static MainForm AuthForm;
-        
+
         public override void OnAwake()
         {
             OxideDownloader.FixWeb();
@@ -43,14 +43,14 @@ namespace OxidePack.Client.App
             ip = "127.0.0.1";
             port = 10000;
 #endif
-            
+
             using (var client = new OPClient(ip, port, Config.BufferSize))
             {
                 client.WorkingLoop();
             }
         }
         #endregion
-        
+
         #region [Methods] UI
         private static void RunUI()
         {

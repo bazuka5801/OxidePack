@@ -12,7 +12,7 @@ namespace OxidePack
             int nameIndex = 0;
             while (sizeResult > 1024 && nameIndex < names.Length)
             {
-                sizeResult /= 1024; 
+                sizeResult /= 1024;
                 nameIndex++;
             }
 

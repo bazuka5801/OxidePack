@@ -35,7 +35,7 @@ namespace OxidePack.CoreLib.Method2Depth
         public void Process(bool controlFlow)
         {
             // Collect information about methods
-            var methodResults = new MethodsVisitor().Walk(_mainClass);
+            var methodResults = new MethodsVisitor().Walk(_mainClass, _compilationTree.SemanticModel);
 
             // Find all local variables
             var localsResult = new LocalsVisitor().Walk(_mainClass, methodResults, _compilationTree.SemanticModel);
@@ -54,7 +54,7 @@ namespace OxidePack.CoreLib.Method2Depth
             _compilationTree.Root = new FieldsRewritrer().Rewrite(_compilationTree.Root, _compilationTree.Generator);
 
             // Collect information about methods
-            methodResults = new MethodsVisitor().Walk(_mainClass);
+            methodResults = new MethodsVisitor().Walk(_mainClass, _compilationTree.SemanticModel);
 
             // Crate a null struct to know when return is null or continue
             var nullReturnValue = CreateNullReturnValue();

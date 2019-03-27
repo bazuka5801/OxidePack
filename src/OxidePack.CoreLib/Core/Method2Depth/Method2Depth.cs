@@ -16,7 +16,7 @@ namespace OxidePack.CoreLib.Method2Depth
             return tree.SourceText;
         }
 
-        public AdhocWorkspace ProcessWorkspace(AdhocWorkspace workspace, EncryptorOptions options = null)
+        public AdhocWorkspace ProcessWorkspace(AdhocWorkspace workspace, string referencesPath, EncryptorOptions options = null)
         {
             options = options ?? new EncryptorOptions();
             if (options.Spaghetti)
@@ -32,14 +32,14 @@ namespace OxidePack.CoreLib.Method2Depth
                         SyntaxNode root = null;
                         for (int i = 0; i < depth; i++)
                         {
-                            var compilationTree = new CompilationTree(tree);
+                            var compilationTree = new CompilationTree(tree, referencesPath);
 
                             new Core(compilationTree).Process(options.SpaghettiControlFlow);
 
                             root = compilationTree.Root.NormalizeWhitespace();
                         }
 
-                        
+
                         workspace.TryApplyChanges(document.Project.Solution.WithDocumentSyntaxRoot(document.Id, root));
                     }
                 }

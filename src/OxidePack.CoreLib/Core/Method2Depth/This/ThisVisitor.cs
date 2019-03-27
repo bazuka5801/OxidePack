@@ -104,7 +104,8 @@ namespace OxidePack.CoreLib.Method2Depth
                 return;
             }
 
-            var symbol = _semanticModel.GetSymbolInfo(node).Symbol;
+            var info = _semanticModel.GetSymbolInfo(node);
+            var symbol = info.Symbol ?? info.CandidateSymbols.FirstOrDefault();
             if (symbol != null && symbol.IsKind(SymbolKind.Method) && symbol.IsStatic == false)
             {
                 _thisVisitorResults.IdentifiersNeedsThis.Add(node.Identifier);

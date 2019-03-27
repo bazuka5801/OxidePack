@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using SilentOrbit.ProtocolBuffers;
+using OxidePack;
 
 namespace OxidePack.Data
 {
@@ -26,7 +27,19 @@ namespace OxidePack.Data
 
         public List<OxidePack.Data.Permission> permissions;
 
-        public ulong millisecondsused;
+        public ulong milliseconds_used;
+
+        public ulong milliseconds_build;
+
+        public ulong milliseconds_encryption;
+
+        public bool verified;
+
+        public int encryptionCount;
+
+        public uint statEncryption;
+
+        public uint statBuild;
 
     }
 

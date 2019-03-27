@@ -12,7 +12,7 @@ namespace OxidePack.Client.Core.MsBuildProject
         public string Directory;
         public string Filename;
         public List<CsProject> CsProjects = new List<CsProject>();
-        
+
         private readonly FubuCsProjFile.Solution _solution;
 
         private Solution(string file)
@@ -31,12 +31,12 @@ namespace OxidePack.Client.Core.MsBuildProject
             sln.Save();
             return Load(file);
         }
-        
+
         public static Solution Load(string file)
         {
             return new Solution(file);
         }
-        
+
         public void ReloadProjects()
         {
             CsProjects.Clear();
@@ -44,7 +44,7 @@ namespace OxidePack.Client.Core.MsBuildProject
             {
                 CsProjects.Add(new CsProject(this, csProjFile.Project, csProjFile.ProjectName, csProjFile.RelativePath));
             }
-            
+
 //            string pattern = Properties.Resources.MsBuildProjectRegex;
 //            
 //            using (var stream = File.OpenText(file))
@@ -52,7 +52,7 @@ namespace OxidePack.Client.Core.MsBuildProject
 //                while (stream.EndOfStream == false)
 //                {
 //                    string line = stream.ReadLine();
-//                    if (string.IsNullOrEmpty(line)) 
+//                    if (string.IsNullOrEmpty(line))
 //                        continue;
 //                    
 //                    var result = Regex.Match(line, pattern);

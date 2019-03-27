@@ -18,12 +18,12 @@ namespace OxidePack
             OnConfigLoaded?.Invoke();
         }
     }
-    
+
     public class ConfigManager : SapphireType
     {
         private Type m_ConfigType;
         private FSWatcher m_ConfigWatcher;
-        
+
         public void SetConfigType(Type type)
         {
             this.m_ConfigType = type;
@@ -66,13 +66,13 @@ namespace OxidePack
             {
                 return;
             }
-            
+
             if (File.Exists("config.json") == false)
             {
                 Write();
                 return;
             }
-            
+
             List<string> newFiels = new List<string>();
             JObject config;
             try
@@ -97,10 +97,10 @@ namespace OxidePack
                     newFiels.Add($"{name}");
                 }
             }
-            
+
             BaseConfig.IsLoaded = true;
             BaseConfig.FireOnConfigLoaded();
-            
+
             Write();
             if (newFiels.Count > 0)
             {
@@ -116,7 +116,7 @@ namespace OxidePack
             {
                 return;
             }
-            
+
             JObject config = new JObject();
             foreach (var field in m_ConfigType.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f=>f.IsLiteral == false))

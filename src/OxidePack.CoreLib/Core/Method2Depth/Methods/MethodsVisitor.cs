@@ -8,11 +8,13 @@ namespace OxidePack.CoreLib.Method2Depth
     public class MethodsVisitor : CSharpSyntaxWalker
     {
         private ClassDeclarationSyntax _baseClass;
+        private SemanticModel _semanticModel;
         private MethodsVisitorResults _methodsVisitorResults;
 
-        public MethodsVisitorResults Walk(ClassDeclarationSyntax baseClass)
+        public MethodsVisitorResults Walk(ClassDeclarationSyntax baseClass, SemanticModel semanticModel)
         {
             _baseClass = baseClass;
+            _semanticModel = semanticModel;
             _methodsVisitorResults = new MethodsVisitorResults();
 
             Visit(baseClass);
@@ -35,7 +37,13 @@ namespace OxidePack.CoreLib.Method2Depth
             }
 
             // <T> Classes
-            if (method.GetParent<ClassDeclarationSyntax>().ConstraintClauses.Count > 0)
+            if (method.GetParent<ClassDeclarationSyntax>()?.TypeParameterList?.Parameters.Count > 0)
+            {
+                return;
+            }
+
+            // <T> Methods
+            if (method.TypeParameterList?.Parameters.Count > 0)
             {
                 return;
             }
@@ -65,7 +73,26 @@ namespace OxidePack.CoreLib.Method2Depth
             }
 
             var visitor = new MethodsVisitor();
-            _methodsVisitorResults.Merge(visitor.Walk(mClass));
+            _methodsVisitorResults.Merge(visitor.Walk(mClass, _semanticModel));
+        }
+
+        public override void VisitBaseExpression(BaseExpressionSyntax node)
+        {
+            base.VisitBaseExpression(node);
+            var method = node.GetParent<MethodDeclarationSyntax>();
+            if (method == null)
+            {
+                return;
+            }
+
+            if (method.HasModifier(SyntaxKind.OverrideKeyword))
+            {
+                var baseMethodName = node.GetParent<MemberAccessExpressionSyntax>()?.Name;
+                if (baseMethodName.Identifier.Text == method.Identifier.Text)
+                {
+                    _methodsVisitorResults.Methods.Remove(method.FullPath());
+                }
+            }
         }
     }
 }

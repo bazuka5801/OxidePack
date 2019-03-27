@@ -15,7 +15,7 @@ namespace OxidePack.Client
     public static class OPClientCore
     {
         public static Solution Solution { get; private set; }
-        
+
         public static PluginsProject PluginsProject { get; private set; }
 
         public static void Init()
@@ -43,7 +43,7 @@ namespace OxidePack.Client
             else
                 SetSolution((Solution)null);
         }
-        
+
         public static void SetSolution(Solution solution)
         {
             Solution = solution;
@@ -53,13 +53,13 @@ namespace OxidePack.Client
         {
             var projectRelativePath = FileUtils.GetRelativePath(Path.GetDirectoryName(filename), Solution.Directory);
             var projectName = Path.GetFileNameWithoutExtension(filename);
-            
+
             Solution.AddProject(filename, projectName, projectRelativePath);
         }
 
         #region MyRegion
 
-        
+
 
         #endregion
 
@@ -99,7 +99,7 @@ namespace OxidePack.Client
             downloadConfig.OnReportProgressEvent -= OnProgress;
             downloader.ClearCache();
             Config.RustVersion = GetRustVersion(".references-cache/Assembly-CSharp.dll");
-            MainForm.ReloadStatus(); 
+            MainForm.ReloadStatus();
             }
             catch (Exception e)
             {

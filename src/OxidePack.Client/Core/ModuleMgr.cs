@@ -17,10 +17,10 @@ namespace OxidePack.Client
             // Not dispose, because using data in code
             ModuleListResponse mlResponse = ModuleListResponse.Deserialize(stream);
             Modules = mlResponse.modules;
-            
+
             OnModulesUpdateEvent?.Invoke();
         }
-        
+
         /// <summary>
         /// Request information about modules
         /// </summary>

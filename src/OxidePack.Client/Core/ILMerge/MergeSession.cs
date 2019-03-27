@@ -9,13 +9,13 @@ namespace OxidePack.Client.Core.ILMerger
     {
         public string Directory;
         public string[] Files;
-        
+
         public MergeSession(string directory, List<string> files)
             : this(directory)
         {
             this.Files = files.ToArray();
         }
-        
+
         public MergeSession(string directory)
         {
             this.Directory = directory;
@@ -25,7 +25,7 @@ namespace OxidePack.Client.Core.ILMerger
         {
             this.Files = new DirectoryInfo(Directory).GetFiles("*.dll").Select(p=>p.FullName).ToArray();
         }
-        
+
         public void Merge(string outputFile)
         {
             var repOptions = new RepackOptions()

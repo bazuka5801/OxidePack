@@ -18,19 +18,19 @@ namespace OxidePack.Client
     public partial class MainForm : Form
     {
         public static MainForm Instance;
-        
+
         public MainForm()
         {
             Instance = this;
             InitializeComponent();
-            
+
             BaseConfig.OnConfigLoaded += LoadConfig;
             if (BaseConfig.IsLoaded)
             {
                 ConsoleSystem.Log("Config.IsLoaded!");
                 LoadConfig();
             }
-            
+
             UpdateStatus("(1/3) Retrieving MachineID");
             UpdateProgressBar(style: ProgressBarStyle.Marquee);
             ThreadPool.QueueUserWorkItem(o =>
@@ -106,7 +106,7 @@ namespace OxidePack.Client
         public async Task CheckForUpdates()
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             var statusBefore = currentStatus;
             UpdateStatus("Checking rust update...");
             UpdateProgressBar(33);
@@ -145,7 +145,7 @@ namespace OxidePack.Client
         public async Task DownloadOxide()
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             var statusBefore = currentStatus;
             await OPClientCore.DownloadOxideDLLs((text, percent) =>
             {
@@ -161,7 +161,7 @@ namespace OxidePack.Client
         #endregion
 
         #region [Methods] UI Handlers
-        
+
         #region [Method] btnCopyUID_Click
         private void btnCopyUID_Click( object sender, EventArgs e )
         {
@@ -197,7 +197,7 @@ namespace OxidePack.Client
         private void btnSendPluginRequest_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             var pluginContent = File.ReadAllText("plugin.cs");
             var bRequest = new BuildRequest()
             {
@@ -219,7 +219,7 @@ namespace OxidePack.Client
         private void btnCreateNewSolution_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             using (SaveFileDialog sFileDialog = new SaveFileDialog()
             {
                 AddExtension = true,
@@ -246,7 +246,7 @@ namespace OxidePack.Client
         private void btnAddProject_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             using (var openFileDialog = new SaveFileDialog()
             {
                 DefaultExt = ".csproj",
@@ -269,7 +269,7 @@ namespace OxidePack.Client
         private void btnEditReference_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             ProjectSelectModel projectSelectModel = new ProjectSelectModel()
             {
                 Projects = OPClientCore.Solution.CsProjects.Select(p=>p.Name).ToList()
@@ -279,14 +279,14 @@ namespace OxidePack.Client
             {
                 return;
             }
-            
+
             var project = OPClientCore.Solution.CsProjects[projectSelectModel.Selected];
             var refsDir = Path.Combine(Directory.GetCurrentDirectory(), ".references-cache");
             if (Config.ProjectsConfig.TryGetValue(project.Name, out var projectConfig) == false)
             {
                 Config.ProjectsConfig[project.Name] = projectConfig = new Config.DependenciesConfig();
             }
-            
+
             var form = new DependenciesModel()
             {
                 Directory = refsDir,
@@ -366,7 +366,7 @@ namespace OxidePack.Client
         private void btnOpenPluginManager_Click(object sender, EventArgs e)
         {
             if (Net.cl.IsAuthed == false) return;
-            
+
             var projects = OPClientCore.Solution.CsProjects;
             ProjectSelectModel psModel = new ProjectSelectModel()
             {

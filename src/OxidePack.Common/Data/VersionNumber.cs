@@ -17,7 +17,7 @@ namespace OxidePack.Data
             this.Minor = minor;
             this.Build = build;
         }
-        
+
         #region Operator Overloads
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace OxidePack.Data
         }
 
         #endregion Operator Overloads
-        
+
         /// <summary>
         /// Compares this version for equality to the specified object
         /// </summary>

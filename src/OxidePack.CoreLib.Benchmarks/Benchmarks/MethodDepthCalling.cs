@@ -7,7 +7,7 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
     {
         [Params(2,4,8)]
         public int Depth;
-        
+
 
         [Benchmark(Description = "Depth")]
         public void TestVoidDepth()
@@ -36,7 +36,7 @@ namespace OxidePack.CoreLib.TestApp.Benchmarks
         {
             while (--i > 0)
             {
-                
+
             }
         }
     }
