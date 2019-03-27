@@ -48,7 +48,7 @@ namespace OxidePack.Server.App
                             Data.milliseconds_used += (ulong)sw.ElapsedMilliseconds;
                             Data.milliseconds_build += (ulong)sw.ElapsedMilliseconds;
                             Data.statBuild++;
-                            ConsoleSystem.Log($"User '{Data.username}' build '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
+                            ConsoleSystem.Log($"User '{Data.username}' build '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}-{bRequest.buildOptions.plugininfo.author}' in {sw.Elapsed.ToString("c")}");
                         }
                         catch (Exception e)
                         {
@@ -88,7 +88,7 @@ namespace OxidePack.Server.App
                                 Data.milliseconds_used += (ulong)sw.ElapsedMilliseconds;
                                 Data.milliseconds_encryption += (ulong)sw.ElapsedMilliseconds;
                                 Data.statEncryption++;
-                                ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}' in {sw.Elapsed.ToString("c")}");
+                                ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}-{bRequest.buildOptions.plugininfo.author}' in {sw.Elapsed.ToString("c")}");
                             }
                             catch (Exception e)
                             {
