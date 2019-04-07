@@ -1,7 +1,12 @@
-**/.idea/*
 **/.vs/*
 **/packages/*
 **/__pycache__/*
 **/build/*
 **/tests/project/*
 *.user
+
+# IDEA
+.idea/**/workspace.xml
+.idea/**/riderModule.iml
+.idea/**/modules.xml
+.idea/**/contentModel.xml
