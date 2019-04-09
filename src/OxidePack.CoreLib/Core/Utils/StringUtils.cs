@@ -26,7 +26,7 @@ namespace OxidePack.CoreLib.Utils
                     continue;
                 }
 
-                if (item[i] == '\\' && char.ToLower(item[i + 1]) == 'u')
+                if (i < item.Length - 1 && item[i] == '\\' && char.ToLower(item[i + 1]) == 'u')
                 {
                     Sb.Append(item[i]);
                     Sb.Append(item[i + 1]);
