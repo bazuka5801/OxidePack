@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RustyCode.WebAPI" type="DotNetProject" factoryName=".NET Project">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/src/RustyCode.WebAPI/bin/Release/netcoreapp2.1/RustyCode.WebAPI.dll" />
+    <option name="EXE_PATH" value="$PROJECT_DIR$/src/RustyCode.WebAPI/bin/Debug/netcoreapp2.1/RustyCode.WebAPI.dll" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/RustyCode.WebAPI" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/RustyCode.WebAPI/bin/Debug/" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <envs>
       <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
@@ -14,7 +14,7 @@
     <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/RustyCode.WebAPI/RustyCode.WebAPI.csproj" />
     <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
     <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-    <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+    <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
     <option name="PROJECT_KIND" value="DotNetCore" />
     <option name="PROJECT_TFM" value=".NETCoreApp,Version=v2.1" />
     <browser url="http://localhost:5000" />
