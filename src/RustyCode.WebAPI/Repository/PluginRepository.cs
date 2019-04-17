@@ -9,7 +9,7 @@ namespace RustyCode.WebAPI.Repository
         {
             var pluginPath = GetPluginPath(pluginMeta);
             var pluginDirectory = GetPluginDirectory(pluginMeta);
-            
+
             if (File.Exists(pluginPath))
             {
                 return (false, $"Plugin [{pluginMeta.Name}/{pluginMeta.Author}/{pluginMeta.Version}] already exist!");
@@ -19,7 +19,7 @@ namespace RustyCode.WebAPI.Repository
                 Directory.CreateDirectory(pluginDirectory);
 
             File.WriteAllBytes(pluginPath, content);
-            return (true, "Success!");
+            return (true, $"Success\n{pluginMeta.Name}\n{pluginMeta.Author}\n{pluginMeta.Version}");
         }
 
         public static (bool success, string message, byte[] content) Get(PluginMeta pluginMeta)
