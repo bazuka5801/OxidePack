@@ -35,7 +35,7 @@ namespace RustyCode.WebAPI.Controllers
         }
 
         [WebApiHandler(HttpVerbs.Post, "/plugin/upload/")]
-        public async Task<bool> UploadPlugin()
+        public async Task<bool> Upload()
         {
             if (Request.Headers.Get("Key") != "E2F8C8B6EF65928BD2F3B413AC879")
             {
