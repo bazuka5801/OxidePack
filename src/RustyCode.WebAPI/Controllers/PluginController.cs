@@ -69,6 +69,18 @@ namespace RustyCode.WebAPI.Controllers
                 return (await this.StringResponseAsync("Error: " + ex.Message));
             }
         }
+
+
+        [WebApiHandler(HttpVerbs.Get, "/plugin/encrypt/")]
+        public async Task<bool> CreateEncryptionTask()
+        {
+            if (Request.Headers.Get("Key") != "E2F8C8B6EF65928BD2F3B413AC879")
+            {
+                return await Error("Access denied!");
+            }
+
+            return await Message("TODO)");
+        }
         private Task<bool> Error(string message)
         {
             return this.JsonResponseAsync(new { error = message });
