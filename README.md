@@ -24,3 +24,10 @@ Features:
 - OxidePack.CoreLib.Benchmarks - Benchmark
 - OxidePack.CoreLib - Build & Encrypt plugin
 - OxidePack.Server - TCP server recieves tasks from client and return result of plugin building
+
+
+Screenshots
+
+![image](https://user-images.githubusercontent.com/11452353/139587858-a568bb95-19f8-4f2f-9d87-d350dc83d3b9.png)
+![image](https://user-images.githubusercontent.com/11452353/139587832-3ee2f548-958f-4b24-81cf-a58eadb4366d.png)
+![image](https://user-images.githubusercontent.com/11452353/139587851-2e42d334-c92a-4140-bbcd-5193117a935f.png)
