@@ -82,13 +82,15 @@ namespace OxidePack.Server.App
                             {
                                 sw.Start();
 
-                                (compilerResults, encryptResult) = ActivePlugin.EncryptWithCompiling(buildResult, options);
+                                (compilerResults, encryptResult) =
+                                    ActivePlugin.EncryptWithCompiling(buildResult, options);
 
                                 sw.Stop();
-                                Data.milliseconds_used += (ulong)sw.ElapsedMilliseconds;
-                                Data.milliseconds_encryption += (ulong)sw.ElapsedMilliseconds;
+                                Data.milliseconds_used += (ulong) sw.ElapsedMilliseconds;
+                                Data.milliseconds_encryption += (ulong) sw.ElapsedMilliseconds;
                                 Data.statEncryption++;
-                                ConsoleSystem.Log($"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}-{bRequest.buildOptions.plugininfo.author}' in {sw.Elapsed.ToString("c")}");
+                                ConsoleSystem.Log(
+                                    $"User '{Data.username}' encrypt '{bRequest.buildOptions.name}:{bRequest.buildOptions.plugininfo.version}-{bRequest.buildOptions.plugininfo.author}' in {sw.Elapsed.ToString("c")}");
                             }
                             catch (Exception e)
                             {

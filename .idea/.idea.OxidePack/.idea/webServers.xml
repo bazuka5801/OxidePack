@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="8af370bb-6d08-4841-91b1-959f197f11b6" name="Server" url="http://185.252.147.164">
+        <fileTransfer host="185.252.147.164" port="21" rootFolder="/OxidePack/bin/netcoreapp2.1">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
